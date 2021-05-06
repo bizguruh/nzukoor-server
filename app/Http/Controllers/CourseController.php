@@ -60,7 +60,6 @@ class CourseController extends Controller
         ]);
     }
 
-
     public function show(Course $course)
     {
         return Course::with('curriculum')->with('module')->with('feedback')->where('id', $course->id)->first();
