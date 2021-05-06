@@ -37,6 +37,11 @@ class User extends Authenticatable
         return $this->belongsTo(Organization::class);
     }
 
+    public function todos()
+    {
+        return $this->hasMany(Todo::class);
+    }
+
     public function feedback()
     {
         return $this->hasMany(Feedback::class);

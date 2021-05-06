@@ -32,6 +32,11 @@ class Facilitator extends Authenticatable
     {
         return $this->belongsTo(Organization::class);
     }
+    public function todos()
+    {
+        return $this->hasMany(Todo::class);
+    }
+
 
     public function module()
     {

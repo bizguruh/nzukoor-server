@@ -11,8 +11,9 @@ use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionMessageController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\ModuleController;
-use App\Models\Discussion;
+use App\Http\Controllers\TodoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,11 +21,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
+
 */
 
 
@@ -162,5 +159,19 @@ Route::post('register-user', [UserController::class, 'store']);
 
 // User api routes ends here
 
+
+// Social auths
 Route::get('/auth/{provider}/redirect', [SocialLoginController::class, 'redirect']);
 Route::get('/auth/{provider}/callback', [SocialLoginController::class, 'callback']);
+
+
+//Inbox routes
+
+Route::post('inbox', [InboxController::class, 'store']);
+Route::get('inbox', [InboxController::class, 'getInbox']);
+Route::delete('inbox/{id}', [InboxController::class, 'destroy']);
+
+
+//Todos routes
+
+Route::apiResource('todos', TodoController::class);
