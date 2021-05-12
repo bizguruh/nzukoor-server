@@ -36,8 +36,15 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|unique:users',
+            'password' => 'required',
+            'phone' => ' required|unique:users'
+        ]);
+
         $user = auth('organization')->user();
-        $referral_code =  $this->generateCode(2, 'Organization');
+        $referral_code =  $this->generateCode(2);
         $check = $user->user()->where('referral_code', $referral_code)->first();
         while (!is_null($check)) {
             $referral_code =  $this->generateCode(2);
@@ -46,6 +53,38 @@ class UserController extends Controller
 
 
         return $user->user()->create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'address' => $request->address,
+            'phone' => $request->phone,
+            'bio' => $request->bio,
+            'profile' => $request->profile,
+            'verification' => false,
+            'referral_code' => $referral_code,
+        ]);
+    }
+
+    public function storeuser(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|unique:users',
+            'password' => 'required',
+            'phone' => ' required|unique:users'
+        ]);
+
+        $user = auth('api')->user();
+        $referral_code =  $this->generateCode(2);
+        $check = User::where('referral_code', $referral_code)->first();
+        while (!is_null($check)) {
+            $referral_code =  $this->generateCode(2);
+            $check = User::where('referral_code', $referral_code)->first();
+        }
+
+
+        return User::create([
+            'organization_id' => null,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),

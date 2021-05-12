@@ -20,7 +20,7 @@ class AddPhoneBioProfileOrganizationIdVerficationAddressToUsersTable extends Mig
             $table->string('profile')->nullable();
             $table->boolean('verification')->nullable()->default(false);
             $table->string('referral_code')->nullable();
-            $table->foreignId('organization_id')->constrained()->onUpdate('cascade')
+            $table->foreignId('organization_id')->nullable()->constrained()->onUpdate('cascade')
                 ->onDelete('cascade');
         });
     }

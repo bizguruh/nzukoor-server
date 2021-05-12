@@ -26,13 +26,21 @@ class OrganizationController extends Controller
 
     public function index()
     {
-        return Organization::get();
+        $user = auth('organization')->user();
+        return $user->admins()->latest()->get();
     }
 
 
     public function store(Request $request)
     {
-        $referral_code =  $this->generateCode(2, 'Organization');
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|unique:organizations',
+            'password' => 'required|min:6',
+            'phone' => ' required|unique:organizations'
+        ]);
+
+        $referral_code =  $this->generateCode(2);
         $check = Organization::where('referral_code', $referral_code)->first();
         while (!is_null($check)) {
             $referral_code =  $this->generateCode(2);
@@ -79,6 +87,12 @@ class OrganizationController extends Controller
     {
         return User::find($id);
     }
+    public function getusers()
+    {
+        $user = auth('organization')->user();
+        return $user->user()->latest()->get();
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -97,7 +111,7 @@ class OrganizationController extends Controller
         $organization->interest = json_encode($request->interest);
         $organization->bio = $request->bio;
         $organization->logo = $request->logo;
-        $organization->verfication = $request->verfication;
+        $organization->verification = $request->verification;
         $organization->save();
         return $organization;
     }
@@ -109,7 +123,7 @@ class OrganizationController extends Controller
         $admin->email = $request->email;
         $admin->bio = $request->bio;
         $admin->profile = $request->profile;
-        $admin->verfication = $request->verfication;
+        $admin->verification = $request->verification;
         $admin->save();
         return $admin;
     }
@@ -122,12 +136,12 @@ class OrganizationController extends Controller
         $facilitator->phone = $request->phone;
         $facilitator->bio = $request->bio;
         $facilitator->profile = $request->profile;
-        $facilitator->verfication = $request->verfication;
+        $facilitator->verification = $request->verification;
         $facilitator->qualifications = json_encode($request->qualifications);
         $facilitator->save();
         return $facilitator;
     }
-    public function updateeuser(Request $request, $id)
+    public function updateuser(Request $request, $id)
     {
         $user =  User::find($id);
         $user->name = $request->name;
@@ -136,7 +150,7 @@ class OrganizationController extends Controller
         $user->phone = $request->phone;
         $user->bio = $request->bio;
         $user->profile = $request->profile;
-        $user->verfication = $request->verfication;
+        $user->verification = $request->verification;
         $user->save();
         return $user;
     }

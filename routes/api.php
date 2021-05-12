@@ -23,6 +23,9 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, Authorization, Accept,charset,boundary,Content-Length');
+header('Access-Control-Allow-Origin: *');
 
 // organization api routes begin here
 Route::middleware('auth:organization')->get('organization', function (Request $request) {
@@ -39,21 +42,23 @@ Route::middleware(['auth:organization'])->group(function () {
 
 
     Route::post('register-admin', [AdminController::class, 'store']);
+    Route::get('get-admins', [OrganizationController::class, 'index']);
     Route::get('get-admin/{id}', [OrganizationController::class, 'getadmin']);
     Route::put('update-admin/{id}', [OrganizationController::class, 'updateadmin']);
-    Route::post('delete-admin/{id}', [OrganizationController::class, 'deleteadmin']);
+    Route::delete('delete-admin/{id}', [OrganizationController::class, 'deleteadmin']);
 
 
     Route::post('register-facilitator', [FacilitatorController::class, 'store']);
-    Route::get('get-facilitators', [OrganizationController::class, 'getfacilitators']);
+    Route::get('get-facilitators', [FacilitatorController::class, 'getfacilitators']);
     Route::get('get-facilitator/{id}', [OrganizationController::class, 'getfacilitator']);
     Route::put('update-facilitator/{id}', [OrganizationController::class, 'updatefacilitator']);
-    Route::post('delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
+    Route::delete('delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
 
     Route::post('register-user', [UserController::class, 'store']);
+    Route::get('get-users', [OrganizationController::class, 'getusers']);
     Route::get('get-user/{id}', [OrganizationController::class, 'getuser']);
     Route::put('update-user/{id}', [OrganizationController::class, 'updateuser']);
-    Route::post('delete-user/{id}', [OrganizationController::class, 'deleteuser']);
+    Route::delete('delete-user/{id}', [OrganizationController::class, 'deleteuser']);
 });
 // organizations api routes ends here
 
@@ -94,6 +99,9 @@ Route::middleware('auth:facilitator')->get('/facilitator', function (Request $re
     return $request->user();
 });
 
+Route::post('facilitator-register', [FacilitatorController::class, 'storefacilitator']);
+
+
 Route::middleware(['auth:facilitator'])->group(function () {
 
     Route::apiResource('modules', ModuleController::class);
@@ -131,6 +139,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('users', UserController::class);
 
@@ -154,7 +163,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('add-discussion-message', [DiscussionMessageController::class, 'store']);
 });
 
-Route::post('register-user', [UserController::class, 'store']);
+Route::post('register-user', [UserController::class, 'storeuser']);
 
 // User api routes ends here
 

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Facilitator;
+use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -33,7 +35,7 @@ class FacilitatorController extends Controller
     public function getfacilitators()
     {
         $user = auth('organization')->user();
-        return Facilitator::where('organization_id', $user->organization_id)->get();
+        return $user->facilitator()->latest()->get();
     }
 
     public function admingetfacilitator($id)
@@ -61,7 +63,12 @@ class FacilitatorController extends Controller
 
     public function store(Request $request)
     {
-
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|unique:facilitators',
+            'password' => 'required:min:6',
+            'phone' => ' required|unique:facilitators'
+        ]);
 
         $referral_code =  $this->generateCode(2);
         $check = Facilitator::where('referral_code', $referral_code)->first();
@@ -88,11 +95,66 @@ class FacilitatorController extends Controller
 
 
             ]);
-        } else {
+        }
+        // else {
 
-            $user = auth('facilitator')->user();
+        //     $user = auth('facilitator')->user();
+        //     return Facilitator::create([
+        //         'organization_id' => $user->organization_id,
+        //         'name' => $request->name,
+        //         'email' => $request->email,
+        //         'password' => Hash::make($request->password),
+        //         'address' => $request->address,
+        //         'phone' => $request->phone,
+        //         'bio' => $request->bio,
+        //         'profile' => $request->profile,
+        //         'qualifications' => json_encode($request->qualifications),
+        //         'verification' => false,
+        //         'referral_code' => $referral_code,
+
+
+        //     ]);
+        // }
+    }
+
+
+    public function storefacilitator(Request $request)
+    {
+
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|unique:facilitators',
+            'password' => 'required|min:6',
+            'phone' => ' required|unique:facilitators'
+        ]);
+        $data =   DB::transaction(function () use ($request) {
+            $referral_code =  $this->generateCode(2);
+            $check = Facilitator::where('referral_code', $referral_code)->first();
+            while (!is_null($check)) {
+                $referral_code =  $this->generateCode(2);
+                $check = Facilitator::where('referral_code', $referral_code)->first();
+            }
+
+            $org = Organization::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'contact_name' => $request->contact_name,
+                'contact_address' => $request->contact_address,
+                'contact_phone' => $request->contact_phone,
+                'interest' => json_encode($request->interest),
+                'bio' => $request->bio,
+                'logo' => $request->profile,
+                'referral_code' => $referral_code,
+                'verification' => $request->verification
+            ]);
+
+
+
             return Facilitator::create([
-                'organization_id' => $user->organization_id,
+                'organization_id' => $org->id,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -106,9 +168,9 @@ class FacilitatorController extends Controller
 
 
             ]);
-        }
+        });
+        return $data;
     }
-
 
     public function show(Facilitator $facilitator)
     {

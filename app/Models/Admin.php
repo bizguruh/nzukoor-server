@@ -12,6 +12,10 @@ class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
     public function event()
     {
@@ -38,6 +42,7 @@ class Admin extends Authenticatable
         'email',
         'password',
         'role',
+        'phone',
         'email_verified_at',
         'profile',
         'verification',

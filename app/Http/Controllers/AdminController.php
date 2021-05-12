@@ -31,6 +31,12 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|unique:admins',
+            'password' => 'required|min:6',
+            'phone' => ' required|unique:admins'
+        ]);
 
         $user = auth('organization')->user();
         $referral_code =  $this->generateCode(2, 'Organization');
@@ -41,14 +47,15 @@ class AdminController extends Controller
         }
 
 
-        return $user->admin()->create([
+        return $user->admins()->create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role' => 'administrator',
             'profile' => $request->profile,
+            'phone' => $request->phone,
             'referral_code' => $referral_code,
-            'verification' => $request->verification
+            'verification' => false
         ]);
     }
     /**

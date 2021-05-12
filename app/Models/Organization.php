@@ -30,7 +30,7 @@ class Organization extends Authenticatable
         'referral_code'
     ];
 
-    public function admin()
+    public function admins()
     {
         return $this->hasMany(Admin::class);
     }
