@@ -72,14 +72,14 @@ Route::post('admin', [AdminController::class, 'store']);
 Route::middleware(['auth:admin'])->group(function () {
     Route::apiResource('admins', AdminController::class);
 
-    Route::get('admin/get-facilitator/{id}', [OrganizationController::class, 'getfacilitator']);
-    Route::put('admin/update-facilitator/{id}', [OrganizationController::class, 'updatefacilitator']);
-    Route::post('admin/delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
+    // Route::get('admin-get-facilitator/{id}', [OrganizationController::class, 'getfacilitator']);
+    Route::put('admin-update-facilitator/{id}', [OrganizationController::class, 'updatefacilitator']);
+    Route::post('admin-delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
 
-    Route::get('admin/get-users', [OrganizationController::class, 'admingetusers']);
-    Route::get('admin/get-user/{id}', [OrganizationController::class, 'getuser']);
-    Route::put('admin/update-user/{id}', [OrganizationController::class, 'updateuser']);
-    Route::post('admin/delete-user/{id}', [OrganizationController::class, 'deleteuser']);
+    Route::get('admin-get-users', [OrganizationController::class, 'admingetusers']);
+    Route::get('admin-get-user/{id}', [OrganizationController::class, 'getuser']);
+    Route::put('admin-update-user/{id}', [OrganizationController::class, 'updateuser']);
+    Route::post('admin-delete-user/{id}', [OrganizationController::class, 'deleteuser']);
 
 
     Route::get('admin-get-facilitators', [FacilitatorController::class, 'admingetfacilitators']);
@@ -184,3 +184,4 @@ Route::delete('inbox/{id}', [InboxController::class, 'destroy']);
 //Todos routes
 
 Route::apiResource('todos', TodoController::class);
+Route::get('todos-destroy', [TodoController::class, 'destroyall']);

@@ -87,17 +87,6 @@ class TodoController extends Controller
      * @param  \App\Models\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function edit(Todo $todo)
-    {
-        if ($todo->status == true) {
-            $todo->status = false;
-        }
-        if ($todo->status == false) {
-            $todo->status = true;
-        }
-        $todo->save();
-        return $todo;
-    }
 
     /**
      * Update the specified resource in storage.
@@ -108,9 +97,18 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
-        $todo->status = true;
-        $todo->save();
-        return $todo;
+
+
+        if ($todo->status == true) {
+            $todo->status = false;
+            $todo->save();
+            return $todo;
+        }
+        if ($todo->status == false) {
+            $todo->status = true;
+            $todo->save();
+            return $todo;
+        }
     }
 
     /**
@@ -122,6 +120,22 @@ class TodoController extends Controller
     public function destroy(Todo $todo)
     {
         $todo->delete();
+        return response()->json([
+            'message' => 'Delete successful'
+        ]);
+    }
+    public function destroyall()
+    {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        $user->todos()->delete();
         return response()->json([
             'message' => 'Delete successful'
         ]);
