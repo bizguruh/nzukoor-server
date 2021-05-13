@@ -14,6 +14,10 @@ class TodoController extends Controller
      */
     public function index()
     {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+            $type = 'admin';
+        }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
             $type = 'facilitator';
@@ -43,13 +47,19 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+            $type = 'admin';
+        }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
+            $type = 'facilitator';
         }
         if (auth('api')->user()) {
             $user = auth('api')->user();
+            $type = 'user';
         }
-
 
         return   $user->todos()->create([
 

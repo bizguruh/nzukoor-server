@@ -76,6 +76,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::put('admin/update-facilitator/{id}', [OrganizationController::class, 'updatefacilitator']);
     Route::post('admin/delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
 
+    Route::get('admin/get-users', [OrganizationController::class, 'admingetusers']);
     Route::get('admin/get-user/{id}', [OrganizationController::class, 'getuser']);
     Route::put('admin/update-user/{id}', [OrganizationController::class, 'updateuser']);
     Route::post('admin/delete-user/{id}', [OrganizationController::class, 'deleteuser']);

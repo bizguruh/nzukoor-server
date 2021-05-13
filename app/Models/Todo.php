@@ -9,7 +9,7 @@ class Todo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'facilitator_id', 'todo', 'completion_time', 'status'];
+    protected $fillable = ['user_id', 'facilitator_id', 'admin_id', 'todo', 'completion_time', 'status'];
 
     public function user()
     {
@@ -18,5 +18,9 @@ class Todo extends Model
     public function facilitator()
     {
         return $this->belongsTo(Facilitator::class);
+    }
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
     }
 }

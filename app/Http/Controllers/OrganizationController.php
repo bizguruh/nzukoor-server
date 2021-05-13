@@ -93,6 +93,12 @@ class OrganizationController extends Controller
         return $user->user()->latest()->get();
     }
 
+    public function admingetusers()
+    {
+        $user = auth('admin')->user();
+        return User::where('organization_id', $user->organization_id)->latest()->get();
+    }
+
 
     /**
      * Update the specified resource in storage.
