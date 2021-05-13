@@ -89,7 +89,12 @@ class TodoController extends Controller
      */
     public function edit(Todo $todo)
     {
-        $todo->status = true;
+        if ($todo->status == true) {
+            $todo->status = false;
+        }
+        if ($todo->status == false) {
+            $todo->status = true;
+        }
         $todo->save();
         return $todo;
     }
