@@ -72,7 +72,7 @@ Route::middleware(['auth:organization'])->group(function () {
 
 // admin api routes begin here
 Route::middleware('auth:admin')->get('/admin', function (Request $request) {
-    return $request->user();
+    return $request->user()->load('organization');
 });
 Route::post('admin', [AdminController::class, 'store']);
 
