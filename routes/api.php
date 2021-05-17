@@ -159,7 +159,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('user-get-facilitator/{id}', [FacilitatorController::class, 'usergetfacilitator']);
 });
 
-Route::post('register-user', [UserController::class, 'storeuser']);
+Route::post('user-register', [UserController::class, 'storeuser']);
 
 // User api routes ends here
 
