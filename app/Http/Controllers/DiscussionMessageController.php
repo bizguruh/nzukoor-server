@@ -12,14 +12,32 @@ class DiscussionMessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getdiscussionmessages($id)
+    public function index()
     {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
-        } else {
+        }
+        if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-        $message = DiscussionMessage::where('organization_id', $user->organization_id)->where('discussion_id', $user->id)->get();
+        return $message = DiscussionMessage::where('discussion_id', 3)->get();
+    }
+
+    public function getdiscussionmessages($id)
+    {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        $message = DiscussionMessage::where('discussion_id', $user->id)->get();
     }
 
 
@@ -27,26 +45,25 @@ class DiscussionMessageController extends Controller
     {
 
 
-
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
-            $facilitator_id = $user->id;
-            $user_id = null;
-        } else {
+        }
+        if (auth('api')->user()) {
             $user = auth('api')->user();
-            $user_id = $user->id;
-            $facilitator_id = null;
         }
 
-        return DiscussionMessage::create([
+        $data = $user->discussionmessage()->create([
 
-            'user_id' => $user_id,
-            'facilitator_id' => $facilitator_id,
             'message' => $request->message,
             'attachment' => $request->attachment,
             'discussion_id' => $request->discussion_id,
             'organization_id' => $user->organization_id
         ]);
+
+        return $data->load('admin', 'user', 'facilitator');
     }
 
 

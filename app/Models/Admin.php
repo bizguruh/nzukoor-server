@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Egulias\EmailValidator\Warning\Comment;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -31,11 +32,40 @@ class Admin extends Authenticatable
         return $this->hasMany(Course::class);
     }
 
+    public function feeds()
+    {
+        return $this->hasMany(Feed::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(FeedComment::class);
+    }
+    public function stars()
+    {
+        return $this->hasMany(FeedStar::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(FeedLike::class);
+    }
     public function curriculum()
     {
         return $this->hasMany(Curriculum::class);
     }
+    public function discussions()
+    {
+        return $this->hasMany(Discussion::class);
+    }
 
+    public function discussionmessage()
+    {
+        return $this->hasMany(DiscussionMessage::class);
+    }
+    public function discussionvote()
+    {
+        return $this->hasMany(DiscussionVote::class);
+    }
 
     /**
      * The attributes that are mass assignable.

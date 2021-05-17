@@ -14,12 +14,18 @@ class DiscussionController extends Controller
      */
     public function index()
     {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
-        } else {
+        }
+        if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-        return Discussion::where('organization_id', $user->organization_id)->with('discussionmessage')->get();
+
+        return Discussion::where('organization_id', $user->organization_id)
+            ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
     }
 
     /**
@@ -30,20 +36,31 @@ class DiscussionController extends Controller
 
     public function store(Request $request)
     {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+            $sender = 'admin';
+        }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
             $sender = 'facilitator';
-        } else {
+        }
+        if (auth('api')->user()) {
             $user = auth('api')->user();
             $sender = 'user';
         }
-        return Discussion::create([
+
+        $request->all();
+
+        $data = $user->discussions()->create([
             'type' => $request->type,
             'name' => $request->name,
+            'tags' => json_encode($request->tags),
             'creator' => $sender,
+            'description' => $request->description,
             'course_id' => $request->course_id,
             'organization_id' => $user->organization_id,
         ]);
+        return $data->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
 
     /**
@@ -54,7 +71,7 @@ class DiscussionController extends Controller
      */
     public function show(Discussion $discussion)
     {
-        return $discussion->with('discussionmessage');
+        return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
 
     public function getdiscussion($id)
@@ -78,6 +95,7 @@ class DiscussionController extends Controller
     {
         $discussion->type = $request->type;
         $discussion->name = $request->name;
+        $discussion->tags = json_encode($request->tags);
         $discussion->creator = $request->creator;
         $discussion->course_id = $request->course_id;
         $discussion->save();

@@ -5,14 +5,21 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\FacilitatorController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FeedController;
+use App\Http\Controllers\FeedCommentController;
+use App\Http\Controllers\FeedLikeController;
+use App\Http\Controllers\FeedStarController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionMessageController;
+use App\Http\Controllers\DiscussionVoteController;
+use App\Http\Controllers\DiscussionViewController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -85,6 +92,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin-get-facilitators', [FacilitatorController::class, 'admingetfacilitators']);
     Route::get('admin-get-facilitator/{id}', [FacilitatorController::class, 'admingetfacilitator']);
 
+
     Route::apiResource('events', EventController::class);
 
     Route::apiResource('courses', CourseController::class);
@@ -121,13 +129,6 @@ Route::middleware(['auth:facilitator'])->group(function () {
 
     Route::get('facilitator-get-users', [UserController::class, 'facilitatorgetusers']);
     Route::get('facilitator-get-user/{id}', [UserController::class, 'facilitatorgetuser']);
-
-
-    Route::post('facilitator-add-discussion', [DiscussionController::class, 'store']);
-    Route::get('facilitator-get-discussion/{id}', [DiscussionController::class, 'getdiscussion']);
-    Route::get('facilitator-get-discussions', [DiscussionController::class, 'index']);
-
-    Route::post('facilitator-add-message', [DiscussionMessageController::class, 'store']);
 });
 
 // facilitator api routes ends here
@@ -156,12 +157,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('user-get-facilitator', [FacilitatorController::class, 'usergetfacilitators']);
     Route::get('user-get-facilitator/{id}', [FacilitatorController::class, 'usergetfacilitator']);
-
-    Route::post('user-add-discussion', [DiscussionController::class, 'store']);
-    Route::get('user-get-discussion/{id}', [DiscussionController::class, 'getdiscussion']);
-    Route::get('user-get-discussions', [DiscussionController::class, 'index']);
-
-    Route::post('add-discussion-message', [DiscussionMessageController::class, 'store']);
 });
 
 Route::post('register-user', [UserController::class, 'storeuser']);
@@ -185,3 +180,19 @@ Route::delete('inbox/{id}', [InboxController::class, 'destroy']);
 
 Route::apiResource('todos', TodoController::class);
 Route::get('todos-destroy', [TodoController::class, 'destroyall']);
+
+// discussions route
+
+Route::apiResource('discussions', DiscussionController::class);
+Route::apiResource('discussion-messages', DiscussionMessageController::class);
+
+Route::apiResource('views', DiscussionViewController::class);
+Route::apiResource('votes', DiscussionVoteController::class);
+Route::get('add-view/{id}', [DiscussionViewController::class, 'addview']);
+
+Route::apiResource('votes', DiscussionVoteController::class);
+Route::apiResource('tags', TagController::class);
+Route::apiResource('feeds', FeedController::class);
+Route::apiResource('feed-comments', FeedCommentController::class);
+Route::apiResource('feed-likes', FeedLikeController::class);
+Route::apiResource('feed-stars', FeedStarController::class);

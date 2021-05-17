@@ -11,7 +11,7 @@ class DiscussionMessage extends Model
     use HasFactory, Notifiable;
 
     protected $table = 'discussion_messages';
-    protected $fillable = ['facilitator_id', 'user_id', 'message', 'attachment', 'discussion_id', 'organization_id'];
+    protected $fillable = ['facilitator_id', 'user_id', 'admin_id', 'message', 'attachment', 'discussion_id', 'organization_id'];
 
     public function discussion()
     {
@@ -20,6 +20,10 @@ class DiscussionMessage extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
     }
     public function facilitator()
     {

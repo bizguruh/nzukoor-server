@@ -42,10 +42,34 @@ class Facilitator extends Authenticatable
     {
         return $this->hasMany(Module::class);
     }
+    public function feeds()
+    {
+        return $this->hasMany(Feed::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(FeedComment::class);
+    }
+    public function stars()
+    {
+        return $this->hasMany(FeedStar::class);
+    }
 
+    public function likes()
+    {
+        return $this->hasMany(FeedLike::class);
+    }
+    public function discussions()
+    {
+        return $this->hasMany(Discussion::class);
+    }
     public function discussionmessage()
     {
         return $this->hasMany(DiscussionMessage::class);
+    }
+    public function discussionvote()
+    {
+        return $this->hasMany(DiscussionVote::class);
     }
 
     /**

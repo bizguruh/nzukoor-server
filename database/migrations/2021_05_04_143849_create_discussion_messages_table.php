@@ -17,6 +17,7 @@ class CreateDiscussionMessagesTable extends Migration
             $table->id();
             $table->text('message')->nullable();
             $table->string('attachment')->nullable();
+            $table->foreignId('admin_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('facilitator_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('discussion_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();

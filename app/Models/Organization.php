@@ -39,6 +39,15 @@ class Organization extends Authenticatable
     {
         return $this->hasMany(Facilitator::class);
     }
+    public function feeds()
+    {
+        return $this->hasMany(Feed::class);
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
 
     public function user()
     {

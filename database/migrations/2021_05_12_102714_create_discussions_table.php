@@ -18,6 +18,11 @@ class CreateDiscussionsTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->string('creator');
+            $table->text('description');
+            $table->text('tags');
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('facilitator_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('admin_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('course_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('organization_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
 
