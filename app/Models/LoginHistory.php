@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Todo extends Model
+class LoginHistory extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['user_id', 'facilitator_id', 'admin_id', 'todo', 'completion_time', 'status'];
+    protected $table = 'login_histories';
+    protected $fillable = ['record', 'user_id', 'admin_id', 'facilitator_id'];
 
     public function user()
     {

@@ -36,6 +36,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Organization::class);
     }
+    public function loginhistory()
+    {
+        return $this->hasMany(loginhistory::class);
+    }
+    public function inbox()
+    {
+        return $this->hasMany(inbox::class);
+    }
     public function feeds()
     {
         return $this->hasMany(Feed::class);

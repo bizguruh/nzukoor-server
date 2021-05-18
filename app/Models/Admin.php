@@ -17,7 +17,14 @@ class Admin extends Authenticatable
     {
         return $this->belongsTo(Organization::class);
     }
-
+    public function inbox()
+    {
+        return $this->hasMany(inbox::class);
+    }
+    public function loginhistory()
+    {
+        return $this->hasMany(loginhistory::class);
+    }
     public function todos()
     {
         return $this->hasMany(Todo::class);

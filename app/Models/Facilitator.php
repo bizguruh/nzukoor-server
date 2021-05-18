@@ -42,6 +42,14 @@ class Facilitator extends Authenticatable
     {
         return $this->hasMany(Module::class);
     }
+    public function loginhistory()
+    {
+        return $this->hasMany(loginhistory::class);
+    }
+    public function inbox()
+    {
+        return $this->hasMany(inbox::class);
+    }
     public function feeds()
     {
         return $this->hasMany(Feed::class);
@@ -49,6 +57,10 @@ class Facilitator extends Authenticatable
     public function comments()
     {
         return $this->hasMany(FeedComment::class);
+    }
+    public function courseschedule()
+    {
+        return $this->hasMany(CourseSchedule::class)->with('facilitator');
     }
     public function stars()
     {

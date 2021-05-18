@@ -13,32 +13,22 @@ class InboxController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getInbox()
+    public function index()
     {
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
-            $sender_type = 'facilitator';
+            $data = Inbox::where([['receiver', '=', 'facilitator'], ['receiver_id', '=', $user->id]])->orWhere('facilitator_id', $user->id)->latest()->get();
         }
         if (auth('api')->user()) {
             $user = auth('api')->user();
-            $sender_type = 'user';
+            $data = Inbox::where([['receiver', '=', 'user'], ['receiver_id', '=', $user->id]])->orWhere('user_id', $user->id)->latest()->get();
         }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
-            $sender_type = 'admin';
+            $data = Inbox::where([['receiver', '=', 'admin'], ['receiver_id', '=', $user->id]])->orWhere('admin_id', $user->id)->latest()->get();
         }
 
-        $inbox = Inbox::where('organization_id', $user->organization_id)->where([
-            ['sender_id', '=', $user->id],
-            ['sender_type', '=', $sender_type]
-
-        ])->orWhere([
-            ['receiver_id', '=', $user->id],
-            ['receiver_type', '=', $sender_type]
-
-        ])->get();
-
-        return InboxResource::collection($inbox);
+        return InboxResource::collection($data);
     }
 
 
@@ -57,16 +47,16 @@ class InboxController extends Controller
             $sender_type = 'admin';
         }
 
-        return Inbox::create([
+
+
+        $data = $user->inbox()->create([
             'message' => $request->message,
             'attachment' => $request->attachment,
-            'sender_id' => $user->id,
-            'sender_type' => $sender_type,
+            'receiver' => $request->receiver,
             'receiver_id' => $request->receiver_id,
-            'receiver_type' => $request->receiver_type,
-            'organization_id' => $user->organization_id,
-            'status' => 'sent',
+            'status' => false,
         ]);
+        return $data->load('admin', 'user', 'facilitator');
     }
 
     /**

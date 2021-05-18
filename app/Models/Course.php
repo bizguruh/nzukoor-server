@@ -12,15 +12,7 @@ class Course extends Model
     protected $fillable = [
         'title',
         'description',
-        'knowledge_areas',
-        'curriculum',
-        'modules',
-        'duration',
-        'certification',
-        'faqs',
-        'date',
-        'time',
-        'facilitators',
+        'course_code',
         'cover',
         'organization_id'
     ];
@@ -46,5 +38,18 @@ class Course extends Model
     public function curriculum()
     {
         return $this->hasOne(Curriculum::class);
+    }
+
+    public function courseoutline()
+    {
+        return $this->hasOne(CourseOutline::class);
+    }
+    public function courseschedule()
+    {
+        return $this->hasMany(CourseSchedule::class);
+    }
+    public function coursefacilitator()
+    {
+        return $this->hasMany(CourseFacilitator::class);
     }
 }

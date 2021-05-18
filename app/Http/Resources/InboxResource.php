@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Admin;
 use App\Models\Facilitator;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,10 +22,17 @@ class InboxResource extends JsonResource
             'message' => $this->message,
             'attachment' => $this->attachment,
             'status' => $this->status,
-            'sender_id' => $this->sender_id,
+            'admin_id' => $this->admin_id,
+            'admin' => $this->admin,
+            'user_id' => $this->user_id,
+            'user' => $this->user,
+            'facilitator_id' => $this->facilitator_id,
+            'facilitator' => $this->facilitator,
             'receiver_id' => $this->receiver_id,
-            'sender' => $this->sender_type == 'user' ? User::find($this->sender_id) : Facilitator::find($this->sender_id),
-            'receiver' => $this->receiver_type == 'user' ? User::find($this->receiver_id) : Facilitator::find($this->receiver_id),
+            'receiver' => $this->receiver,
+            'user_info' => $this->when($this->receiver === 'user', User::find($this->receiver_id)),
+            'facilitator_info' => $this->when($this->receiver === 'facilitator', Facilitator::find($this->receiver_id)),
+            'admin_info' => $this->when($this->receiver === 'admin', Admin::find($this->receiver_id)),
             'created_at' => $this->created_at,
         ];
     }

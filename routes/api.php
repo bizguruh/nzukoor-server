@@ -10,6 +10,8 @@ use App\Http\Controllers\FeedCommentController;
 use App\Http\Controllers\FeedLikeController;
 use App\Http\Controllers\FeedStarController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseOutlineController;
+use App\Http\Controllers\CourseScheduleController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionMessageController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\DiscussionViewController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\LoginHistoryController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
@@ -36,6 +39,7 @@ header('Access-Control-Allow-Origin: *');
 
 // organization api routes begin here
 Route::middleware('auth:organization')->get('organization', function (Request $request) {
+
     return $request->user();
 });
 
@@ -72,6 +76,8 @@ Route::middleware(['auth:organization'])->group(function () {
 
 // admin api routes begin here
 Route::middleware('auth:admin')->get('/admin', function (Request $request) {
+    $login = new LoginHistoryController;
+    $login->store();
     return $request->user()->load('organization');
 });
 Route::post('admin', [AdminController::class, 'store']);
@@ -95,7 +101,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::apiResource('events', EventController::class);
 
-    Route::apiResource('courses', CourseController::class);
+
 
     Route::apiResource('curriculums', CurriculumController::class);
 });
@@ -105,6 +111,8 @@ Route::middleware(['auth:admin'])->group(function () {
 // facilitator api routes begin here
 
 Route::middleware('auth:facilitator')->get('/facilitator', function (Request $request) {
+    $login = new LoginHistoryController;
+    $login->store();
     return $request->user();
 });
 
@@ -121,8 +129,6 @@ Route::middleware(['auth:facilitator'])->group(function () {
     Route::put('facilitator/update-user/{id}', [OrganizationController::class, 'updateuser']);
     Route::post('facilitator/delete-user/{id}', [OrganizationController::class, 'deleteuser']);
 
-    Route::get('facilitator-get-courses', [CourseController::class, 'facilitatorgetcourses']);
-    Route::get('facilitator-get-course/{id}', [CourseController::class, 'facilitatorgetcourse']);
 
     Route::get('facilitator-get-events', [EventController::class, 'facilitatorgetevents']);
     Route::get('facilitator-get-event/{id}', [EventController::class, 'facilitatorgetevent']);
@@ -138,6 +144,8 @@ Route::middleware(['auth:facilitator'])->group(function () {
 // User api routes begin here
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
+    $login = new LoginHistoryController;
+    $login->store();
     return $request->user();
 });
 
@@ -149,8 +157,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('feedbacks', FeedbackController::class);
 
 
-    Route::get('user-get-courses', [CourseController::class, 'usergetcourses']);
-    Route::get('user-get-course/{id}', [CourseController::class, 'usergetcourse']);
 
     Route::get('user-get-events', [EventController::class, 'usergetevents']);
     Route::get('user-get-event/{id}', [EventController::class, 'usergetevent']);
@@ -171,9 +177,7 @@ Route::get('/auth/{provider}/callback', [SocialLoginController::class, 'callback
 
 //Inbox routes
 
-Route::post('inbox', [InboxController::class, 'store']);
-Route::get('inbox', [InboxController::class, 'getInbox']);
-Route::delete('inbox/{id}', [InboxController::class, 'destroy']);
+Route::apiResource('inboxes', InboxController::class);
 
 
 //Todos routes
@@ -196,3 +200,9 @@ Route::apiResource('feeds', FeedController::class);
 Route::apiResource('feed-comments', FeedCommentController::class);
 Route::apiResource('feed-likes', FeedLikeController::class);
 Route::apiResource('feed-stars', FeedStarController::class);
+Route::apiResource('login-history', LoginHistoryController::class);
+
+Route::apiResource('courses', CourseController::class);
+
+
+Route::apiResource('courseschedules', CourseScheduleController::class);

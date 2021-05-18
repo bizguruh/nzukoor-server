@@ -30,23 +30,23 @@ class FacilitatorController extends Controller
     public function getfacilitator($id)
     {
         $user = auth('organization')->user();
-        return Facilitator::where('id', $id)->first();
+        return Facilitator::where('id', $id)->with('loginhistory')->first();
     }
     public function getfacilitators()
     {
         $user = auth('organization')->user();
-        return $user->facilitator()->latest()->get();
+        return $user->facilitator()->with('loginhistory')->latest()->get();
     }
 
     public function admingetfacilitator($id)
     {
         $user = auth('admin')->user();
-        return Facilitator::where('id', $id)->first();
+        return Facilitator::where('id', $id)->with('loginhistory')->first();
     }
     public function admingetfacilitators()
     {
         $user = auth('admin')->user();
-        return Facilitator::where('organization_id', $user->organization_id)->get();
+        return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
     }
 
     public function usergetfacilitator($id)

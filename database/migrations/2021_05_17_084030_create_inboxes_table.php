@@ -17,10 +17,12 @@ class CreateInboxesTable extends Migration
             $table->id();
             $table->text('message')->nullable();
             $table->string('attachment')->nullable();
-            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('facilitator_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('admin_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('status');
+            $table->string('receiver');
+            $table->string('receiver_id');
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('facilitator_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('admin_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->boolean('status');
             $table->timestamps();
         });
     }

@@ -27,7 +27,7 @@ class OrganizationController extends Controller
     public function index()
     {
         $user = auth('organization')->user();
-        return $user->admins()->latest()->get();
+        return $user->admins()->with('loginhistory')->latest()->get();
     }
 
 
@@ -85,18 +85,18 @@ class OrganizationController extends Controller
     }
     public function getuser($id)
     {
-        return User::find($id);
+        return User::find($id)->with('loginhistory');
     }
     public function getusers()
     {
         $user = auth('organization')->user();
-        return $user->user()->latest()->get();
+        return $user->user()->with('loginhistory')->latest()->get();
     }
 
     public function admingetusers()
     {
         $user = auth('admin')->user();
-        return User::where('organization_id', $user->organization_id)->latest()->get();
+        return User::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
     }
 
 

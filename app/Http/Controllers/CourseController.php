@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -15,49 +16,50 @@ class CourseController extends Controller
     public function index()
     {
         $user = auth('admin')->user();
-        return Course::with('curriculum')->with('module')->with('feedback')->where('organization_id', $user->organization_id)->get();
+        return Course::with('courseoutline', 'courseschedule')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
-    public function facilitatorgetcourses()
-    {
-        $user = auth('facilitator')->user();
-        return Course::with('curriculum')->with('module')->with('feedback')->where('organization_id', $user->organization_id)->get();
-    }
 
-    public function facilitatorgetcourse($id)
-    {
-        return Course::with('curriculum')->with('module')->with('feedback')->where('id', $id)->first();
-    }
-
-    public function usergetcourses()
-    {
-        $user = auth('api')->user();
-        return Course::with('curriculum')->with('module')->with('feedback')->where('organization_id', $user->organization_id)->get();
-    }
-
-    public function usergetcourse($id)
-    {
-        return Course::with('curriculum')->with('module')->with('feedback')->where('id', $id)->first();
-    }
 
     public function store(Request $request)
     {
-        $user = auth('admin')->user();
 
-        return $user->course()->create([
-            'title' => $request->title,
-            'description'  => $request->description,
-            'knowledge_areas'  => $request->knowledge_areas,
-            'curriculum'  => $request->curriculum,
-            'modules'  => json_encode($request->modules),
-            'duration'  => $request->duration,
-            'certification'  => $request->certification,
-            'faqs'  => json_encode($request->faqs),
-            'date'  => $request->date,
-            'time'  => $request->time,
-            'facilitators'  => json_encode($request->facilitators),
-            'cover'  => $request->cover,
-        ]);
+        $result = DB::transaction(function () use ($request) {
+            $user = auth('admin')->user();
+
+
+            $course = Course::create([
+                'title' =>  $request->input('general.name'),
+                'description' =>  $request->input('general.description'),
+                'code' => $request->input('general.code'),
+                'cover'  =>  $request->input('general.cover'),
+                'organization_id' => $user->organization_id,
+            ]);
+            $outline = $course->courseoutline()->create([
+                'overview' =>  $request->input('outline.overview'),
+                'additional_info' =>  $request->input('outline.additional_info'),
+                'knowledge_areas' =>  $request->input('outline.knowledge_area'),
+                'modules' => json_encode($request->input('outline.modules')),
+                'duration' =>  $request->input('outline.duration'),
+                'certification' =>  $request->input('outline.certification'),
+                'faqs' => json_encode($request->input('outline.faqs')),
+
+
+            ]);
+            foreach ($request->input('schedule') as $key => $value) {
+                return  $value['facilitator_id'];
+                $schedule = $course->courseschedule()->create([
+                    'day' =>  $value['day'],
+                    'facilitator_id' =>   $value['facilitator_id'],
+
+                    'start_time' =>  $value['start_time'],
+                    'end_time' =>  $value['end_time'],
+                ]);
+            }
+            return $course->load('courseoutline', 'courseschedule');
+        });
+
+        return $result;
     }
 
     public function show(Course $course)
@@ -82,7 +84,41 @@ class CourseController extends Controller
         $course->facilitators   = json_encode($request->facilitators);
         $course->cover  = $request->cover;
         $course->save();
-        return $course;
+        $result = DB::transaction(function () use ($request) {
+            $user = auth('admin')->user();
+
+
+          $course->title =  $request->input('general.name')
+                $course->descriotion = $request->input('general.description');
+
+                $course->cover = $request->input('general.cover');
+
+
+
+                $course->cover =   $request->input('outline.overview');
+            $course->cover =   $request->input('outline.additional_info');
+            $course->cover =  $request->input('outline.knowledge_area');
+            $course->cover =  json_encode($request->input('outline.modules'));
+            $course->cover =   $request->input('outline.duration');
+            $course->cover =   $request->input('outline.certification');
+            $course->cover =  json_encode($request->input('outline.faqs'));
+
+
+
+            foreach ($request->input('schedule') as $key => $value) {
+                return  $value['facilitator_id'];
+
+                    $course->cover =   $value['day'];
+                $course->cover =    $value['facilitator_id'];
+
+                $course->cover =  $value['start_time'];
+                $course->cover =  $value['end_time'];
+
+            }
+            return $course->load('courseoutline', 'courseschedule');
+        });
+
+        return $result;
     }
 
 
