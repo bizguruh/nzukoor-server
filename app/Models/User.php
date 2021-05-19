@@ -38,7 +38,7 @@ class User extends Authenticatable
     }
     public function loginhistory()
     {
-        return $this->hasMany(loginhistory::class);
+        return $this->hasMany(LoginHistory::class);
     }
     public function inbox()
     {
