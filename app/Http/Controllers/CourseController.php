@@ -44,6 +44,7 @@ class CourseController extends Controller
                 'duration' =>  $request->input('outline.duration'),
                 'certification' =>  $request->input('outline.certification'),
                 'faqs' => json_encode($request->input('outline.faqs')),
+                'organization_id' => $user->organization_id,
 
 
             ]);
