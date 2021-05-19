@@ -19,7 +19,6 @@ class CreateLoginHistoryTable extends Migration
             $table->foreignId('user_id')->nullable()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('facilitator_id')->nullable()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('admin_id')->nullable()->cascadeOnDelete()->cascadeOnUpdate();
-
             $table->timestamps();
         });
     }

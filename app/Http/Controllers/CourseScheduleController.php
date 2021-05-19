@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseSchedule;
+use App\Models\Course;
 use Illuminate\Http\Request;
+
+use function PHPUnit\Framework\returnValue;
 
 class CourseScheduleController extends Controller
 {
@@ -14,10 +17,17 @@ class CourseScheduleController extends Controller
      */
     public function index()
     {
-        $user = auth('admin')->user();
 
-        $d =  CourseSchedule::get();
-        $d->courseschedule();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        return CourseSchedule::where('organization_id', $user->organization_id)->with('course', 'facilitator')->latest()->get();
     }
 
     /**
@@ -38,7 +48,21 @@ class CourseScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $user = auth('admin')->user();
+        $course = Course::find($request->course_id);
+        foreach ($request->input('schedule') as $key => $value) {
+
+
+            $schedule = $course->courseschedule()->create([
+                'day' =>  $value['day'],
+                'facilitator_id' =>   $value['facilitator_id'],
+                'start_time' =>  $value['start_time'],
+                'end_time' =>  $value['end_time'],
+                'organization_id' => $user->organization_id
+            ])->load('course', 'facilitator');
+        }
+        return $schedule;
     }
 
     /**
@@ -81,8 +105,12 @@ class CourseScheduleController extends Controller
      * @param  \App\Models\CourseSchedule  $courseSchedule
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CourseSchedule $courseSchedule)
+    public function destroy($id)
     {
-        //
+        $schedule = CourseSchedule::find($id);
+        $schedule->delete();
+        return response()->json([
+            'message' => 'Delete successful'
+        ]);
     }
 }

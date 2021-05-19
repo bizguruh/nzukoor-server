@@ -17,6 +17,7 @@ class CreateCourseFacilitatorsTable extends Migration
             $table->id();
             $table->foreignId('facilitator_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('course_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('organization_id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

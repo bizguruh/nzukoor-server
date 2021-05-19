@@ -98,11 +98,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('admin-get-facilitators', [FacilitatorController::class, 'admingetfacilitators']);
     Route::get('admin-get-facilitator/{id}', [FacilitatorController::class, 'admingetfacilitator']);
 
-
-    Route::apiResource('events', EventController::class);
-
-
-
     Route::apiResource('curriculums', CurriculumController::class);
 });
 // admin api routes ends here
@@ -206,3 +201,7 @@ Route::apiResource('courses', CourseController::class);
 
 
 Route::apiResource('courseschedules', CourseScheduleController::class);
+
+Route::apiResource('courseoutlines', CourseOutlineController::class);
+
+Route::apiResource('events', EventController::class);

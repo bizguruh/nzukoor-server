@@ -60,7 +60,7 @@ class Facilitator extends Authenticatable
     }
     public function courseschedule()
     {
-        return $this->hasMany(CourseSchedule::class)->with('facilitator');
+        return $this->hasMany(CourseSchedule::class);
     }
     public function stars()
     {

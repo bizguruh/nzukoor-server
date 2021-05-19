@@ -20,6 +20,7 @@ class CreateCourseSchedulesTable extends Migration
             $table->string('end_time');
             $table->foreignId('facilitator_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('course_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('organization_id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

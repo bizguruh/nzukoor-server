@@ -23,6 +23,7 @@ class CreateCourseOutlinesTable extends Migration
             $table->text('overview')->nullable();
             $table->text('additional_info')->nullable();
             $table->foreignId('course_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('organization_id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CourseSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +30,7 @@ class CourseController extends Controller
 
 
             $course = Course::create([
-                'title' =>  $request->input('general.name'),
+                'title' =>  $request->input('general.title'),
                 'description' =>  $request->input('general.description'),
                 'code' => $request->input('general.code'),
                 'cover'  =>  $request->input('general.cover'),
@@ -47,11 +48,10 @@ class CourseController extends Controller
 
             ]);
             foreach ($request->input('schedule') as $key => $value) {
-                return  $value['facilitator_id'];
+
                 $schedule = $course->courseschedule()->create([
                     'day' =>  $value['day'],
                     'facilitator_id' =>   $value['facilitator_id'],
-
                     'start_time' =>  $value['start_time'],
                     'end_time' =>  $value['end_time'],
                 ]);
@@ -71,49 +71,39 @@ class CourseController extends Controller
 
     public function update(Request $request, Course $course)
     {
-        $course->title = $request->title;
-        $course->description   = $request->description;
-        $course->knowledge_areas  = $request->knowledge_areas;
-        $course->curriculum  = $request->curriculum;
-        $course->modules  = json_encode($request->modules);
-        $course->duration  = $request->duration;
-        $course->certification   = $request->certification;
-        $course->faqs  = json_encode($request->faqs);
-        $course->date  = $request->date;
-        $course->time  = $request->time;
-        $course->facilitators   = json_encode($request->facilitators);
-        $course->cover  = $request->cover;
-        $course->save();
-        $result = DB::transaction(function () use ($request) {
+
+
+        $result = DB::transaction(function () use ($request, $course) {
             $user = auth('admin')->user();
 
-
-          $course->title =  $request->input('general.name')
-                $course->descriotion = $request->input('general.description');
-
-                $course->cover = $request->input('general.cover');
+            $course->title = $request->input('general.title');
+            $course->description = $request->input('general.description');
+            $course->cover  = $request->input('general.cover');
 
 
+            $course->save();
 
-                $course->cover =   $request->input('outline.overview');
-            $course->cover =   $request->input('outline.additional_info');
-            $course->cover =  $request->input('outline.knowledge_area');
-            $course->cover =  json_encode($request->input('outline.modules'));
-            $course->cover =   $request->input('outline.duration');
-            $course->cover =   $request->input('outline.certification');
-            $course->cover =  json_encode($request->input('outline.faqs'));
+            $outline = $course->courseoutline()->first();
+            $outline->overview =   $request->input('outline.overview');
+            $outline->additional_info =   $request->input('outline.additional_info');
+            $outline->knowledge_areas =  $request->input('outline.knowledge_area');
+            $outline->modules =  json_encode($request->input('outline.modules'));
+            $outline->duration =   $request->input('outline.duration');
+            $outline->certification =   $request->input('outline.certification');
+            $outline->faqs =  json_encode($request->input('outline.faqs'));
+            $outline->save();
 
 
 
             foreach ($request->input('schedule') as $key => $value) {
-                return  $value['facilitator_id'];
 
-                    $course->cover =   $value['day'];
-                $course->cover =    $value['facilitator_id'];
+                $schedule =  CourseSchedule::firstOrNew(['id' => $value['id']]);
 
-                $course->cover =  $value['start_time'];
-                $course->cover =  $value['end_time'];
-
+                $schedule->day = $value['day'];
+                $schedule->facilitator_id =   $value['facilitator_id'];
+                $schedule->start_time =  $value['start_time'];
+                $schedule->end_time =  $value['end_time'];
+                $schedule->save();
             }
             return $course->load('courseoutline', 'courseschedule');
         });

@@ -20,4 +20,9 @@ class Module extends Model
     {
         return $this->belongsTo(Facilitator::class);
     }
+
+    public  function courseoutline()
+    {
+        return $this->belongsTo(CourseOutline::class);
+    }
 }
