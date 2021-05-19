@@ -10,7 +10,7 @@ class Event extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['type', 'title', 'description', 'schedule', 'facilitators', 'resource', 'url', 'cover', 'organization_id'];
+    protected $fillable = ['type', 'title', 'description', 'schedule', 'facilitators', 'resource', 'url', 'cover', 'organization_id', 'start', 'end', 'status', 'facilitator_id', 'admin_id'];
 
     public  function organization()
     {

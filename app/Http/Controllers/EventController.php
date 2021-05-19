@@ -25,15 +25,29 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        $user = auth('admin')->user();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+
         return $user->event()->create([
             'type' => $request->type,
             'title' => $request->title,
             'description' => $request->description,
-            'schedule' => $request->schedule,
+            'schedule' => $request->duration,
             'facilitators' => json_encode($request->facilitators),
             'url' => $request->url,
-            'resource' => json_encode($request->resource),
+            'start' => $request->start,
+            'end' => $request->end,
+            'status' => false,
+            'resource' => $request->resource,
+            'organization_id' => $user->organization_id,
             'cover' => $request->cover,
 
         ]);
@@ -59,13 +73,17 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
+        return $request->all();
         $event->type = $request->type;
         $event->title = $request->title;
         $event->description  = $request->description;
-        $event->schedule = $request->schedule;
+        $event->schedule = $request->duration;
         $event->facilitators  = json_encode($request->facilitators);
         $event->url = $request->url;
-        $event->resource  = json_encode($request->resource);
+        $event->start = $request->start;
+        $event->end = $request->end;
+        $event->status = $request->status;
+        $event->resource  = $request->resource;
         $event->cover = $request->cover;
         $event->save();
         return $event;
