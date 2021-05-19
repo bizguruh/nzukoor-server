@@ -42,7 +42,7 @@ class User extends Authenticatable
     }
     public function inbox()
     {
-        return $this->hasMany(inbox::class);
+        return $this->hasMany(Inbox::class);
     }
     public function feeds()
     {

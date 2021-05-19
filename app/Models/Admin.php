@@ -19,11 +19,11 @@ class Admin extends Authenticatable
     }
     public function inbox()
     {
-        return $this->hasMany(inbox::class);
+        return $this->hasMany(Inbox::class);
     }
     public function loginhistory()
     {
-        return $this->hasMany(loginhistory::class);
+        return $this->hasMany(LoginHistory::class);
     }
     public function todos()
     {
