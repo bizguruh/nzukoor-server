@@ -71,6 +71,36 @@ class DiscussionController extends Controller
      */
     public function show(Discussion $discussion)
     {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        function sorttags($arr)
+        {
+            return  array_map(function ($val) {
+                return $val->value;
+            }, $arr);
+        }
+
+
+        $alldiscussions =  Discussion::where('organization_id', $user->organization_id)
+            ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+
+        $newdis = [];
+        foreach ($alldiscussions as $key => $value) {
+            $intersect =   array_intersect(sorttags(json_decode($value->tags)), sorttags(json_decode($discussion->tags)));
+            if (count($intersect) > 0) {
+                array_push($newdis, $value);
+            }
+        }
+
+        $discussion->related = $newdis;
+
         return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
 

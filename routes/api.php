@@ -22,6 +22,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LoginHistoryController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Http\Request;
@@ -205,3 +206,6 @@ Route::apiResource('courseschedules', CourseScheduleController::class);
 Route::apiResource('courseoutlines', CourseOutlineController::class);
 
 Route::apiResource('events', EventController::class);
+
+
+Route::apiResource('send-notification', NotificationController::class);

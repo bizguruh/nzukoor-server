@@ -81,8 +81,6 @@ class CourseController extends Controller
             $course->title = $request->input('general.title');
             $course->description = $request->input('general.description');
             $course->cover  = $request->input('general.cover');
-
-
             $course->save();
 
             $outline = $course->courseoutline()->first();
