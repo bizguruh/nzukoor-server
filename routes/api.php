@@ -208,4 +208,10 @@ Route::apiResource('courseoutlines', CourseOutlineController::class);
 Route::apiResource('events', EventController::class);
 
 
-Route::apiResource('send-notification', NotificationController::class);
+Route::post('send-notification', [NotificationController::class, 'sendnotification']);
+Route::post('send-notifications', [NotificationController::class, 'sendnotifications']);
+Route::get('get-notifications', [NotificationController::class, 'getnotifications']);
+Route::get('mark-notifications', [NotificationController::class, 'markreadnotifications']);
+Route::get('mark-notification/{id}', [NotificationController::class, 'marksinglenotification']);
+Route::get('unread-notifications', [NotificationController::class, 'unreadnotifications']);
+Route::get('read-notifications', [NotificationController::class, 'readnotifications']);

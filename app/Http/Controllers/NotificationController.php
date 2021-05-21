@@ -3,39 +3,15 @@
 namespace App\Http\Controllers;
 
 
-use App\Notifications\FirstNotify;
+
+use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
 use Notification;
 
 class NotificationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function sendnotifications(Request $request)
     {
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
@@ -52,11 +28,11 @@ class NotificationController extends Controller
 
 
         $details = [
-            'greeting' => 'Hi',
-            'body' => 'This is my body',
-            'thanks' => 'Thank you',
-            'actionText' => 'view my site',
-            'url' => '/',
+            'greeting' => $request->greeting,
+            'body' => $request->body,
+            'thanks' => $request->thanks,
+            'actionText' => $request->action,
+            'url' => $request->url,
             'to' => $type,
             'id' => $user->id
         ];
@@ -64,48 +40,107 @@ class NotificationController extends Controller
         return 'done';
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Notification  $notification
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Notification $notification)
+    public function sendnotification(Request $request)
     {
-        //
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+            $type = 'admin';
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+            $type = 'facilitator';
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+            $type = 'user';
+        }
+
+
+        $details = [
+            'greeting' => $request->greeting,
+            'body' => $request->body,
+            'thanks' => $request->thanks,
+            'actionText' => $request->action,
+            'url' => $request->url,
+            'to' => $type,
+            'id' => $user->id
+        ];
+        $user->notify(new SendNotification($details));
+        return 'Notification sent';
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Notification  $notification
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Notification $notification)
+
+    public function getnotifications()
     {
-        //
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        return $user->notifications;
+
+        // foreach ($user->notifications as $notification) {
+        //     echo $notification->type;
+        // }
+    }
+    public function unreadnotifications()
+    {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        return $user->unreadnotifications;
+
+        foreach ($user->unreadnotifications as $notification) {
+            echo $notification->type;
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Notification  $notification
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Notification $notification)
+    public function markreadnotifications()
     {
-        //
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        $user->unreadNotifications->markAsRead();
+        return  $user->notifications;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Notification  $notification
-     * @return \Illuminate\Http\Response
-     */
+    public function marksinglenotification($id)
+    {
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        $user->unreadNotifications->where('id', $id)->markAsRead();
+        return $user->notifications;
+    }
+
+
     public function destroy(Notification $notification)
     {
-        //
     }
 }
