@@ -70,9 +70,9 @@ class CourseOutlineController extends Controller
      * @param  \App\Models\CourseOutline  $courseOutline
      * @return \Illuminate\Http\Response
      */
-    public function show(CourseOutline $courseOutline)
+    public function show($id)
     {
-        //
+        return  CourseOutline::find($id)->load('course');
     }
 
     /**

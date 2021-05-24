@@ -45,7 +45,7 @@ class EventController extends Controller
             'url' => $request->url,
             'start' => $request->start,
             'end' => $request->end,
-            'status' => false,
+            'status' => $request->status,
             'resource' => $request->resource,
             'organization_id' => $user->organization_id,
             'cover' => $request->cover,

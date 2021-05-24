@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
+use App\Models\Facilitator;
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -25,7 +28,7 @@ class UserController extends Controller
     public function facilitatorgetusers()
     {
         $user = auth('facilitator')->user();
-        return User::where('organization_id', $user->organization_id)->get();
+        return User::where('organization_id', $user->organization_id)->with('loginhistory')->get();
     }
 
     public function facilitatorgetuser($id)
@@ -117,6 +120,116 @@ class UserController extends Controller
         return $user;
     }
 
+    public function updatepassword(Request $request)
+    {
+
+
+        if (auth('organization')->user()) {
+            $user = auth('admin')->user();
+            $find = Organization::find($user->id);
+            if (Hash::check($request->new_password, $find->password)) {
+
+                return response()->json([
+                    'message' => 'Cannot use old password'
+                ]);
+            }
+            if (Hash::check($request->old_password, $find->password)) {
+                $find->password = Hash::make($request->new_password);
+                $find->save();
+                return response()->json([
+                    'message' => ' Password changed'
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Incorrect password'
+                ]);
+            }
+        }
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+            $find = Admin::find($user->id);
+            if (Hash::check($request->new_password, $find->password)) {
+
+                return response()->json([
+                    'message' => 'Cannot use old password'
+                ]);
+            }
+            if (Hash::check($request->old_password, $find->password)) {
+                $find->password = Hash::make($request->new_password);
+                $find->save();
+                return response()->json([
+                    'message' => ' Password changed'
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Incorrect password'
+                ]);
+            }
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+            $find = Facilitator::find($user->id);
+            if (Hash::check($request->new_password, $find->password)) {
+
+                return response()->json([
+                    'message' => 'Cannot use old password'
+                ]);
+            }
+            if (Hash::check($request->old_password, $find->password)) {
+                $find->password = Hash::make($request->new_password);
+                $find->save();
+                return response()->json([
+                    'message' => ' Password changed'
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Incorrect password'
+                ]);
+            }
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+            $find = User::find($user->id);
+            if (Hash::check($request->new_password, $find->password)) {
+
+                return response()->json([
+                    'message' => 'Cannot use old password'
+                ]);
+            }
+            if (Hash::check($request->old_password, $find->password)) {
+                $find->password = Hash::make($request->new_password);
+                $find->save();
+                return response()->json([
+                    'message' => 'success'
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Incorrect password'
+                ]);
+            }
+        }
+    }
+
+    public function resetpassword(Request $request)
+    {
+
+        if ($request->role == 'organization') {
+            $user = auth('admin')->user();
+            $find = Organization::where('email', $user->email);
+        }
+        if ($request->role == 'admin') {
+            $user = auth('admin')->user();
+            $find = Admin::where('email', $user->email);
+        }
+        if ($request->role == 'facilitator') {
+            $user = auth('facilitator')->user();
+            $find = Facilitator::where('email', $user->email);
+        }
+        if ($request->role == 'user') {
+            $user = auth('api')->user();
+            $find = User::where('email', $user->email);
+        }
+    }
 
     public function destroy(User $user)
     {

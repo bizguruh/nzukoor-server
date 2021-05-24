@@ -14,18 +14,28 @@ class ModuleController extends Controller
      */
     public function index()
     {
-        return Module::all();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        return Module::where('organization_id', $user->organization_id)->with('course')->latest()->get();
     }
 
     public function store(Request $request)
     {
         $user = auth('facilitator')->user();
+
+
         return $user->module()->create([
 
-            'title' => $request->title,
-            'description' => $request->description,
-            'cover' => $request->cover,
-            'content' => json_encode($request->content),
+            'module' => $request->module,
+            'cover_image' => $request->cover_image,
+            'modules' => json_encode($request->modules),
             'course_id' => $request->course_id,
             'organization_id' => $user->organization_id
         ]);
@@ -52,12 +62,10 @@ class ModuleController extends Controller
     public function update(Request $request, Module $module)
     {
 
-        $module->title  = $request->title;
-        $module->description = $request->description;
-        $module->cover = $request->cover;
-        $module->content = json_encode($request->content);
+        $module->cover_image = $request->cover_image;
+        $module->modules = json_encode($request->modules);
         $module->save();
-        return $module;
+        return $module->load('course');
     }
 
     /**

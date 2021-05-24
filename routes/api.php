@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\FacilitatorController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FeedCommentController;
 use App\Http\Controllers\FeedLikeController;
@@ -109,7 +110,7 @@ Route::middleware(['auth:admin'])->group(function () {
 Route::middleware('auth:facilitator')->get('/facilitator', function (Request $request) {
     $login = new LoginHistoryController;
     $login->store();
-    return $request->user();
+    return $request->user()->load('organization');
 });
 
 Route::post('facilitator-register', [FacilitatorController::class, 'storefacilitator']);
@@ -117,7 +118,7 @@ Route::post('facilitator-register', [FacilitatorController::class, 'storefacilit
 
 Route::middleware(['auth:facilitator'])->group(function () {
 
-    Route::apiResource('modules', ModuleController::class);
+
 
     Route::apiResource('facilitators', FacilitatorController::class);
 
@@ -207,6 +208,8 @@ Route::apiResource('courseoutlines', CourseOutlineController::class);
 
 Route::apiResource('events', EventController::class);
 
+Route::apiResource('modules', ModuleController::class);
+
 
 Route::post('send-notification', [NotificationController::class, 'sendnotification']);
 Route::post('send-notifications', [NotificationController::class, 'sendnotifications']);
@@ -215,3 +218,13 @@ Route::get('mark-notifications', [NotificationController::class, 'markreadnotifi
 Route::get('mark-notification/{id}', [NotificationController::class, 'marksinglenotification']);
 Route::get('unread-notifications', [NotificationController::class, 'unreadnotifications']);
 Route::get('read-notifications', [NotificationController::class, 'readnotifications']);
+
+Route::apiResource('connections', ConnectionController::class);
+
+Route::post('delete-connection/{id}', [ConnectionController::class, 'deleteconnection']);
+
+
+//Update password
+Route::post('update-password', [UserController::class, 'updatepassword']);
+
+Route::post('reset-password', [UserController::class, 'resetpassword']);

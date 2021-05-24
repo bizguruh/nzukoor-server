@@ -16,8 +16,16 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $user = auth('admin')->user();
-        return Course::with('courseoutline', 'courseschedule')->where('organization_id', $user->organization_id)->latest()->get();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        return Course::with('courseoutline', 'courseschedule', 'modules')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
 

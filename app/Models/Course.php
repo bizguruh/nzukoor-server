@@ -26,9 +26,9 @@ class Course extends Model
         return $this->belongsTo(Organization::class);
     }
 
-    public  function module()
+    public  function modules()
     {
-        return $this->hasMany(Module::class)->with('facilitator');
+        return $this->hasMany(Module::class);
     }
     public function feedback()
     {

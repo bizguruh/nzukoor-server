@@ -73,6 +73,10 @@ class Admin extends Authenticatable
     {
         return $this->hasMany(DiscussionVote::class);
     }
+    public function connections()
+    {
+        return $this->hasMany(Connection::class);
+    }
 
     /**
      * The attributes that are mass assignable.

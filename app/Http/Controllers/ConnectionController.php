@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
+use App\Http\Resources\ConnectionResource;
+use App\Models\Connection;
 use Illuminate\Http\Request;
 
-class TagController extends Controller
+class ConnectionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +16,6 @@ class TagController extends Controller
     public function index()
     {
 
-        if (auth('organization')->user()) {
-            $user = auth('organization')->user();
-        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -29,7 +27,7 @@ class TagController extends Controller
         }
 
 
-        return Tag::where('organization_id', $user->organization_id)->get();
+        return ConnectionResource::collection($user->connections()->latest()->get());
     }
 
     /**
@@ -50,10 +48,6 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-
-        if (auth('organization')->user()) {
-            $user = auth('organization')->user();
-        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -64,51 +58,33 @@ class TagController extends Controller
             $user = auth('api')->user();
         }
 
-        return  $user->tags()->create(['tag' => $request->tag]);
+        $check = Connection::where([['follow_type', $request->follow_type], ['following_id', $request->following_id]])->first();
+        if (is_null($check)) {
+            return  $user->connections()->create([
+                'follow_type' => $request->type,
+                'following_id' => $request->following_id
+            ]);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tag  $tag
+     * @param  \App\Models\Connection  $connection
      * @return \Illuminate\Http\Response
      */
-    public function show(Tag $tag)
+    public function deleteconnection(Request $request, $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Tag $tag)
-    {
-        //
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        $check = $user->connections()->where([['follow_type', $request->follow_type], ['following_id', $request->following_id]])->first();
+        $check->delete();
     }
 }

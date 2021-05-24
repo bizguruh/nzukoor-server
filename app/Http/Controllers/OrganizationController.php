@@ -85,7 +85,7 @@ class OrganizationController extends Controller
     }
     public function getuser($id)
     {
-        return User::find($id)->with('loginhistory');
+        return User::find($id)->with('loginhistory')->first();
     }
     public function getusers()
     {

@@ -15,11 +15,9 @@ class CreateModulesTable extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
-
-            $table->string('title');
-            $table->string('description');
-            $table->string('cover');
-            $table->text('content');
+            $table->string('module');
+            $table->text('modules');
+            $table->string('cover_image');
             $table->foreignId('course_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('facilitator_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('organization_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();

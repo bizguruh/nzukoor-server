@@ -78,11 +78,13 @@ class AdminController extends Controller
      */
     public function update(Request $request, Admin $admin)
     {
+
         $admin->name = $request->name;
         $admin->email = $request->email;
-        $admin->bio = $request->bio;
+        $admin->phone = $request->phone;
+        // $admin->bio = $request->bio;
         $admin->profile = $request->profile;
-        $admin->verfication = $request->verfication;
+        $admin->verification = $request->verification;
         $admin->save();
         return $admin;
     }
