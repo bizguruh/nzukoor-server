@@ -66,7 +66,7 @@ class CourseController extends Controller
                     'organization_id' => $user->organization_id,
                 ]);
             }
-            return $course->load('courseoutline', 'courseschedule');
+            return $course->load('courseoutline', 'courseschedule', 'modules');
         });
 
         return $result;
