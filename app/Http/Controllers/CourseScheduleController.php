@@ -55,7 +55,8 @@ class CourseScheduleController extends Controller
 
 
             $schedule = $course->courseschedule()->create([
-                'day' =>  $value['day'],
+                'day' =>  'defult',
+                'url' =>  $value['url'],
                 'facilitator_id' =>   $value['facilitator_id'],
                 'start_time' =>  $value['start_time'],
                 'end_time' =>  $value['end_time'],

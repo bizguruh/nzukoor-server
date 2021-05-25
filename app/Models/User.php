@@ -88,6 +88,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Connection::class);
     }
+
+    public function library()
+    {
+        return $this->hasMany(Library::class);
+    }
     /**
      * The attributes that should be hidden for arrays.
      *

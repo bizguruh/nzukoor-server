@@ -10,6 +10,8 @@ class CourseSchedule extends Model
     use HasFactory;
     protected $fillable = [
         'day',
+        'url',
+        'status',
         'start_time',
         'end_time',
         'facilitator_id',

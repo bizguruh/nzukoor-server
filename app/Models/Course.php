@@ -52,4 +52,9 @@ class Course extends Model
     {
         return $this->hasMany(CourseFacilitator::class);
     }
+
+    public function library()
+    {
+        return $this->hasMany(Library::class);
+    }
 }

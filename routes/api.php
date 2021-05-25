@@ -21,6 +21,7 @@ use App\Http\Controllers\DiscussionViewController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\LoginHistoryController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
@@ -143,7 +144,7 @@ Route::middleware(['auth:facilitator'])->group(function () {
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     $login = new LoginHistoryController;
     $login->store();
-    return $request->user();
+    return $request->user()->load('organization');
 });
 
 
@@ -158,7 +159,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('user-get-events', [EventController::class, 'usergetevents']);
     Route::get('user-get-event/{id}', [EventController::class, 'usergetevent']);
 
-    Route::get('user-get-facilitator', [FacilitatorController::class, 'usergetfacilitators']);
+    Route::get('user-get-facilitators', [FacilitatorController::class, 'usergetfacilitators']);
     Route::get('user-get-facilitator/{id}', [FacilitatorController::class, 'usergetfacilitator']);
 });
 
@@ -221,7 +222,11 @@ Route::get('read-notifications', [NotificationController::class, 'readnotificati
 
 Route::apiResource('connections', ConnectionController::class);
 
+Route::apiResource('libraries', LibraryController::class);
+
 Route::post('delete-connection/{id}', [ConnectionController::class, 'deleteconnection']);
+
+Route::get('get-course/{id}', [CourseController::class, 'getcourse']);
 
 
 //Update password

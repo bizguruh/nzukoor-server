@@ -48,6 +48,8 @@ class ConnectionController extends Controller
      */
     public function store(Request $request)
     {
+
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -61,7 +63,7 @@ class ConnectionController extends Controller
         $check = Connection::where([['follow_type', $request->follow_type], ['following_id', $request->following_id]])->first();
         if (is_null($check)) {
             return  $user->connections()->create([
-                'follow_type' => $request->type,
+                'follow_type' => $request->follow_type,
                 'following_id' => $request->following_id
             ]);
         }

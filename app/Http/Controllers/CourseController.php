@@ -29,7 +29,10 @@ class CourseController extends Controller
     }
 
 
-
+    public function getcourse($id)
+    {
+        return Course::with('courseoutline', 'courseschedule', 'modules')->where('id', $id)->first();
+    }
     public function store(Request $request)
     {
 
@@ -56,10 +59,12 @@ class CourseController extends Controller
 
 
             ]);
+
             foreach ($request->input('schedule') as $key => $value) {
 
                 $schedule = $course->courseschedule()->create([
-                    'day' =>  $value['day'],
+                    'day' => 'default',
+                    'url' =>  $value['url'],
                     'facilitator_id' =>   $value['facilitator_id'],
                     'start_time' =>  $value['start_time'],
                     'end_time' =>  $value['end_time'],
@@ -100,6 +105,7 @@ class CourseController extends Controller
             $outline->certification =   $request->input('outline.certification');
             $outline->faqs =  json_encode($request->input('outline.faqs'));
             $outline->save();
+
 
 
 
