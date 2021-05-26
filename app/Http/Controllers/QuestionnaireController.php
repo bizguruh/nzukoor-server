@@ -45,7 +45,7 @@ class QuestionnaireController extends Controller
 
         $validate = $request->validate([
             'title' => 'required',
-            'content' => 'required',
+
 
         ]);
         if (auth('admin')->user()) {
