@@ -9,7 +9,7 @@ class Module extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['module', 'modules', 'cover_image', 'organization_id', 'course_id', 'facilitator_id'];
+    protected $fillable = ['module', 'modules', 'cover_image', 'organization_id', 'course_id', 'facilitator_id', 'admin_id'];
 
 
     public  function course()
@@ -21,8 +21,17 @@ class Module extends Model
         return $this->belongsTo(Facilitator::class);
     }
 
+    public  function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
+
     public  function courseoutline()
     {
         return $this->belongsTo(CourseOutline::class);
+    }
+    public function questionnaire()
+    {
+        return $this->hasOne(Questionnaire::class);
     }
 }

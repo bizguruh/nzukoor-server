@@ -25,6 +25,7 @@ use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\LoginHistoryController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Http\Request;
@@ -223,6 +224,9 @@ Route::get('read-notifications', [NotificationController::class, 'readnotificati
 Route::apiResource('connections', ConnectionController::class);
 
 Route::apiResource('libraries', LibraryController::class);
+
+
+Route::apiResource('questionnaires', QuestionnaireController::class);
 
 Route::post('delete-connection/{id}', [ConnectionController::class, 'deleteconnection']);
 

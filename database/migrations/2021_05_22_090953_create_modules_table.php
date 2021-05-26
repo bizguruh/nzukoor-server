@@ -19,7 +19,7 @@ class CreateModulesTable extends Migration
             $table->text('modules');
             $table->string('cover_image');
             $table->foreignId('course_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('facilitator_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('facilitator_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('organization_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

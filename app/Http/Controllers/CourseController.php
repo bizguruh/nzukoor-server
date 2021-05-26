@@ -25,7 +25,7 @@ class CourseController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-        return Course::with('courseoutline', 'courseschedule', 'modules')->where('organization_id', $user->organization_id)->latest()->get();
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
 

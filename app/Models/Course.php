@@ -28,7 +28,7 @@ class Course extends Model
 
     public  function modules()
     {
-        return $this->hasMany(Module::class);
+        return $this->hasMany(Module::class)->with('questionnaire');
     }
     public function feedback()
     {
@@ -56,5 +56,9 @@ class Course extends Model
     public function library()
     {
         return $this->hasMany(Library::class);
+    }
+    public function questionnaire()
+    {
+        return $this->hasOne(Questionnaire::class);
     }
 }

@@ -23,12 +23,17 @@ class ModuleController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-        return Module::where('organization_id', $user->organization_id)->with('course')->latest()->get();
+        return Module::where('organization_id', $user->organization_id)->with('course', 'questionnaire')->latest()->get();
     }
 
     public function store(Request $request)
     {
-        $user = auth('facilitator')->user();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
 
 
         return $user->module()->create([
