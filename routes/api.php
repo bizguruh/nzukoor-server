@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\FacilitatorController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnsweredQuestionnaireController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FeedCommentController;
@@ -224,6 +225,9 @@ Route::get('read-notifications', [NotificationController::class, 'readnotificati
 Route::apiResource('connections', ConnectionController::class);
 
 Route::apiResource('libraries', LibraryController::class);
+Route::apiResource('answer-questionnaires', AnsweredQuestionnaireController::class);
+
+
 
 
 Route::apiResource('questionnaires', QuestionnaireController::class);

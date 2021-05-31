@@ -32,6 +32,10 @@ class User extends Authenticatable
         'referral_code'
     ];
 
+    public function answeredquestionnaire()
+    {
+        return $this->hasMany(AnsweredQuestionnaire::class);
+    }
     public function organization()
     {
         return $this->belongsTo(Organization::class);
