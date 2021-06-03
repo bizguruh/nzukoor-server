@@ -136,6 +136,9 @@ Route::middleware(['auth:facilitator'])->group(function () {
 
     Route::get('facilitator-get-users', [UserController::class, 'facilitatorgetusers']);
     Route::get('facilitator-get-user/{id}', [UserController::class, 'facilitatorgetuser']);
+
+    Route::get('facilitator-get-admins', [AdminController::class, 'facilitatorgetadmins']);
+    Route::get('facilitator-get-admin/{id}', [AdminController::class, 'facilitatorgetadmin']);
 });
 
 // facilitator api routes ends here

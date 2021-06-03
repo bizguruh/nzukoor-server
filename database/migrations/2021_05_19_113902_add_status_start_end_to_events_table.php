@@ -16,7 +16,7 @@ class AddStatusStartEndToEventsTable extends Migration
         Schema::table('events', function (Blueprint $table) {
             $table->string('start');
             $table->string('end');
-            $table->boolean('status');
+            $table->string('status');
             $table->foreignId('facilitator_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('admin_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
         });

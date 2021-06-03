@@ -22,7 +22,7 @@ class MailController extends Controller
         ];
 
         Mail::send('email.roleinvite', $data, function ($message) use ($data, $user) {
-            $message->to($user->email, $user->name)->subject($data['organization'] . 'ROLE INVITATION');
+            $message->to($user->email, $user->name)->subject(strtoupper($data['organization']) . ' ROLE INVITATION');
             $message->from('successahon@gmail.com', 'SkillsGuruh');
         });
     }

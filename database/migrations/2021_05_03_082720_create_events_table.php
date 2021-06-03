@@ -17,10 +17,10 @@ class CreateEventsTable extends Migration
             $table->id();
             $table->string('type');
             $table->string('title');
-            $table->string('description');
+            $table->longText('description');
             $table->string('schedule');
             $table->text('facilitators');
-            $table->string('url');
+            $table->string('url')->nullable();
             $table->text('resource')->nullable();
             $table->string('cover');
             $table->timestamps();

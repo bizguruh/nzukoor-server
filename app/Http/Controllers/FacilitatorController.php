@@ -92,7 +92,7 @@ class FacilitatorController extends Controller
                 'profile' => $request->profile,
                 'qualifications' => json_encode($request->qualifications),
                 'verification' => false,
-                'referral_code' => $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
 
 
             ]);
@@ -126,7 +126,7 @@ class FacilitatorController extends Controller
         //         'profile' => $request->profile,
         //         'qualifications' => json_encode($request->qualifications),
         //         'verification' => false,
-        //         'referral_code' => $referral_code,
+        //         'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
 
 
         //     ]);
@@ -164,7 +164,7 @@ class FacilitatorController extends Controller
                     'profile' => $request->profile,
                     'qualifications' => json_encode($request->qualifications),
                     'verification' => false,
-                    'referral_code' => $referral_code,
+                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
                 ]);
                 $referral_detail = [
                     'greeting' => 'Welcome',
@@ -202,7 +202,7 @@ class FacilitatorController extends Controller
                     'interest' => json_encode($request->interest),
                     'bio' => $request->bio,
                     'logo' => $request->profile,
-                    'referral_code' => $referral_code,
+                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
                     'verification' => $request->verification
                 ]);
 
@@ -219,7 +219,7 @@ class FacilitatorController extends Controller
                     'profile' => $request->profile,
                     'qualifications' => json_encode($request->qualifications),
                     'verification' => false,
-                    'referral_code' => $referral_code,
+                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
 
 
                 ]);

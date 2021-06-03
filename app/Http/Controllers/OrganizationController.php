@@ -7,6 +7,7 @@ use App\Models\Facilitator;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class OrganizationController extends Controller
@@ -33,39 +34,44 @@ class OrganizationController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|unique:organizations',
-            'password' => 'required|min:6',
-            'phone' => ' required|unique:organizations'
-        ]);
+        $result = DB::transaction(function () use ($request) {
 
-        $referral_code =  $this->generateCode(2);
-        $check = Organization::where('referral_code', $referral_code)->first();
-        while (!is_null($check)) {
+
+            $validated = $request->validate([
+                'name' => 'required|max:255',
+                'email' => 'required|unique:organizations',
+                'password' => 'required|min:6',
+                'phone' => ' required|unique:organizations'
+            ]);
+
             $referral_code =  $this->generateCode(2);
             $check = Organization::where('referral_code', $referral_code)->first();
-        }
+            while (!is_null($check)) {
+                $referral_code =  $this->generateCode(2);
+                $check = Organization::where('referral_code', $referral_code)->first();
+            }
 
-        $user = Organization::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'contact_name' => $request->contact_name,
-            'contact_address' => $request->contact_address,
-            'contact_phone' => $request->contact_phone,
-            'interest' => json_encode($request->interest),
-            'bio' => $request->bio,
-            'logo' => $request->logo,
-            'referral_code' => $referral_code,
-            'verification' => $request->verification
-        ]);
+            $user = Organization::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'contact_name' => $request->contact_name,
+                'contact_address' => $request->contact_address,
+                'contact_phone' => $request->contact_phone,
+                'interest' => json_encode($request->interest),
+                'bio' => $request->bio,
+                'logo' => $request->logo,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                'verification' => $request->verification
+            ]);
 
-        $mail =  new MailController;
-        $mail->sendwelcome($user);
-        return response($user, 201);
+            $mail =  new MailController;
+            $mail->sendwelcome($user);
+            return $user;
+        });
+        return response($result, 201);
     }
     /**
      * Display the specified resource.

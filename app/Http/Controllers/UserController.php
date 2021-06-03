@@ -65,7 +65,7 @@ class UserController extends Controller
             'bio' => $request->bio,
             'profile' => $request->profile,
             'verification' => false,
-            'referral_code' => $referral_code,
+            'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code, getuser
         ]);
         $details = [
             'greeting' => 'Welcome',
@@ -126,7 +126,7 @@ class UserController extends Controller
                 'bio' => $request->bio,
                 'profile' => $request->profile,
                 'verification' => false,
-                'referral_code' => $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code, getuser
             ]);
             $referral_detail = [
                 'greeting' => 'Welcome',
@@ -150,7 +150,7 @@ class UserController extends Controller
                 'bio' => $request->bio,
                 'profile' => $request->profile,
                 'verification' => false,
-                'referral_code' => $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code, getuser
             ]);
         }
 
