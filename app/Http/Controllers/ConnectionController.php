@@ -168,7 +168,7 @@ class ConnectionController extends Controller
             foreach ($courses as $key => $value) {
 
                 if (!is_null($value->courseoutline)) {
-                    $dis = $value->courseoutline->knowledge_areas;
+                    $dis = json_decode($value->courseoutline->knowledge_areas)->value;
                     $check =  in_array($dis, $interests);
                     if ($check) {
                         array_push($allusers, $value);

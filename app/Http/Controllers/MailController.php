@@ -26,12 +26,14 @@ class MailController extends Controller
             $message->from('successahon@gmail.com', 'SkillsGuruh');
         });
     }
-    public function sendwelcome($data)
+    public function sendwelcome($info)
     {
 
-
-        Mail::send('email.organizationwelcome', $data, function ($message) use ($data) {
-            $message->to($data->email, $data->name)->subject('WELCOME MAIL');
+        $data = [
+            'name' => $info->name
+        ];
+        Mail::send('email.organizationwelcome', $data, function ($message) use ($info) {
+            $message->to($info->email, $info->name)->subject('WELCOME MAIL');
             $message->from('successahon@gmail.com', 'SkillsGuruh');
         });
     }
