@@ -15,7 +15,7 @@ class MailController extends Controller
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
 
         $data = [
-            'name' => $organization,
+            'organization' => $organization,
             'role' => $user->role,
             'username' => $first_name
 

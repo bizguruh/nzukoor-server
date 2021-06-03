@@ -13,6 +13,10 @@ class NotificationController extends Controller
 
     public function sendnotifications(Request $request)
     {
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            $type = 'organization';
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
             $type = 'admin';
@@ -42,6 +46,11 @@ class NotificationController extends Controller
 
     public function sendnotification(Request $request)
     {
+
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            $type = 'organization';
+        }
 
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
@@ -73,6 +82,10 @@ class NotificationController extends Controller
 
     public function getnotifications()
     {
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            $type = 'organization';
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -90,6 +103,10 @@ class NotificationController extends Controller
     }
     public function unreadnotifications()
     {
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            $type = 'organization';
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -108,6 +125,10 @@ class NotificationController extends Controller
 
     public function markreadnotifications()
     {
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            $type = 'organization';
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -125,6 +146,10 @@ class NotificationController extends Controller
     public function marksinglenotification($id)
     {
 
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            $type = 'organization';
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }

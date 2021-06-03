@@ -15,7 +15,7 @@
 </head>
 <body>
    <h3>  Dear {{$username}},</h3>
-<p>You have been invited by {{$name}} to be a {{$role}} on SkillsGuruh.
+<p>You have been invited by {{$organization}} to be a {{$role}} on SkillsGuruh.
   </p>
   <p> Welcome to The Social Learning Place, we hope you like it here.</p>
 <p>Please log in to get started.</p>
