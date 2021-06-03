@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -47,7 +48,7 @@ class AdminController extends Controller
         }
 
 
-        return $user->admins()->create([
+        $newuser = $user->admins()->create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -57,6 +58,21 @@ class AdminController extends Controller
             'referral_code' => $referral_code,
             'verification' => false
         ]);
+        $details = [
+            'greeting' => 'Welcome',
+            'body' => "Welcome to " . $user->name . ", Access learners,Create courses,events and so much more.",
+            'thanks' => 'Thanks',
+            'actionText' => '',
+            'url' => '',
+            'to' => 'admin',
+            'id' => $newuser->id
+        ];
+        $newuser->notify(new SendNotification($details));
+        $newuser->role = 'Admin';
+
+        $mail =  new MailController;
+        $mail->sendroleinvite($user->name, $newuser);
+        return response($newuser->load('loginhistory'), 201);
     }
     /**
      * Display the specified resource.

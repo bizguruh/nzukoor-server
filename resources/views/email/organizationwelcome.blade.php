@@ -7,6 +7,8 @@
   <title>Document</title>
 </head>
 <body>
-  <h3>Welcome</h3>
+  <h3>Welcome to SkillsGuruh</h3>
+  <p>Sincerely,</p>
+<p>The Team @ SkillsGuruh</p>
 </body>
 </html>

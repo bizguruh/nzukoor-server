@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -22,6 +23,23 @@ class EventController extends Controller
     {
         return Event::where('id', $id)->first();
     }
+    public function checkEvents()
+    {
+        $events = Event::where('status', '!=', 'expired')->get();
+        foreach ($events as $key => $event) {
+            $now  = Carbon::now();
+            $start = Carbon::parse($event->start);
+            $end = Carbon::parse($event->end);
+            $end_diff = $now->gte($end);
+            if ($now->gte($start) && $now->lte($end)) {
+                $event->status = 'active';
+            }
+            if ($end_diff) {
+                $event->status = 'expired';
+            }
+            $event->save();
+        }
+    }
 
     public function store(Request $request)
     {
@@ -39,13 +57,14 @@ class EventController extends Controller
         return $user->event()->create([
             'type' => $request->type,
             'title' => $request->title,
+            'venue' => $request->venue,
             'description' => $request->description,
             'schedule' => $request->duration,
             'facilitators' => json_encode($request->facilitators),
             'url' => $request->url,
             'start' => $request->start,
             'end' => $request->end,
-            'status' => 'inactive',
+            'status' => 'pending',
             'resource' => $request->resource,
             'organization_id' => $user->organization_id,
             'cover' => $request->cover,
@@ -76,6 +95,7 @@ class EventController extends Controller
         return $request->all();
         $event->type = $request->type;
         $event->title = $request->title;
+        $event->venue = $request->venue;
         $event->description  = $request->description;
         $event->schedule = $request->duration;
         $event->facilitators  = json_encode($request->facilitators);

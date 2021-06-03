@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Facilitator;
 use App\Models\Organization;
 use App\Models\User;
+use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -55,7 +56,7 @@ class UserController extends Controller
         }
 
 
-        return $user->user()->create([
+        $newuser = $user->user()->create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -66,6 +67,28 @@ class UserController extends Controller
             'verification' => false,
             'referral_code' => $referral_code,
         ]);
+        $details = [
+            'greeting' => 'Welcome',
+            'body' => "Welcome to " . $user->name . ", Find facilitators, courses,events according to your personal interests.",
+            'thanks' => 'Thanks',
+            'actionText' => '',
+            'url' => '',
+            'to' => 'user',
+            'id' => $newuser->id
+        ];
+
+
+
+
+
+
+
+        $newuser->notify(new SendNotification($details));
+        $newuser->role = 'Learner';
+
+        $mail =  new MailController;
+        $mail->sendroleinvite($user->name, $newuser);
+        return response($newuser->load('loginhistory'), 201);
     }
 
     public function storeuser(Request $request)
@@ -86,18 +109,80 @@ class UserController extends Controller
         }
 
 
-        return User::create([
-            'organization_id' => null,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'bio' => $request->bio,
-            'profile' => $request->profile,
-            'verification' => false,
-            'referral_code' => $referral_code,
-        ]);
+        if ($request->referral) {
+
+            if (User::where('referral_code', $request->referral)->with('organization')->first()) {
+                $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
+            } else {
+                $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
+            }
+            $newuser = User::create([
+                'organization_id' => $olduser->organization_id,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'bio' => $request->bio,
+                'profile' => $request->profile,
+                'verification' => false,
+                'referral_code' => $referral_code,
+            ]);
+            $referral_detail = [
+                'greeting' => 'Welcome',
+                'body' => $newuser->name . " just used your referral link to create an account",
+                'thanks' => 'Thanks',
+                'actionText' => '',
+                'url' => '',
+                'to' => 'user',
+                'id' => $newuser->id
+            ];
+            $olduser->notify(new SendNotification($referral_detail));
+            $olduser->role = 'Learner';
+        } else {
+            $newuser = User::create([
+                'organization_id' => null,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'bio' => $request->bio,
+                'profile' => $request->profile,
+                'verification' => false,
+                'referral_code' => $referral_code,
+            ]);
+        }
+
+        $details = [
+            'greeting' => 'Welcome',
+            'body' => "Welcome to " . $olduser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
+            'thanks' => 'Thanks',
+            'actionText' => '',
+            'url' => '',
+            'to' => 'user',
+            'id' => $newuser->id
+        ];
+        $newuser->notify(new SendNotification($details));
+
+
+        return response($newuser->load('loginhistory'), 201);
+    }
+    public function saveinterests(Request $request)
+    {
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        $user->interests = json_encode($request->interest);
+        $user->save();
+        return $user;
     }
 
 

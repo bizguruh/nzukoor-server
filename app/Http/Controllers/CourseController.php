@@ -50,7 +50,7 @@ class CourseController extends Controller
             $outline = $course->courseoutline()->create([
                 'overview' =>  $request->input('outline.overview'),
                 'additional_info' =>  $request->input('outline.additional_info'),
-                'knowledge_areas' =>  $request->input('outline.knowledge_area'),
+                'knowledge_areas' => json_encode($request->input('outline.knowledge_area')),
                 'modules' => json_encode($request->input('outline.modules')),
                 'duration' =>  $request->input('outline.duration'),
                 'certification' =>  $request->input('outline.certification'),
@@ -65,6 +65,7 @@ class CourseController extends Controller
                 $schedule = $course->courseschedule()->create([
                     'day' => 'default',
                     'url' =>  $value['url'],
+                    'venue' =>  $value['venue'],
                     'facilitator_id' =>   $value['facilitator_id'],
                     'start_time' =>  $value['start_time'],
                     'end_time' =>  $value['end_time'],
@@ -114,6 +115,7 @@ class CourseController extends Controller
                 $schedule =  CourseSchedule::firstOrNew(['id' => $value['id']]);
 
                 $schedule->day = $value['day'];
+                $schedule->value = $value['value'];
                 $schedule->facilitator_id =   $value['facilitator_id'];
                 $schedule->start_time =  $value['start_time'];
                 $schedule->end_time =  $value['end_time'];

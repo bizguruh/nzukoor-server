@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Facilitator;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -81,7 +82,7 @@ class FacilitatorController extends Controller
         if (auth('organization')->user()) {
 
             $user = auth('organization')->user();
-            return $user->facilitator()->create([
+            $newuser = $user->facilitator()->create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -95,6 +96,21 @@ class FacilitatorController extends Controller
 
 
             ]);
+            $details = [
+                'greeting' => 'Welcome',
+                'body' => "Welcome to " . $user->name . ", Access learners,Create courses,events and so much more.",
+                'thanks' => 'Thanks',
+                'actionText' => '',
+                'url' => '',
+                'to' => 'facilitator',
+                'id' => $newuser->id
+            ];
+            $newuser->notify(new SendNotification($details));
+            $newuser->role = 'Facilitator';
+
+            $mail =  new MailController;
+            $mail->sendroleinvite($user->name, $newuser);
+            return response($newuser->load('loginhistory'), 201);
         }
         // else {
 
@@ -135,39 +151,91 @@ class FacilitatorController extends Controller
                 $check = Facilitator::where('referral_code', $referral_code)->first();
             }
 
-            $org = Organization::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'address' => $request->address,
-                'phone' => $request->phone,
-                'contact_name' => $request->contact_name,
-                'contact_address' => $request->contact_address,
-                'contact_phone' => $request->contact_phone,
-                'interest' => json_encode($request->interest),
-                'bio' => $request->bio,
-                'logo' => $request->profile,
-                'referral_code' => $referral_code,
-                'verification' => $request->verification
-            ]);
+            if ($request->referral) {
+                $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
+                $newuser =  Facilitator::create([
+                    'organization_id' => $olduser->organization->id,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'address' => $request->address,
+                    'phone' => $request->phone,
+                    'bio' => $request->bio,
+                    'profile' => $request->profile,
+                    'qualifications' => json_encode($request->qualifications),
+                    'verification' => false,
+                    'referral_code' => $referral_code,
+                ]);
+                $referral_detail = [
+                    'greeting' => 'Welcome',
+                    'body' => $newuser->name . " just used your referral link to create an account",
+                    'thanks' => 'Thanks',
+                    'actionText' => '',
+                    'url' => '',
+                    'to' => 'user',
+                    'id' => $newuser->id
+                ];
+                $details = [
+                    'greeting' => 'Welcome',
+                    'body' => "Welcome to " . $olduser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
+                    'thanks' => 'Thanks',
+                    'actionText' => '',
+                    'url' => '',
+                    'to' => 'user',
+                    'id' => $newuser->id
+                ];
+                $newuser->notify(new SendNotification($referral_detail));
+                $newuser->notify(new SendNotification($details));
+            } else {
 
 
 
-            return Facilitator::create([
-                'organization_id' => $org->id,
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'address' => $request->address,
-                'phone' => $request->phone,
-                'bio' => $request->bio,
-                'profile' => $request->profile,
-                'qualifications' => json_encode($request->qualifications),
-                'verification' => false,
-                'referral_code' => $referral_code,
+                $org = Organization::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'address' => $request->address,
+                    'phone' => $request->phone,
+                    'contact_name' => $request->contact_name,
+                    'contact_address' => $request->contact_address,
+                    'contact_phone' => $request->contact_phone,
+                    'interest' => json_encode($request->interest),
+                    'bio' => $request->bio,
+                    'logo' => $request->profile,
+                    'referral_code' => $referral_code,
+                    'verification' => $request->verification
+                ]);
 
 
-            ]);
+
+                $newuser =  Facilitator::create([
+                    'organization_id' => $org->id,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'address' => $request->address,
+                    'phone' => $request->phone,
+                    'bio' => $request->bio,
+                    'profile' => $request->profile,
+                    'qualifications' => json_encode($request->qualifications),
+                    'verification' => false,
+                    'referral_code' => $referral_code,
+
+
+                ]);
+                $details = [
+                    'greeting' => 'Welcome',
+                    'body' => "Welcome " . $newuser->name . ", Find facilitators, courses,events according to your personal interests.",
+                    'thanks' => 'Thanks',
+                    'actionText' => '',
+                    'url' => '',
+                    'to' => 'user',
+                    'id' => $newuser->id
+                ];
+
+                $newuser->notify(new SendNotification($details));
+            }
+            return response($newuser->load('loginhistory'), 201);
         });
         return $data;
     }

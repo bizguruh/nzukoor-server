@@ -47,7 +47,7 @@ class OrganizationController extends Controller
             $check = Organization::where('referral_code', $referral_code)->first();
         }
 
-        return Organization::create([
+        $user = Organization::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -62,6 +62,10 @@ class OrganizationController extends Controller
             'referral_code' => $referral_code,
             'verification' => $request->verification
         ]);
+
+        $mail =  new MailController;
+        $mail->sendwelcome($user);
+        return response($user, 201);
     }
     /**
      * Display the specified resource.

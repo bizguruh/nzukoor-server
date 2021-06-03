@@ -29,7 +29,13 @@ class User extends Authenticatable
         'organization_id',
         'email_verified_at',
         'verification',
-        'referral_code'
+        'referral_code',
+        'interests',
+        'age',
+        'gender',
+        'lga',
+        'state',
+        'country'
     ];
 
     public function answeredquestionnaire()
@@ -96,6 +102,11 @@ class User extends Authenticatable
     public function library()
     {
         return $this->hasMany(Library::class);
+    }
+
+    public function referral()
+    {
+        return $this->hasMany(Referral::class);
     }
     /**
      * The attributes that should be hidden for arrays.

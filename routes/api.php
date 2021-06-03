@@ -24,6 +24,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\LoginHistoryController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuestionnaireController;
@@ -241,3 +242,17 @@ Route::get('get-course/{id}', [CourseController::class, 'getcourse']);
 Route::post('update-password', [UserController::class, 'updatepassword']);
 
 Route::post('reset-password', [UserController::class, 'resetpassword']);
+
+//update interests
+Route::post('save-interests', [UserController::class, 'saveinterests']);
+
+
+Route::get('identical-learners', [ConnectionController::class, 'getlearnerswithinterests']);
+Route::get('identical-facilitators', [ConnectionController::class, 'getfacilitatorswithinterests']);
+
+Route::get('other-discussions', [ConnectionController::class, 'getidenticaldiscusiions']);
+Route::get('interest-courses', [ConnectionController::class, 'getidenticalcourses']);
+
+
+Route::get('send-mail', [MailController::class, 'sendwelcome']);
+Route::post('send-referral', [MailController::class, 'sendreferral']);

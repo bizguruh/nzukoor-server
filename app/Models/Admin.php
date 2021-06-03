@@ -82,6 +82,10 @@ class Admin extends Authenticatable
     {
         return $this->hasMany(Module::class);
     }
+    public function referral()
+    {
+        return $this->hasMany(Referral::class);
+    }
     /**
      * The attributes that are mass assignable.
      *

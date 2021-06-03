@@ -25,9 +25,19 @@ class Facilitator extends Authenticatable
         'organization_id',
         'email_verified_at',
         'verification',
-        'referral_code'
+        'referral_code',
+        'interests',
+        'age',
+        'gender',
+        'lga',
+        'state',
+        'country'
     ];
 
+    public function referral()
+    {
+        return $this->hasMany(Referral::class);
+    }
     public function organization()
     {
         return $this->belongsTo(Organization::class);
