@@ -200,7 +200,12 @@ class UserController extends Controller
         $user->phone = $request->phone;
         $user->bio = $request->bio;
         $user->profile = $request->profile;
-        $user->verfication = $request->verfication;
+        $user->state = $request->state;
+        $user->country = $request->country;
+        $user->age = $request->age;
+        $user->gender = $request->gender;
+        $user->lga = $request->lga;
+        $user->verification = $request->verification;
         $user->save();
         return $user;
     }

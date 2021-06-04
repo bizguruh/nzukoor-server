@@ -255,6 +255,11 @@ class FacilitatorController extends Controller
         $facilitator->bio = $request->bio;
         $facilitator->profile = $request->profile;
         $facilitator->verfication = $request->verfication;
+        $facilitator->state = $request->state;
+        $facilitator->country = $request->country;
+        $facilitator->age = $request->age;
+        $facilitator->gender = $request->gender;
+        $facilitator->lga = $request->lga;
         $facilitator->qualifications = json_encode($request->qualifications);
         $facilitator->save();
         return $facilitator;
