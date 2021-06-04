@@ -28,6 +28,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuestionnaireController;
+use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Http\Request;
@@ -259,3 +260,8 @@ Route::get('interest-courses', [ConnectionController::class, 'getidenticalcourse
 
 Route::get('send-mail', [MailController::class, 'sendwelcome']);
 Route::post('send-referral', [MailController::class, 'sendreferral']);
+
+
+//Referral routes
+
+Route::apiResource('referrals', ReferralController::class);

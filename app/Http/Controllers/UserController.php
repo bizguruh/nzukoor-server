@@ -8,6 +8,7 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -64,6 +65,7 @@ class UserController extends Controller
             'phone' => $request->phone,
             'bio' => $request->bio,
             'profile' => $request->profile,
+            'country' => 'NG',
             'verification' => false,
             'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code, getuser
         ]);
@@ -100,73 +102,84 @@ class UserController extends Controller
             'phone' => ' required|unique:users'
         ]);
 
-        $user = auth('api')->user();
-        $referral_code =  $this->generateCode(2);
-        $check = User::where('referral_code', $referral_code)->first();
-        while (!is_null($check)) {
+        $result =  DB::transaction(function () use ($request) {
+            $user = auth('api')->user();
             $referral_code =  $this->generateCode(2);
             $check = User::where('referral_code', $referral_code)->first();
-        }
-
-
-        if ($request->referral) {
-
-            if (User::where('referral_code', $request->referral)->with('organization')->first()) {
-                $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
-            } else {
-                $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
+            while (!is_null($check)) {
+                $referral_code =  $this->generateCode(2);
+                $check = User::where('referral_code', $referral_code)->first();
             }
-            $newuser = User::create([
-                'organization_id' => $olduser->organization_id,
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'address' => $request->address,
-                'phone' => $request->phone,
-                'bio' => $request->bio,
-                'profile' => $request->profile,
-                'verification' => false,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code, getuser
-            ]);
-            $referral_detail = [
+
+
+            if ($request->referral) {
+                $referree_type = 'learner';
+                if (User::where('referral_code', $request->referral)->with('organization')->first()) {
+                    $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
+                } else {
+                    $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
+                }
+                $newuser = User::create([
+                    'organization_id' => $olduser->organization_id,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'address' => $request->address,
+                    'phone' => $request->phone,
+                    'bio' => $request->bio,
+                    'profile' => $request->profile,
+                    'country' => 'NG',
+                    'verification' => false,
+                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                ]);
+                $referral_detail = [
+                    'greeting' => 'Welcome',
+                    'body' => $newuser->name . " just used your referral link to create an account",
+                    'thanks' => 'Thanks',
+                    'actionText' => '',
+                    'url' => '',
+                    'to' => 'user',
+                    'id' => $newuser->id
+                ];
+                $olduser->notify(new SendNotification($referral_detail));
+
+                // Add referral
+
+                $olduser->referral()->create([
+                    'referree_type' =>    $referree_type,
+                    'referree_id'    =>  $newuser->id
+                ]);
+            } else {
+                $newuser = User::create([
+                    'organization_id' => null,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'address' => $request->address,
+                    'phone' => $request->phone,
+                    'bio' => $request->bio,
+                    'profile' => $request->profile,
+                    'country' => 'NG',
+                    'verification' => false,
+                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code, getuser
+                ]);
+            }
+
+            $details = [
                 'greeting' => 'Welcome',
-                'body' => $newuser->name . " just used your referral link to create an account",
+                'body' => "Welcome to " . $olduser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
                 'thanks' => 'Thanks',
                 'actionText' => '',
                 'url' => '',
                 'to' => 'user',
                 'id' => $newuser->id
             ];
-            $olduser->notify(new SendNotification($referral_detail));
-            $olduser->role = 'Learner';
-        } else {
-            $newuser = User::create([
-                'organization_id' => null,
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'address' => $request->address,
-                'phone' => $request->phone,
-                'bio' => $request->bio,
-                'profile' => $request->profile,
-                'verification' => false,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code, getuser
-            ]);
-        }
-
-        $details = [
-            'greeting' => 'Welcome',
-            'body' => "Welcome to " . $olduser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
-            'thanks' => 'Thanks',
-            'actionText' => '',
-            'url' => '',
-            'to' => 'user',
-            'id' => $newuser->id
-        ];
-        $newuser->notify(new SendNotification($details));
+            $newuser->notify(new SendNotification($details));
+            return $newuser;
+        });
 
 
-        return response($newuser->load('loginhistory'), 201);
+        return response($result->load('loginhistory'), 201);
     }
     public function saveinterests(Request $request)
     {

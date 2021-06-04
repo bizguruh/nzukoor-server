@@ -91,6 +91,7 @@ class FacilitatorController extends Controller
                 'bio' => $request->bio,
                 'profile' => $request->profile,
                 'qualifications' => json_encode($request->qualifications),
+                'country' => 'NG',
                 'verification' => false,
                 'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
 
@@ -125,6 +126,7 @@ class FacilitatorController extends Controller
         //         'bio' => $request->bio,
         //         'profile' => $request->profile,
         //         'qualifications' => json_encode($request->qualifications),
+
         //         'verification' => false,
         //         'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
 
@@ -163,6 +165,7 @@ class FacilitatorController extends Controller
                     'bio' => $request->bio,
                     'profile' => $request->profile,
                     'qualifications' => json_encode($request->qualifications),
+                    'country' => 'NG',
                     'verification' => false,
                     'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
                 ]);
@@ -184,6 +187,13 @@ class FacilitatorController extends Controller
                     'to' => 'user',
                     'id' => $newuser->id
                 ];
+                // Add referral
+
+                $olduser->referral()->create([
+                    'referree_type' =>    'facilitator',
+                    'referree_id'    =>  $newuser->id
+                ]);
+
                 $newuser->notify(new SendNotification($referral_detail));
                 $newuser->notify(new SendNotification($details));
             } else {
@@ -218,6 +228,7 @@ class FacilitatorController extends Controller
                     'bio' => $request->bio,
                     'profile' => $request->profile,
                     'qualifications' => json_encode($request->qualifications),
+                    'country' => 'NG',
                     'verification' => false,
                     'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
 
