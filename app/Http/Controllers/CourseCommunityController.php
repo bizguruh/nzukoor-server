@@ -14,7 +14,9 @@ class CourseCommunityController extends Controller
      */
     public function index()
     {
-        //
+
+        $user = auth('api')->user();
+        return  $user->coursecommunity()->with('course')->get();
     }
 
     /**

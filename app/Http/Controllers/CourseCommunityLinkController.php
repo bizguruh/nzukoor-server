@@ -48,7 +48,8 @@ class CourseCommunityLinkController extends Controller
             'course_id' => $request->course_id
         ]);
         $user->coursecommunity()->create([
-            'code' => $link->code
+            'code' => $link->code,
+            'course_id' => $request->course_id
         ]);
 
         return  response($link, 201);

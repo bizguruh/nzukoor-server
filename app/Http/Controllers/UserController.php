@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Course;
 use App\Models\CourseCommunity;
 use App\Models\CourseCommunityLink;
 use App\Models\Facilitator;
 use App\Models\Organization;
 use App\Models\User;
+use App\Notifications\AddedToLibrary;
 use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -182,7 +184,8 @@ class UserController extends Controller
 
 
                     $newuser->coursecommunity()->create([
-                        'code' => $request->referral
+                        'code' => $request->referral,
+                        'course_id' => $link->course_id
                     ]);
 
 
@@ -193,6 +196,12 @@ class UserController extends Controller
                             $info->library()->create([
                                 'course_id' => $link->course_id
                             ]);
+
+                            $details = [
+                                'body' =>  \ucfirst(Course::find($link->course_id)->title) . ' course has just been added to your library',
+                            ];
+
+                            $info->notify(new AddedToLibrary($details));
                         }
                     }
                 }
