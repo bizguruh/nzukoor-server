@@ -19,7 +19,7 @@ class SingleLibraryResource extends JsonResource
             'id' => $this->id,
             'course_id' => $this->course_id,
             'user_id' => $this->user_id,
-            'course' => Course::find($this->course_id)->load('modules')->load('courseoutline')
+            'course' => Course::find($this->course_id)->load('modules')->load('courseoutline')->load('questionnaire')
         ];
     }
 }

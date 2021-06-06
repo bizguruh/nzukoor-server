@@ -32,6 +32,6 @@ class Module extends Model
     }
     public function questionnaire()
     {
-        return $this->hasOne(Questionnaire::class);
+        return $this->hasMany(Questionnaire::class);
     }
 }

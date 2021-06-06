@@ -18,6 +18,11 @@ class CourseScheduleController extends Controller
     public function index()
     {
 
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            return CourseSchedule::where('organization_id', $user->id)->with('course', 'facilitator')->latest()->get();
+        }
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -27,6 +32,7 @@ class CourseScheduleController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
+
         return CourseSchedule::where('organization_id', $user->organization_id)->with('course', 'facilitator')->latest()->get();
     }
 
@@ -48,16 +54,28 @@ class CourseScheduleController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+        }
 
-        $user = auth('admin')->user();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
         $course = Course::find($request->course_id);
+
         foreach ($request->input('schedule') as $key => $value) {
 
 
             $schedule = $course->courseschedule()->create([
                 'day' =>  'monday',
                 'url' =>  $value['url'],
-                'value' =>  $value['value'],
+                'venue' =>  $value['venue'],
                 'facilitator_id' =>   $value['facilitator_id'],
                 'start_time' =>  $value['start_time'],
                 'end_time' =>  $value['end_time'],

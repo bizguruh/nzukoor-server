@@ -14,7 +14,9 @@ class Course extends Model
         'description',
         'course_code',
         'cover',
-        'organization_id'
+        'organization_id',
+        'type',
+        'amount'
     ];
     public  function organization()
     {
@@ -59,6 +61,6 @@ class Course extends Model
     }
     public function questionnaire()
     {
-        return $this->hasOne(Questionnaire::class);
+        return $this->hasMany(Questionnaire::class);
     }
 }

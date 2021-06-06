@@ -16,6 +16,10 @@ class CourseController extends Controller
      */
     public function index()
     {
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->id)->latest()->get();
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -45,6 +49,8 @@ class CourseController extends Controller
                 'description' =>  $request->input('general.description'),
                 'code' => $request->input('general.code'),
                 'cover'  =>  $request->input('general.cover'),
+                'type' => $request->type,
+                'amount' => $request->amount,
                 'organization_id' => $user->organization_id,
             ]);
             $outline = $course->courseoutline()->create([

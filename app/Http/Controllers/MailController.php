@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReferralInvite;
 use App\Models\Organization;
+use App\Notifications\RoleInvite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -14,17 +16,17 @@ class MailController extends Controller
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
 
-        $data = [
-            'organization' => $organization,
-            'role' => $user->role,
-            'username' => $first_name
+        $details = [
+            'from_email' => 'bizguruh@gmail.com',
+            'from_name' => 'SkillsGuruh',
+            'greeting' => 'Hello ' . $first_name,
+            'body' => 'You have been invited by ' . $organization . ' to be a ' . $user->role . ' on SkillsGuruh',
+            'actionText' => 'Click to login',
+            'url' => "http://skillsguruh.com/login",
 
         ];
 
-        Mail::send('email.roleinvite', $data, function ($message) use ($data, $user) {
-            $message->to($user->email, $user->name)->subject(strtoupper($data['organization']) . ' ROLE INVITATION');
-            $message->from('successahon@gmail.com', 'SkillsGuruh');
-        });
+        $user->notify(new RoleInvite($details));
     }
     public function sendwelcome($info)
     {
@@ -53,12 +55,10 @@ class MailController extends Controller
         $data = [
             'code' => $request->code,
             'name' => $user->name,
-            'organization' => $organization->name
+            'organization' => $organization->name,
+            'from' => $user->email,
+            'url' => 'https://skillsguruh.herokuapp.com/register/?referral_code=' . $request->code
         ];
-
-        Mail::send('email.referralemail', $data, function ($message) use ($request, $data) {
-            $message->to($request->email, 'Referral')->subject(strtoupper($data['organization']) . ' INVITE MAIL');
-            $message->from('successahon@gmail.com', 'SkillsGuruh');
-        });
+        Mail::to($request->email)->send(new ReferralInvite($data));
     }
 }

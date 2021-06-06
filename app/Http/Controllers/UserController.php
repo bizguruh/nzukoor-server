@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\CourseCommunity;
+use App\Models\CourseCommunityLink;
 use App\Models\Facilitator;
 use App\Models\Organization;
 use App\Models\User;
@@ -113,12 +115,24 @@ class UserController extends Controller
 
 
             if ($request->referral) {
-                $referree_type = 'learner';
-                if (User::where('referral_code', $request->referral)->with('organization')->first()) {
-                    $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
+                if (substr($request->referral, 0, 9) == 'community') {
+                    $referral_type = 'community_course';
                 } else {
-                    $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
+                    $referral_type = 'normal';
                 }
+                if ($referral_type == 'normal') {
+                    if (User::where('referral_code', $request->referral)->with('organization')->first()) {
+                        $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
+                    } else {
+                        $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
+                    }
+                }
+                if ($referral_type == 'community_course') {
+                    $link = CourseCommunityLink::where('code', $request->referral)->first();
+                    $olduser = User::find($link->user_id)->first();
+                }
+                $referree_type = 'learner';
+
                 $newuser = User::create([
                     'organization_id' => $olduser->organization_id,
                     'name' => $request->name,
@@ -132,23 +146,56 @@ class UserController extends Controller
                     'verification' => false,
                     'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
                 ]);
-                $referral_detail = [
-                    'greeting' => 'Welcome',
-                    'body' => $newuser->name . " just used your referral link to create an account",
-                    'thanks' => 'Thanks',
-                    'actionText' => '',
-                    'url' => '',
-                    'to' => 'user',
-                    'id' => $newuser->id
-                ];
-                $olduser->notify(new SendNotification($referral_detail));
+
 
                 // Add referral
 
-                $olduser->referral()->create([
-                    'referree_type' =>    $referree_type,
-                    'referree_id'    =>  $newuser->id
-                ]);
+                if ($referral_type == 'normal') {
+                    $referral_detail = [
+                        'greeting' => 'Welcome',
+                        'body' => $newuser->name . " just used your referral link to create an account",
+                        'thanks' => 'Thanks',
+                        'actionText' => '',
+                        'url' => '',
+                        'to' => 'user',
+                        'id' => $newuser->id
+                    ];
+                    $olduser->notify(new SendNotification($referral_detail));
+                    $olduser->referral()->create([
+                        'referree_type' =>    $referree_type,
+                        'referree_id'    =>  $newuser->id
+                    ]);
+                }
+
+
+                if ($referral_type == 'community_course') {
+                    $referral_detail = [
+                        'greeting' => 'Welcome',
+                        'body' => $newuser->name . " just used your course community referral link to create an account",
+                        'thanks' => 'Thanks',
+                        'actionText' => '',
+                        'url' => '',
+                        'to' => 'user',
+                        'id' => $newuser->id
+                    ];
+                    $olduser->notify(new SendNotification($referral_detail));
+
+
+                    $newuser->coursecommunity()->create([
+                        'code' => $request->referral
+                    ]);
+
+
+                    $link_users = CourseCommunity::where('code', $request->referral)->get();
+                    if (count($link_users) == $link->amount) {
+                        foreach ($link_users as $key => $value) {
+                            $info = User::find($value->user_id);
+                            $info->library()->create([
+                                'course_id' => $link->course_id
+                            ]);
+                        }
+                    }
+                }
             } else {
                 $newuser = User::create([
                     'organization_id' => null,

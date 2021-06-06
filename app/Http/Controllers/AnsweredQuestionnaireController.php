@@ -55,8 +55,18 @@ class AnsweredQuestionnaireController extends Controller
      */
     public function show($id)
     {
-        $user = auth('api')->user();
-        return $user->answeredquestionnaire()->where('course_id', $id)->get();
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        return $user->answeredquestionnaire()->first();
     }
 
     /**

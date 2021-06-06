@@ -38,6 +38,16 @@ class User extends Authenticatable
         'country'
     ];
 
+    public function communitylink()
+    {
+        return $this->hasMany(CourseCommunityLink::class);
+    }
+    public function coursecommunity()
+    {
+        return $this->hasMany(CourseCommunity::class);
+    }
+
+
     public function answeredquestionnaire()
     {
         return $this->hasMany(AnsweredQuestionnaire::class);

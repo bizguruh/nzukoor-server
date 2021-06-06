@@ -7,6 +7,8 @@ use App\Http\Controllers\FacilitatorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
 use App\Http\Controllers\ConnectionController;
+use App\Http\Controllers\CourseCommunityController;
+use App\Http\Controllers\CourseCommunityLinkController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FeedCommentController;
 use App\Http\Controllers\FeedLikeController;
@@ -32,6 +34,7 @@ use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -94,12 +97,12 @@ Route::middleware(['auth:admin'])->group(function () {
 
     // Route::get('admin-get-facilitator/{id}', [OrganizationController::class, 'getfacilitator']);
     Route::put('admin-update-facilitator/{id}', [OrganizationController::class, 'updatefacilitator']);
-    Route::post('admin-delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
+    Route::delete('admin-delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
 
     Route::get('admin-get-users', [OrganizationController::class, 'admingetusers']);
     Route::get('admin-get-user/{id}', [OrganizationController::class, 'getuser']);
     Route::put('admin-update-user/{id}', [OrganizationController::class, 'updateuser']);
-    Route::post('admin-delete-user/{id}', [OrganizationController::class, 'deleteuser']);
+    Route::delete('admin-delete-user/{id}', [OrganizationController::class, 'deleteuser']);
 
 
     Route::get('admin-get-facilitators', [FacilitatorController::class, 'admingetfacilitators']);
@@ -265,3 +268,13 @@ Route::post('send-referral', [MailController::class, 'sendreferral']);
 //Referral routes
 
 Route::apiResource('referrals', ReferralController::class);
+
+
+// Notification request
+
+Route::post('join-discussion', [NotificationController::class, 'joinDiscussionRequest']);
+
+// Apply course
+Route::apiResource('apply-community', CourseCommunityLinkController::class);
+
+Route::apiResource('add-community', CourseCommunityController::class);

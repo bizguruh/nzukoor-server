@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Module;
+use App\Models\Questionnaire;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ModuleController extends Controller
 {
@@ -28,22 +30,39 @@ class ModuleController extends Controller
 
     public function store(Request $request)
     {
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
+        $result = DB::transaction(function () use ($request) {
+            if (auth('admin')->user()) {
+                $user = auth('admin')->user();
+            }
+            if (auth('facilitator')->user()) {
+                $user = auth('facilitator')->user();
+            }
 
 
-        return $user->module()->create([
+            $resource = $user->module()->create([
 
-            'module' => $request->module,
-            'cover_image' => $request->cover_image,
-            'modules' => json_encode($request->modules),
-            'course_id' => $request->course_id,
-            'organization_id' => $user->organization_id
-        ]);
+                'module' => $request->module,
+                'cover_image' => $request->cover_image,
+                'modules' => json_encode($request->modules),
+                'course_id' => $request->course_id,
+                'organization_id' => $user->organization_id
+            ]);
+
+            foreach ($request->questionnaires as $key => $value) {
+                Questionnaire::create([
+                    'course_id' => $request->course_id,
+                    'module_id' =>  $resource->id,
+                    'organization_id' => $user->organization_id,
+                    'module' => $request->module,
+                    'title' => $value['title'],
+                    'content' => json_encode($value['sections'])
+                ]);
+            }
+
+            return $resource;
+        });
+
+        return response($result->load('questionnaire'), 201);
     }
 
     /**
