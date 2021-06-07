@@ -260,9 +260,11 @@ Route::get('identical-facilitators', [ConnectionController::class, 'getfacilitat
 Route::get('other-discussions', [ConnectionController::class, 'getidenticaldiscusiions']);
 Route::get('interest-courses', [ConnectionController::class, 'getidenticalcourses']);
 
-
+// Mail routes
 Route::get('send-mail', [MailController::class, 'sendwelcome']);
 Route::post('send-referral', [MailController::class, 'sendreferral']);
+
+Route::post('send/invite', [MailController::class, 'sendcourseinvite']);
 
 
 //Referral routes

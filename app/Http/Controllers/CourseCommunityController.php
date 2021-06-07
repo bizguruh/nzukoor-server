@@ -50,9 +50,10 @@ class CourseCommunityController extends Controller
      * @param  \App\Models\CourseCommunity  $courseCommunity
      * @return \Illuminate\Http\Response
      */
-    public function show(CourseCommunity $courseCommunity)
+    public function show($id)
     {
-        //
+        $user = auth('api')->user();
+        return $user->coursecommunity()->where('course_id', $id)->first();
     }
 
     /**

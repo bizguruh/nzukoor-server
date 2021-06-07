@@ -41,7 +41,15 @@ class CourseController extends Controller
     {
 
         $result = DB::transaction(function () use ($request) {
-            $user = auth('admin')->user();
+            if (auth('admin')->user()) {
+                $user = auth('admin')->user();
+            }
+            if (auth('facilitator')->user()) {
+                $user = auth('facilitator')->user();
+            }
+            if (auth('api')->user()) {
+                $user = auth('api')->user();
+            }
 
 
             $course = Course::create([

@@ -33,11 +33,11 @@ class CourseCommunityLinkController extends Controller
     public function store(Request $request)
     {
         $user = auth('api')->user();
-        $code =  'community-' . $this->generateCode(2);
+        $code =  'group-' . $this->generateCode(2);
         $check = $user->communitylink()->where('code', $code)->first();
 
         while (!is_null($check)) {
-            $code =  'community-' . $this->generateCode(2);
+            $code =  'group-' . $this->generateCode(2);
             $check = $user->communitylink()->where('code', $code)->first();
         }
 
@@ -61,8 +61,10 @@ class CourseCommunityLinkController extends Controller
      * @param  \App\Models\CourseCommunityLink  $courseCommunityLink
      * @return \Illuminate\Http\Response
      */
-    public function show(CourseCommunityLink $courseCommunityLink)
+    public function show($id)
     {
+        $user = auth('api')->user();
+        return $user->coursecommunity()->where('course_id', $id)->first();
     }
 
     /**

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\GroupCourseInvite;
 use App\Mail\ReferralInvite;
 use App\Models\Organization;
+use App\Notifications\GroupInvite;
 use App\Notifications\RoleInvite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class MailController extends Controller
 {
@@ -60,5 +63,28 @@ class MailController extends Controller
             'url' => 'https://skillsguruh.herokuapp.com/register/?referral_code=' . $request->code
         ];
         Mail::to($request->email)->send(new ReferralInvite($data));
+    }
+
+
+    public function sendcourseinvite(Request $request)
+    {
+        $user = auth('api')->user();
+        $name = trim($user->name);
+        $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+        $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
+
+
+        $details = [
+
+            'from_email' => 'bizguruh@gmail.com',
+            'from_name' => 'SkillsGuruh',
+            'greeting' => 'Hello ',
+            'body' => 'You have been invited by ' . $user->name . ' on SkillsGuruh',
+            'actionText' => 'Click to get started',
+            'url' => "http://skillsguruh.herokuapp.com/register/?referral_type=group&referral_code=" . $request->code,
+
+        ];
+
+        Mail::to($request->users)->send(new GroupCourseInvite($details));
     }
 }

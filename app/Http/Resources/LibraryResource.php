@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Course;
+use App\Models\CourseOutline;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LibraryResource extends JsonResource
@@ -19,7 +20,8 @@ class LibraryResource extends JsonResource
             'id' => $this->id,
             'course_id' => $this->course_id,
             'user_id' => $this->user_id,
-            'course' => Course::find($this->course_id)->load('modules')
+            'course' => Course::find($this->course_id)->load('modules', 'courseoutline')
+
         ];
     }
 }

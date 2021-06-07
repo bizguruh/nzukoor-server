@@ -117,8 +117,8 @@ class UserController extends Controller
 
 
             if ($request->referral) {
-                if (substr($request->referral, 0, 9) == 'community') {
-                    $referral_type = 'community_course';
+                if (substr($request->referral, 0, 5) == 'group') {
+                    $referral_type = 'group_course';
                 } else {
                     $referral_type = 'normal';
                 }
@@ -129,7 +129,7 @@ class UserController extends Controller
                         $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
                     }
                 }
-                if ($referral_type == 'community_course') {
+                if ($referral_type == 'group_course') {
                     $link = CourseCommunityLink::where('code', $request->referral)->first();
                     $olduser = User::find($link->user_id)->first();
                 }
@@ -170,10 +170,10 @@ class UserController extends Controller
                 }
 
 
-                if ($referral_type == 'community_course') {
+                if ($referral_type == 'group_course') {
                     $referral_detail = [
                         'greeting' => 'Welcome',
-                        'body' => $newuser->name . " just used your course community referral link to create an account",
+                        'body' => $newuser->name . " just used your course group referral link to create an account",
                         'thanks' => 'Thanks',
                         'actionText' => '',
                         'url' => '',
