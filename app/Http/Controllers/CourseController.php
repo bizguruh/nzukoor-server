@@ -49,8 +49,8 @@ class CourseController extends Controller
                 'description' =>  $request->input('general.description'),
                 'code' => $request->input('general.code'),
                 'cover'  =>  $request->input('general.cover'),
-                'type' => $request->type,
-                'amount' => $request->amount,
+                'type' => $request->input('general.type'),
+                'amount' => $request->input('general.amount'),
                 'organization_id' => $user->organization_id,
             ]);
             $outline = $course->courseoutline()->create([
@@ -99,6 +99,8 @@ class CourseController extends Controller
             $user = auth('admin')->user();
 
             $course->title = $request->input('general.title');
+            $course->type = $request->input('general.type');
+            $course->amount = $request->input('general.amount');
             $course->description = $request->input('general.description');
             $course->cover  = $request->input('general.cover');
             $course->save();
