@@ -32,7 +32,7 @@ class EventController extends Controller
             $end = Carbon::parse($event->end);
             $end_diff = $now->gte($end);
             if ($now->gte($start) && $now->lte($end)) {
-                $event->status = 'active';
+                $event->status = 'ongoing';
             }
             if ($end_diff) {
                 $event->status = 'expired';

@@ -17,7 +17,7 @@ class CreateCoursesTable extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->string('cover');
+            $table->string('cover')->nullable();
             $table->string('course_code')->nullable();
             $table->foreignId('organization_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
