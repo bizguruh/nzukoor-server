@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\CourseSchedule;
+use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -86,7 +87,17 @@ class CourseController extends Controller
                     'organization_id' => $user->organization_id,
                 ]);
             }
-            return $course->load('courseoutline', 'courseschedule', 'modules');
+            foreach ($request->questionnaires as $key => $value) {
+                Questionnaire::create([
+                    'course_id' => $course->id,
+                    'module_id' => null,
+                    'organization_id' => $user->organization_id,
+                    'module' => $course->title,
+                    'title' => $value['title'],
+                    'content' => json_encode($value['sections'])
+                ]);
+            }
+            return $course->load('courseoutline', 'courseschedule', 'modules', 'questionnaire');
         });
 
         return $result;

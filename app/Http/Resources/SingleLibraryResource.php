@@ -17,6 +17,8 @@ class SingleLibraryResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'progress' => $this->progress,
+            'current_module' => $this->current_module,
             'course_id' => $this->course_id,
             'user_id' => $this->user_id,
             'course' => Course::find($this->course_id)->load('modules')->load('courseoutline')->load('questionnaire')
