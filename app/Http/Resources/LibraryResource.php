@@ -18,6 +18,7 @@ class LibraryResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'progress' => $this->progress,
             'course_id' => $this->course_id,
             'user_id' => $this->user_id,
             'course' => Course::find($this->course_id)->load('modules', 'courseoutline')

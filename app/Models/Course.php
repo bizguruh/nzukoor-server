@@ -16,7 +16,11 @@ class Course extends Model
         'cover',
         'organization_id',
         'type',
-        'amount'
+        'amount',
+        'progress',
+        'current_module',
+        'total_modules'
+
     ];
     public  function organization()
     {

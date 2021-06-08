@@ -182,7 +182,10 @@ class UserController extends Controller
                     ];
                     $olduser->notify(new SendNotification($referral_detail));
 
-
+                    $olduser->referral()->create([
+                        'referree_type' =>    'learner',
+                        'referree_id'    =>  $newuser->id
+                    ]);
                     $newuser->coursecommunity()->create([
                         'code' => $request->referral,
                         'course_id' => $link->course_id

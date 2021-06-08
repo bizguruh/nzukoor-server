@@ -212,6 +212,8 @@ Route::apiResource('login-history', LoginHistoryController::class);
 
 Route::apiResource('courses', CourseController::class);
 
+Route::post('update/progress', [LibraryController::class, 'updateprogress']);
+
 
 Route::apiResource('courseschedules', CourseScheduleController::class);
 

@@ -62,7 +62,7 @@ class MailController extends Controller
             'from' => $user->email,
             'url' => 'https://skillsguruh.herokuapp.com/register/?referral_code=' . $request->code
         ];
-        Mail::to($request->email)->send(new ReferralInvite($data));
+        Mail::to($request->emails)->send(new ReferralInvite($data));
     }
 
 

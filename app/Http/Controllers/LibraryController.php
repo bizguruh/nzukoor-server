@@ -31,6 +31,20 @@ class LibraryController extends Controller
         return new SingleLibraryResource($library);
     }
 
+    public function updateprogress(Request $request)
+    {
+        $find = Library::where('course_id', $request->id)->first();
+
+        if (is_null($find->current_module) ||  $find->current_module < $request->current_module) {
+
+            $find->current_module = $request->current_module;
+            $find->total_modules = $request->total_modules;
+            $find->progress = ($request->current_module / $request->total_modules)  * 100;
+        }
+        $find->save();
+        return $find;
+    }
+
 
     public function update(Request $request, Library $library)
     {
