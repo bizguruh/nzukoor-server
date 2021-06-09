@@ -66,7 +66,7 @@ class AnsweredQuestionnaireController extends Controller
             $user = auth('api')->user();
         }
 
-        return $user->answeredquestionnaire()->first();
+        return $user->answeredquestionnaire()->where('questionnaire_id', $id)->first();
     }
 
     /**
