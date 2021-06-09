@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\LibraryResource;
 use App\Http\Resources\SingleLibraryResource;
+use App\Models\EnrollCount;
 use App\Models\Library;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,21 @@ class LibraryController extends Controller
 
     public function store(Request $request)
     {
+
         $user  = auth('api')->user();
+        $enroll = EnrollCount::where('course_id', $request->course_id)->where('organization_id', $user->organization_id)->first();
+
+        if (is_null($enroll)) {
+            EnrollCount::create([
+                'course_id' => $request->course_id,
+                'organization_id' => $user->organization_id,
+                'count' => 1
+            ]);
+        } else {
+            $enroll->count = $enroll->count + 1;
+            $enroll->save();
+        }
+
         return $user->library()->create([
             'course_id' => $request->course_id
         ]);

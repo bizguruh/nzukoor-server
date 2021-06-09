@@ -31,8 +31,10 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
+
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
@@ -284,3 +286,10 @@ Route::post('join-discussion', [NotificationController::class, 'joinDiscussionRe
 Route::apiResource('apply-community', CourseCommunityLinkController::class);
 
 Route::apiResource('add-community', CourseCommunityController::class);
+
+
+Route::apiResource('reviews', ReviewController::class);
+
+Route::get('mostenrolled', [CourseController::class, 'mostenrolled']);
+
+Route::get('toprated', [CourseController::class, 'toprated']);

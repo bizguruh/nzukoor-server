@@ -22,6 +22,18 @@ class Course extends Model
         'total_modules'
 
     ];
+
+
+    public function enroll()
+    {
+        return $this->hasOne(EnrollCount::class);
+    }
+
+    public function review()
+    {
+        return $this->hasMany(Review::class)->with('user');
+    }
+
     public  function organization()
     {
         return $this->belongsTo(Organization::class);

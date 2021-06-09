@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\CourseSchedule;
+use App\Models\EnrollCount;
 use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,7 @@ class CourseController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->organization_id)->latest()->get();
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
 
@@ -103,9 +104,30 @@ class CourseController extends Controller
         return $result;
     }
 
-    public function show(Course $course)
+    public function mostenrolled()
     {
-        return Course::with('curriculum')->with('module')->with('feedback')->where('id', $course->id)->first();
+        $user = auth('facilitator')->user();
+        $enrolled = EnrollCount::where('organization_id', $user->organization_id)->with('course')->get()->toArray();
+
+
+
+        usort($enrolled, function ($param1, $param2) {
+
+            return strcmp($param2['count'], $param1['count']);
+        });
+        return $enrolled;
+    }
+
+    public function toprated()
+    {
+        $user = auth('facilitator')->user();
+        $enrolled = Course::where('organization_id', $user->organization_id)->with('review')->get()->toArray();
+
+        usort($enrolled, function ($param1, $param2) {
+
+            return strcmp($param2['count'], $param1['count']);
+        });
+        return $enrolled;
     }
 
 

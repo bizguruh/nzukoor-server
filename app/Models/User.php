@@ -38,6 +38,12 @@ class User extends Authenticatable
         'country'
     ];
 
+
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function communitylink()
     {
         return $this->hasMany(CourseCommunityLink::class);
