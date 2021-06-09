@@ -8,6 +8,7 @@ use App\Models\EnrollCount;
 use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class CourseController extends Controller
 {
@@ -121,13 +122,31 @@ class CourseController extends Controller
     public function toprated()
     {
         $user = auth('facilitator')->user();
-        $enrolled = Course::where('organization_id', $user->organization_id)->with('review')->get()->toArray();
+        $enrolled = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review')->get()->toArray();
 
-        usort($enrolled, function ($param1, $param2) {
 
-            return strcmp($param2['count'], $param1['count']);
+
+        function totalreview($arr)
+        {
+
+            $score = array_map(function ($param) {
+                return $param['score'];
+            }, $arr);
+            return array_reduce($score, function ($a, $b) {
+                return $a + $b;
+            }, 0);
+        }
+
+
+        $courses = array_map(function ($val) {
+            return [['total_review' => totalreview($val['review']) ? intval(totalreview($val['review']) / count($val['review'])) : 0], ['course' => $val]];
+        }, $enrolled);
+
+        usort($courses, function ($param1, $param2) {
+
+            return strcmp($param2[0]['total_review'], $param1[0]['total_review']);
         });
-        return $enrolled;
+        return $courses;
     }
 
 

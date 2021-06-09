@@ -79,12 +79,13 @@ class MailController extends Controller
             'from_email' => 'bizguruh@gmail.com',
             'from_name' => 'SkillsGuruh',
             'greeting' => 'Hello ',
-            'body' => 'You have been invited by ' . $user->name . ' on SkillsGuruh',
+            'body' => 'You have been invited by ' . $user->name . 'to join a course group on SkillsGuruh',
             'actionText' => 'Click to get started',
             'url' => "http://skillsguruh.herokuapp.com/register/?referral_type=group&referral_code=" . $request->code,
 
         ];
 
         Mail::to($request->users)->send(new GroupCourseInvite($details));
+        return response($details, 201);
     }
 }
