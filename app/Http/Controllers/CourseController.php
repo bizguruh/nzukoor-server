@@ -182,16 +182,16 @@ class CourseController extends Controller
 
             foreach ($request->questionnaires as $key => $value) {
 
-                // if (is_null($value['id'])) {
-                Questionnaire::create([
-                    'course_id' => $course->id,
-                    'module_id' => null,
-                    'organization_id' => $user->organization_id,
-                    'module' => $course->title,
-                    'title' => $value['title'],
-                    'content' => json_encode($value['sections'])
-                ]);
-                //}
+                if (is_null($value['id'])) {
+                    Questionnaire::create([
+                        'course_id' => $course->id,
+                        'module_id' => null,
+                        'organization_id' => $user->organization_id,
+                        'module' => $course->title,
+                        'title' => $value['title'],
+                        'content' => json_encode($value['sections'])
+                    ]);
+                }
             }
             return $course->load('courseoutline', 'courseschedule');
         });
