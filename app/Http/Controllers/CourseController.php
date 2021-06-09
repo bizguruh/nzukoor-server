@@ -170,19 +170,20 @@ class CourseController extends Controller
                 $schedule->end_time =  $value['end_time'];
                 $schedule->save();
             }
-            // return $request->questionnaires;
+            //return $request->questionnaires;
 
             foreach ($request->questionnaires as $key => $value) {
 
-
-                Questionnaire::create([
-                    'course_id' => $course->id,
-                    'module_id' => null,
-                    'organization_id' => $user->organization_id,
-                    'module' => $course->title,
-                    'title' => $value['title'],
-                    'content' => json_encode($value['sections'])
-                ]);
+                if (is_null($value['id'])) {
+                    Questionnaire::create([
+                        'course_id' => $course->id,
+                        'module_id' => null,
+                        'organization_id' => $user->organization_id,
+                        'module' => $course->title,
+                        'title' => $value['title'],
+                        'content' => json_encode($value['sections'])
+                    ]);
+                }
             }
             return $course->load('courseoutline', 'courseschedule');
         });
