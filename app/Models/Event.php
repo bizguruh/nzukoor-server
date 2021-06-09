@@ -18,7 +18,12 @@ class Event extends Model
     }
     public  function admin()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Admin::class);
+    }
+
+    public  function facilitator()
+    {
+        return $this->belongsTo(Facilitator::class);
     }
 
     public function feedback()

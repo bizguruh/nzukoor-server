@@ -15,7 +15,16 @@ class CourseCommunityController extends Controller
     public function index()
     {
 
-        $user = auth('api')->user();
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
         return  $user->coursecommunity()->with('course')->get();
     }
 
@@ -37,7 +46,16 @@ class CourseCommunityController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth('api')->user();
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
 
         return   $user->coursecommunity()->create([
 
@@ -52,7 +70,17 @@ class CourseCommunityController extends Controller
      */
     public function show($id)
     {
-        $user = auth('api')->user();
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
         return $user->coursecommunity()->where('course_id', $id)->first();
     }
 

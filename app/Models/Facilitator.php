@@ -34,6 +34,17 @@ class Facilitator extends Authenticatable
         'country'
     ];
 
+
+    public function communitylink()
+    {
+        return $this->hasMany(CourseCommunityLink::class);
+    }
+    public function coursecommunity()
+    {
+        return $this->hasMany(CourseCommunity::class);
+    }
+
+
     public function referral()
     {
         return $this->hasMany(Referral::class);
@@ -46,7 +57,10 @@ class Facilitator extends Authenticatable
     {
         return $this->hasMany(Todo::class);
     }
-
+    public function event()
+    {
+        return $this->hasMany(Event::class);
+    }
 
     public function module()
     {

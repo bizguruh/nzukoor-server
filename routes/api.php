@@ -123,6 +123,8 @@ Route::middleware('auth:facilitator')->get('/facilitator', function (Request $re
 
 Route::post('facilitator-register', [FacilitatorController::class, 'storefacilitator']);
 
+Route::post('facilitator-register-user', [UserController::class, 'facilitatorStoreUser']);
+
 
 Route::middleware(['auth:facilitator'])->group(function () {
 
