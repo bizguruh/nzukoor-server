@@ -9,6 +9,7 @@ use App\Http\Controllers\AnsweredQuestionnaireController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\CourseCommunityController;
 use App\Http\Controllers\CourseCommunityLinkController;
+use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FeedCommentController;
 use App\Http\Controllers\FeedLikeController;
@@ -263,8 +264,10 @@ Route::post('save-interests', [UserController::class, 'saveinterests']);
 Route::get('identical-learners', [ConnectionController::class, 'getlearnerswithinterests']);
 Route::get('identical-facilitators', [ConnectionController::class, 'getfacilitatorswithinterests']);
 
+
 Route::get('other-discussions', [ConnectionController::class, 'getidenticaldiscusiions']);
 Route::get('interest-courses', [ConnectionController::class, 'getidenticalcourses']);
+
 
 // Mail routes
 Route::get('send-mail', [MailController::class, 'sendwelcome']);
@@ -293,3 +296,18 @@ Route::apiResource('reviews', ReviewController::class);
 Route::get('mostenrolled', [CourseController::class, 'mostenrolled']);
 
 Route::get('toprated', [CourseController::class, 'toprated']);
+
+
+// Guest
+Route::get('guest/mostenrolled', [CourseController::class, 'guestmostenrolled']);
+Route::get('guest/learners', [UserController::class, 'index']);
+Route::get('guest/facilitators', [FacilitatorController::class, 'index']);
+Route::get('guest/courses', [CourseController::class, 'guestcourses']);
+Route::get('guest/discussions', [DiscussionController::class, 'guestdiscussions']);
+Route::get('guest/events', [EventController::class, 'index']);
+
+
+// Contact message
+Route::post('send/message', [MailController::class, 'contactmail']);
+
+Route::apiResource('contributors', ContributorController::class);

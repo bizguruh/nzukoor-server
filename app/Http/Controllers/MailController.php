@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactMail;
 use App\Mail\GroupCourseInvite;
 use App\Mail\ReferralInvite;
 use App\Models\Organization;
@@ -87,5 +88,22 @@ class MailController extends Controller
 
         Mail::to($request->users)->send(new GroupCourseInvite($details));
         return response($details, 201);
+    }
+    public function contactmail(Request $request)
+    {
+
+
+        $details = [
+
+            'from_email' => $request->email,
+            'from_name' => $request->name,
+            'body' => $request->message,
+
+
+
+        ];
+
+        Mail::to('succy2010@gmail.com')->send(new ContactMail($details));
+        return response($details, 200);
     }
 }

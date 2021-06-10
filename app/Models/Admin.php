@@ -14,6 +14,11 @@ class Admin extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
 
+    public function contribution()
+    {
+        return $this->hasMany(Contributor::class);
+    }
+
     public function communitylink()
     {
         return $this->hasMany(CourseCommunityLink::class);

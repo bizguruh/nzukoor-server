@@ -32,8 +32,14 @@ class CourseController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
+
         return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->where('organization_id', $user->organization_id)->latest()->get();
     }
+    public function guestcourses()
+    {
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->latest()->get();
+    }
+
 
 
     public function getcourse($id)
@@ -111,6 +117,17 @@ class CourseController extends Controller
         $enrolled = EnrollCount::where('organization_id', $user->organization_id)->with('course')->get()->toArray();
 
 
+
+        usort($enrolled, function ($param1, $param2) {
+
+            return strcmp($param2['count'], $param1['count']);
+        });
+        return $enrolled;
+    }
+    public function guestmostenrolled()
+    {
+
+        $enrolled = EnrollCount::with('course')->get()->toArray();
 
         usort($enrolled, function ($param1, $param2) {
 

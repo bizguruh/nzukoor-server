@@ -28,6 +28,8 @@ class FacilitatorController extends Controller
 
 
 
+
+
     public function getfacilitator($id)
     {
         $user = auth('organization')->user();

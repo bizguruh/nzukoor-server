@@ -62,6 +62,13 @@ class DiscussionMessageController extends Controller
             'discussion_id' => $request->discussion_id,
             'organization_id' => $user->organization_id
         ]);
+        $type = 'discussion';
+        $contribution =   $user->contribution()->firstOrNew();
+
+        $contribution->type = $type;
+        $contribution->discussion_id = $request->discussion_id;
+        $contribution->count = $contribution->count + 1;
+        $contribution->save();
 
         return $data->load('admin', 'user', 'facilitator');
     }

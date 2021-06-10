@@ -44,6 +44,10 @@ class Facilitator extends Authenticatable
         return $this->hasMany(CourseCommunity::class);
     }
 
+    public function contribution()
+    {
+        return $this->hasMany(Contributor::class);
+    }
 
     public function referral()
     {

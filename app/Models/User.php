@@ -38,6 +38,11 @@ class User extends Authenticatable
         'country'
     ];
 
+    public function contribution()
+    {
+        return $this->hasMany(Contributor::class);
+    }
+
 
     public function review()
     {

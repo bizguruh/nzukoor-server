@@ -28,6 +28,12 @@ class DiscussionController extends Controller
             ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
     }
 
+    public function guestdiscussions()
+    {
+        return Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->latest()->get();
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
