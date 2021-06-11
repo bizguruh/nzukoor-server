@@ -31,6 +31,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\QuestionnaireController;
+use App\Http\Controllers\QuestionTemplateController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TagController;
@@ -246,7 +247,7 @@ Route::apiResource('answer-questionnaires', AnsweredQuestionnaireController::cla
 
 
 Route::apiResource('questionnaires', QuestionnaireController::class);
-
+Route::apiResource('question/templates', QuestionTemplateController::class);
 Route::post('delete-connection/{id}', [ConnectionController::class, 'deleteconnection']);
 
 Route::get('get-course/{id}', [CourseController::class, 'getcourse']);
