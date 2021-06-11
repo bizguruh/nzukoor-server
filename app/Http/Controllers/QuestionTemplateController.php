@@ -93,8 +93,11 @@ class QuestionTemplateController extends Controller
      * @param  \App\Models\QuestionTemplate  $questionTemplate
      * @return \Illuminate\Http\Response
      */
-    public function destroy(QuestionTemplate $questionTemplate)
+    public function destroy($id)
     {
-        //
+        QuestionTemplate::find($id)->delete();
+        return response()->json([
+            'message' => 'Delete successful'
+        ]);
     }
 }
