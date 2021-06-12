@@ -39,6 +39,7 @@ class ModuleController extends Controller
             }
 
 
+
             $resource = $user->module()->create([
 
                 'module' => $request->module,
@@ -48,16 +49,33 @@ class ModuleController extends Controller
                 'organization_id' => $user->organization_id
             ]);
 
-            foreach ($request->questionnaires as $key => $value) {
-                Questionnaire::create([
-                    'course_id' => $request->course_id,
-                    'module_id' =>  $resource->id,
-                    'organization_id' => $user->organization_id,
-                    'module' => $request->module,
-                    'title' => $value['title'],
-                    'content' => json_encode($value['sections'])
-                ]);
+            if (count($request->questionnaires)) {
+                foreach ($request->questionnaires as $key => $value) {
+                    Questionnaire::create([
+                        'course_id' => $request->course_id,
+                        'module_id' =>  $resource->id,
+                        'organization_id' => $user->organization_id,
+                        'module' => $request->module,
+                        'title' => $value['title'],
+                        'content' => json_encode($value['sections'])
+                    ]);
+                }
             }
+
+            if (count($request->templates)) {
+                foreach ($request->templates as $key => $value) {
+                    Questionnaire::create([
+                        'course_id' => $request->course_id,
+                        'module_id' =>  $resource->id,
+                        'organization_id' => $user->organization_id,
+                        'module' => $request->module,
+                        'title' => $value['title'],
+                        'type' => $request->type,
+                        'content' => $value['sections']
+                    ]);
+                }
+            }
+
 
             return $resource;
         });
