@@ -133,6 +133,7 @@ class UserController extends Controller
                 if ($referral_type == 'group_course') {
                     $link = CourseCommunityLink::where('code', $request->referral)->first();
                     $olduser = User::find($link->user_id)->first();
+                    $co = Course::find($link->course_id);
                 }
                 $referree_type = 'learner';
 
@@ -174,7 +175,7 @@ class UserController extends Controller
                 if ($referral_type == 'group_course') {
                     $referral_detail = [
                         'greeting' => 'Welcome',
-                        'body' => $newuser->name . " just used your course group referral link to create an account",
+                        'body' => $newuser->name . " accepted your invitation to take the course titled" . $co->title . " with you",
                         'thanks' => 'Thanks',
                         'actionText' => '',
                         'url' => '',
@@ -272,7 +273,7 @@ class UserController extends Controller
                 'profile' => $request->profile,
                 'country' => 'NG',
                 'verification' => false,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . $referral_code,
             ]);
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\CourseCommunityLink;
 use Illuminate\Http\Request;
 
@@ -33,11 +34,12 @@ class CourseCommunityLinkController extends Controller
     public function store(Request $request)
     {
         $user = auth('api')->user();
-        $code =  'group-' . $this->generateCode(2);
+        $course =  Course::find($request->course_id);
+        $code =  urlencode($course->title) . '-' . $this->generateCode(2);
         $check = $user->communitylink()->where('code', $code)->first();
 
         while (!is_null($check)) {
-            $code =  'group-' . $this->generateCode(2);
+            $code =  urlencode($course->title) . '-' . $this->generateCode(2);
             $check = $user->communitylink()->where('code', $code)->first();
         }
 
@@ -51,6 +53,16 @@ class CourseCommunityLinkController extends Controller
             'code' => $link->code,
             'course_id' => $request->course_id
         ]);
+        $co = Course::find($request->course_id);
+        $message = 'I enrolled for the ' . $co->title . ' course and I think you’d like it. Join me!';
+        $url = 'https://skillsguruh.herokuapp.com/learner/courses/?course_id=' . $request->course_id;
+        $data = $user->feeds()->create([
+            'organization_id' => $user->organization_id,
+            'media' => $co->cover,
+            'url' => $url,
+            'message' => $message
+        ]);
+
 
         return  response($link, 201);
     }

@@ -68,7 +68,7 @@ class AdminController extends Controller
                 'role' => 'administrator',
                 'profile' => $request->profile,
                 'phone' => $request->phone,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . $referral_code,
                 'verification' => false
             ]);
             $details = [

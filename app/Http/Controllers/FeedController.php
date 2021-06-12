@@ -64,6 +64,7 @@ class FeedController extends Controller
         $data = $user->feeds()->create([
             'organization_id' => $user->organization_id,
             'media' => $request->media,
+            'url' => $request->url,
             'message' => $request->message
         ]);
         return $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars');

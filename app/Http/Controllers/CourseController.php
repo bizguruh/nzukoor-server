@@ -139,7 +139,7 @@ class CourseController extends Controller
     public function toprated()
     {
         $user = auth('facilitator')->user();
-        $enrolled = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review')->get()->toArray();
+        $enrolled = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->get()->toArray();
 
 
 

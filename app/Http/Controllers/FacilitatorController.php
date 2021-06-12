@@ -95,7 +95,7 @@ class FacilitatorController extends Controller
                 'qualifications' => json_encode($request->qualifications),
                 'country' => 'NG',
                 'verification' => false,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . $referral_code,
 
 
             ]);
