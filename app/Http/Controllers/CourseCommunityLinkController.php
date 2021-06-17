@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\CourseCommunityLink;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CourseCommunityLinkController extends Controller
 {
@@ -54,7 +55,7 @@ class CourseCommunityLinkController extends Controller
             'course_id' => $request->course_id
         ]);
         $co = Course::find($request->course_id);
-        $message = 'I enrolled for the ' . $co->title . ' course and I think you’d like it. Join me!';
+        $message = '<p>I enrolled for the course, ' . $co->title . ' course and I think you’d like it. Join me!</p> <p>' .  Str::limit($co->description, 50) . '...</p>';
         $url = 'https://skillsguruh.herokuapp.com/learner/courses/?course_id=' . $request->course_id;
         $data = $user->feeds()->create([
             'organization_id' => $user->organization_id,

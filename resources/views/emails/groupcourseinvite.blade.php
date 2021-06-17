@@ -7,7 +7,7 @@
 {{$actionText}}
 @endcomponent
 
-{{$url}}
+<small>{{$url}}</small>
 
 Thanks,<br>
 {{ config('app.name') }}

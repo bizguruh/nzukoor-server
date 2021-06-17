@@ -81,9 +81,9 @@ class MailController extends Controller
             'from_email' => 'skillsguruh@gmail.com',
             'from_name' => 'SkillsGuruh',
             'greeting' => 'Hello ',
-            'body' => 'Would you enroll for the course, ' . $request->title . ' on SkillsGuruh with me?',
+            'body' => 'Would you enroll for the course, **' . $request->title . '** on SkillsGuruh with me?',
             'actionText' => 'Check it out here',
-            'url' => "http://skillsguruh.herokuapp.com/register/?referral_type=group&referral_code=" . $request->code,
+            'url' => "https://skillsguruh.herokuapp.com/explore/courses/?referral_type=group&referral_code=" . $request->code,
 
         ];
 
