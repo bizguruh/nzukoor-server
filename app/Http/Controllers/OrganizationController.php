@@ -34,6 +34,7 @@ class OrganizationController extends Controller
 
     public function store(Request $request)
     {
+
         $result = DB::transaction(function () use ($request) {
 
 

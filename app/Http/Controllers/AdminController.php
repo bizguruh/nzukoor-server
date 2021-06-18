@@ -43,6 +43,7 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
+
         $result =  DB::transaction(function () use ($request) {
 
             $validated = $request->validate([
@@ -78,7 +79,8 @@ class AdminController extends Controller
                 'actionText' => '',
                 'url' => '',
                 'to' => 'admin',
-                'id' => $newuser->id
+                'id' => $newuser->id,
+
             ];
             $newuser->notify(new SendNotification($details));
             $newuser->role = 'Admin';

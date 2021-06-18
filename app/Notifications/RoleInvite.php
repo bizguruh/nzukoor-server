@@ -48,8 +48,8 @@ class RoleInvite extends Notification
             ->line($this->details['body'])
             ->line('SkillsGuruh is Social Learning Place, we hope you like it here.')
             ->line('Please click the link to get started')
-            ->action($this->details['actionText'], $this->details['url'])
-            ->line('Use this referral code ' . $this->details['code'] . ' to create an account');
+            ->action($this->details['actionText'], $this->details['url']);
+        //  ->line('Use this referral code ' . $this->details['code'] . ' to create an account');
     }
 
     /**

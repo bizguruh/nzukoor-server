@@ -18,6 +18,8 @@ class MailController extends Controller
 {
     public function sendroleinvite($organization, $user)
     {
+
+        $userorg = auth('organization')->user();
         $name = trim($user->name);
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
@@ -29,6 +31,7 @@ class MailController extends Controller
             'body' => 'You have been invited by ' . $organization . ' to be a ' . $user->role . ' on SkillsGuruh',
             'actionText' => 'Click to login',
             'url' => "http://skillsguruh.com/login",
+            'code' => $userorg->referral_code
 
         ];
 
