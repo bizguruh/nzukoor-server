@@ -14,6 +14,17 @@ class Admin extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
 
+
+    public function discussionrequest()
+    {
+        return $this->hasMany(DiscussionRequest::class);
+    }
+
+    public function privatediscusion()
+    {
+        return $this->hasMany(PrivateDiscussionMember::class);
+    }
+
     public function contribution()
     {
         return $this->hasMany(Contributor::class);

@@ -25,7 +25,7 @@ class MailController extends Controller
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
 
         $details = [
-            'from_email' => 'bizguruh@gmail.com',
+            'from_email' => 'skillsguruh@gmail.com',
             'from_name' => 'SkillsGuruh',
             'greeting' => 'Hello ' . $first_name,
             'body' => 'You have been invited by ' . $organization . ' to be a ' . $user->role . ' on SkillsGuruh',
@@ -150,6 +150,7 @@ class MailController extends Controller
         Mail::to($request->users)->send(new DiscussionInvite($details));
         return response($details, 200);
     }
+
     public function sendeventinvite(Request $request)
     {
 

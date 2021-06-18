@@ -20,6 +20,7 @@ use App\Http\Controllers\CourseScheduleController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionMessageController;
+use App\Http\Controllers\DiscussionRequestController;
 use App\Http\Controllers\DiscussionVoteController;
 use App\Http\Controllers\DiscussionViewController;
 use App\Http\Controllers\EventController;
@@ -30,13 +31,15 @@ use App\Http\Controllers\LoginHistoryController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\QuestionTemplateController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
-
+use App\Models\DiscussionRequest;
+use App\Models\PrivateDiscussionMember;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
@@ -315,3 +318,10 @@ Route::get('guest/events', [EventController::class, 'index']);
 Route::post('send/message', [MailController::class, 'contactmail']);
 
 Route::apiResource('contributors', ContributorController::class);
+
+
+Route::apiResource('discussion/private', PrivateDiscussionMemberController::class);
+
+Route::apiResource('discussion/requests', DiscussionRequestController::class);
+
+Route::post('discussion/reject', [NotificationController::class, 'discussionreject']);

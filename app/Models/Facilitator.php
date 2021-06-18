@@ -35,6 +35,16 @@ class Facilitator extends Authenticatable
     ];
 
 
+    public function discussionrequest()
+    {
+        return $this->hasMany(DiscussionRequest::class);
+    }
+
+    public function privatediscusion()
+    {
+        return $this->hasMany(PrivateDiscussionMember::class);
+    }
+
     public function communitylink()
     {
         return $this->hasMany(CourseCommunityLink::class);

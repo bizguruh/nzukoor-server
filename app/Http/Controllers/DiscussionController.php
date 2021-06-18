@@ -66,6 +66,14 @@ class DiscussionController extends Controller
             'course_id' => $request->course_id,
             'organization_id' => $user->organization_id,
         ]);
+
+
+        if ($request->type == 'private') {
+            $user->privatediscusion()->create([
+                'discussion_id' => $data->id,
+                'type' => $sender
+            ]);
+        }
         return $data->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
 

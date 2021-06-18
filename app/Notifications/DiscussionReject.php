@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class JoinDiscussion extends Notification
+class DiscussionReject extends Notification
 {
     use Queueable;
 
@@ -32,7 +32,6 @@ class JoinDiscussion extends Notification
     {
         return ['database', 'mail'];
     }
-
     /**
      * Get the mail representation of the notification.
      *
@@ -42,11 +41,10 @@ class JoinDiscussion extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Discussion Request')
+            ->subject('Discussion Request Rejection')
             ->from($this->details['from_email'], $this->details['from_name'])
             ->greeting($this->details['greeting'])
-            ->line($this->details['body'])
-            ->action($this->details['actionText'], $this->details['url']);
+            ->line($this->details['body']);
     }
 
     public function toDatabase($notifiable)
@@ -54,9 +52,8 @@ class JoinDiscussion extends Notification
         return [
             'notification' => $this->details['body'],
             'id' => $this->details['id'],
-            'sender_id' => $this->details['sender_id'],
-            'sender' => $this->details['sender'],
-            'type' => 'discussion request'
+
+
 
         ];
     }

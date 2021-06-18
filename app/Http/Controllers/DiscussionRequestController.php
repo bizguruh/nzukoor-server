@@ -14,7 +14,17 @@ class DiscussionRequestController extends Controller
      */
     public function index()
     {
-        //
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        return $user->discussionrequest()->get();
     }
 
     /**

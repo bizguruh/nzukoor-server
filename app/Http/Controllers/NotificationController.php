@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Discussion;
+use App\Models\DiscussionRequest;
 use App\Models\Facilitator;
+use App\Models\NotificationResponse;
 use App\Models\User;
+use App\Notifications\DiscussionReject;
 use App\Notifications\SendNotification;
 use App\Notifications\JoinDiscussion;
 use Illuminate\Http\Request;
@@ -14,6 +17,10 @@ use Notification;
 class NotificationController extends Controller
 {
 
+    public function getnotificationresponse()
+    {
+        NotificationResponse::where('user');
+    }
     public function sendnotifications(Request $request)
     {
         if (auth('organization')->user()) {
@@ -87,6 +94,7 @@ class NotificationController extends Controller
 
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
+            $sender = 'admin';
         }
 
         if (auth('admin')->user()) {
@@ -94,9 +102,11 @@ class NotificationController extends Controller
         }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
+            $sender = "facilitator";
         }
         if (auth('api')->user()) {
             $user = auth('api')->user();
+            $sender = 'user';
         }
 
         $discussion = Discussion::find($request->discussion_id);
@@ -114,14 +124,77 @@ class NotificationController extends Controller
             'from_name' => $user->name,
             'from_email' => $user->email,
             'greeting' => $discussion->name,
-            'body' => "$user->name has requested access to join your discussion",
+            'body' => $user->name . " has requested access to join your discussion, " . strtoupper($discussion->name),
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => "http://localhost:8080/discussion/$request->discussion_id",
+            'url' => "http://localhost:8080/discussion/" . $request->discussion_id,
+            'id' => $request->discussion_id,
+            'sender_id' => $user->id,
+            'sender' => $sender
 
         ];
 
         $creator->notify(new joinDiscussion($details));
+
+        $creator->discussionrequest()->create([
+            'type_id' => $user->id,
+            'type' => $sender,
+            'discussion_id' => $request->discussion_id,
+            'body' => $user->name . " has requested access to join your discussion, " . strtoupper($discussion->name),
+        ]);
+        return 'Notification sent';
+    }
+
+    public function discussionreject(Request $request)
+    {
+
+
+
+        $discussion = Discussion::find($request->discussion_id);
+        if ($request->type == 'admin') {
+            $user = Admin::find($request->type_id);
+        }
+        if ($request->type == 'facilitator') {
+            $user = Facilitator::find($request->type_id);
+        }
+        if ($request->type == 'user') {
+            $user = User::find($request->type_id);
+        }
+
+        $details = [
+            'from_name' => $user->name,
+            'from_email' => $user->email,
+            'greeting' => $discussion->name,
+            'body' => "Your request to join the discussion, " . strtoupper($discussion->name) . ' has been rejected',
+            'thanks' => 'Thanks',
+            'actionText' => 'Click to view',
+            'url' => "http://localhost:8080/discussion/" . $request->discussion_id,
+            'id' => $request->discussion_id
+
+
+        ];
+
+        $user->notify(new DiscussionReject($details));
+
+        if (auth('organization')->user()) {
+            $creator = auth('organization')->user();
+        }
+
+        if (auth('admin')->user()) {
+            $creator = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $creator = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $creator = auth('api')->user();
+        }
+
+
+
+        $disrequest = DiscussionRequest::where('id', $request->id)->first();
+        $disrequest->response = 'rejected';
+        $disrequest->save();
         return 'Notification sent';
     }
 

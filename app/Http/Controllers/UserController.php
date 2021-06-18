@@ -118,7 +118,7 @@ class UserController extends Controller
 
 
             if ($request->referral) {
-                if (substr($request->referral, 0, 5) == 'group') {
+                if (CourseCommunityLink::where('code', $request->referral)->first()) {
                     $referral_type = 'group_course';
                 } else {
                     $referral_type = 'normal';
@@ -175,7 +175,7 @@ class UserController extends Controller
                 if ($referral_type == 'group_course') {
                     $referral_detail = [
                         'greeting' => 'Welcome',
-                        'body' => $newuser->name . " accepted your invitation to take the course titled" . $co->title . " with you",
+                        'body' => $newuser->name . " accepted your invitation to take the course titled " . $co->title . " with you",
                         'thanks' => 'Thanks',
                         'actionText' => '',
                         'url' => '',
@@ -196,6 +196,17 @@ class UserController extends Controller
 
                     $link_users = CourseCommunity::where('code', $request->referral)->get();
                     if (count($link_users) == $link->amount) {
+                        $course = Course::find($link->course_id)->first();
+                        $discussion = $olduser->discussions()->create([
+                            'type' => 'private',
+                            'name' => $request->referral,
+                            'tags' => json_encode([]),
+                            'creator' => 'user',
+                            'description' => $course->description,
+                            'course_id' => $course->id,
+                            'organization_id' => $olduser->organization_id,
+                        ]);
+
                         foreach ($link_users as $key => $value) {
                             $info = User::find($value->user_id);
                             $info->library()->create([
@@ -207,6 +218,11 @@ class UserController extends Controller
                             ];
 
                             $info->notify(new AddedToLibrary($details));
+
+                            $info->privatediscusion()->create([
+                                'discussion_id' => $discussion->id,
+                                'type' => 'user'
+                            ]);
                         }
                     }
                 }
