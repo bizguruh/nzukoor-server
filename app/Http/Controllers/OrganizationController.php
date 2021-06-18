@@ -52,6 +52,7 @@ class OrganizationController extends Controller
                 $check = Organization::where('referral_code', $referral_code)->first();
             }
 
+
             $user = Organization::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -63,7 +64,7 @@ class OrganizationController extends Controller
                 'contact_phone' => $request->contact_phone,
                 'interest' => json_encode($request->interest),
                 'bio' => $request->bio,
-                'logo' => $request->logo,
+                'logo' => $request->profile,
                 'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . $referral_code,
                 'verification' => $request->verification
             ]);
