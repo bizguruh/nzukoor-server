@@ -275,6 +275,9 @@ Route::get('send-mail', [MailController::class, 'sendwelcome']);
 Route::post('send-referral', [MailController::class, 'sendreferral']);
 
 Route::post('send/invite', [MailController::class, 'sendcourseinvite']);
+Route::post('send/discussion/invite', [MailController::class, 'senddiscussioninvite']);
+Route::post('send/event/invite', [MailController::class, 'sendeventinvite']);
+
 
 
 //Referral routes

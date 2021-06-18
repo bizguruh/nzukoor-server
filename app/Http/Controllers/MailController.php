@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ContactMail;
+use App\Mail\DiscussionInvite;
+use App\Mail\EventInvite;
 use App\Mail\GroupCourseInvite;
 use App\Mail\ReferralInvite;
 use App\Models\Organization;
@@ -70,7 +72,15 @@ class MailController extends Controller
     public function sendcourseinvite(Request $request)
     {
 
-        $user = auth('api')->user();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
         $name = trim($user->name);
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
@@ -103,6 +113,70 @@ class MailController extends Controller
         ];
 
         Mail::to('succy2010@gmail.com')->send(new ContactMail($details));
+        return response($details, 200);
+    }
+    public function senddiscussioninvite(Request $request)
+    {
+
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        $name = trim($user->name);
+        $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+        $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
+
+
+        $details = [
+
+            'from_email' => $user->email,
+            'from_name' => $user->name,
+            'greeting' => 'Hello',
+            'body' => 'I just started a discussion, **' . $request->title . '** on SkillsGuruh and I’d like to hear your thoughts. ',
+            'actionText' => 'Join here',
+            'url' => "https://skillsguruh.herokuapp.com/learner/discussion/" . $request->id,
+
+        ];
+
+        Mail::to($request->users)->send(new DiscussionInvite($details));
+        return response($details, 200);
+    }
+    public function sendeventinvite(Request $request)
+    {
+
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        $name = trim($user->name);
+        $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+        $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
+
+
+        $details = [
+
+            'from_email' => $user->email,
+            'from_name' => $user->name,
+            'greeting' => 'Hello',
+            'body' => 'I will be attending the event, **' . $request->title . '** on SkillsGuruh and I think you’d like it. Join me! ',
+            'actionText' => 'Join here',
+            'url' => "https://skillsguruh.herokuapp.com/learner/event/" . $request->id,
+
+        ];
+
+        Mail::to($request->users)->send(new EventInvite($details));
         return response($details, 200);
     }
 }
