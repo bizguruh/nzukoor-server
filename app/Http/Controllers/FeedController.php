@@ -12,6 +12,10 @@ class FeedController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function guestfeeds()
+    {
+        return Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->get();
+    }
     public function index()
     {
         if (auth('admin')->user()) {

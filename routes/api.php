@@ -312,6 +312,7 @@ Route::get('guest/facilitators', [FacilitatorController::class, 'index']);
 Route::get('guest/courses', [CourseController::class, 'guestcourses']);
 Route::get('guest/discussions', [DiscussionController::class, 'guestdiscussions']);
 Route::get('guest/events', [EventController::class, 'index']);
+Route::get('guest/feeds', [FeedController::class, 'guestfeeds']);
 
 
 // Contact message
