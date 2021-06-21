@@ -73,7 +73,7 @@ class PrivateDiscussionMemberController extends Controller
             'body' => "Your request to join the discussion, " . strtoupper($discussion->name) . ' has been accepted',
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => "http://localhost:8080/discussion/" . $request->discussion_id,
+            'url' => "https://skillsguruh-api.herokuapp.com/discussion/" . $request->discussion_id,
             'id' => $request->discussion_id
 
 
