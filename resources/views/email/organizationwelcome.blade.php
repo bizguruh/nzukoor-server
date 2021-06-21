@@ -58,6 +58,9 @@
     border-right: 18px solid #388087;
     border-top: 8px solid #388087;
 }
+.text-green{
+  color:#388087;
+}
   .footer {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
@@ -87,8 +90,8 @@
 <img src="{{asset('welcome.png')}}" width="300" height="auto" alt="Welcome">
 </div>
 <div>
-  <h3>Greetings {{$name}}, Here’s your Passport to be more </h3>
-  <h4>Welcome to the Social Learning Place.</h4>
+  <h1>Greetings {{$name}}, Here’s your Passport to be more </h1>
+  <h2 class="text-green">Welcome to the Social Learning Place.</h2>
   <p>
 We believe everybody has the capacity to be more, so get ready to be your very best self.
 
@@ -101,8 +104,8 @@ We believe everybody has the capacity to be more, so get ready to be your very b
 <div>
   <h5>Be part of something that has lasting value: help people around the world experience growth and fulfillment by sharing what you know. </h5>
 </div>
-<footer class=" text-right">
- <span><a href="http://skillsguruh.herokuapp.com/contact">Contact</a></span> | <span><a href="http://skillsguruh.herokuapp.com/about">About</a></span>
+<footer class=" text-right text-green">
+ <span><a href="http://skillsguruh.herokuapp.com/contact" class="text-green">Contact</a></span> | <span><a class="text-green" href="http://skillsguruh.herokuapp.com/about">About</a></span>
 </footer>
   </div>
 </body>
