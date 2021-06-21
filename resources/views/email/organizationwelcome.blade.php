@@ -75,6 +75,10 @@ body {
 .text-center{
   text-align: center;
 }
+td{
+  width: 50%;
+  padding: 15px;
+}
 .button-blue,
 .button-primary {
     background-color: #388087;
@@ -179,7 +183,7 @@ We believe everybody has the capacity to be more, so get ready to be your very b
             <a href="http://skillsguruh.herokuapp.com/register"><button class="button button-primary-outline">Become a Facilitator</button></a>
 
         </td>
-         <td class="text-center">
+         <td class="text-center" >
           <img src="{{asset('welcome2.png')}}"alt="Welcome">
 
   <p>  <strong class="mb-1 text-green">Your friendship counts!, </strong> Refer a friend and earn up to N100,000 credit points. Unlock group courses or join discussions of mutual interest. Trust us, life is better when you win with your tribe.</p>
