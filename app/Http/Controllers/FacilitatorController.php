@@ -249,7 +249,7 @@ class FacilitatorController extends Controller
                 $newuser->notify(new SendNotification($details));
             }
             $mail =  new MailController;
-            $mail->sendwelcome($newuser);
+            $mail->sendfacilitatorwelcome($newuser);
             return response($newuser->load('loginhistory'), 201);
         });
         return $data;

@@ -45,7 +45,19 @@ class MailController extends Controller
         ];
         Mail::send('email.organizationwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject('Here’s Your Passport To Be More ');
-            $message->from('successahon@gmail.com', 'SkillsGuruh');
+            $message->from('skillsguruh@gmail.com', 'SkillsGuruh');
+        });
+    }
+
+    public function sendfacilitatorwelcome($info)
+    {
+
+        $data = [
+            'name' => $info->name
+        ];
+        Mail::send('email.facilitatorwelcome', $data, function ($message) use ($info) {
+            $message->to($info->email, $info->name)->subject(' A Home For You To Share');
+            $message->from('skillsguruh@gmail.com', 'SkillsGuruh');
         });
     }
 
@@ -119,7 +131,7 @@ class MailController extends Controller
 
         ];
 
-        Mail::to('succy2010@gmail.com')->send(new ContactMail($details));
+        Mail::to('skillsguruh@gmail.com')->send(new ContactMail($details));
         return response($details, 200);
     }
     public function senddiscussioninvite(Request $request)
