@@ -158,7 +158,7 @@ p {
 <div class="top_banner">
 <img src="{{asset('welcome.png')}}" width="300" height="auto" alt="Welcome">
 </div>
-<div class="text-left"  style="margin-bottom: 8px;padding-top:10px" >
+<div class="text-left"  style="margin-bottom: 16px;padding-top:10px" >
   <h1>Greetings {{$name}}, Here’s your Passport to be more </h1>
   <h2 class="text-green">Welcome to the Social Learning Place.</h2>
   <p>
@@ -169,7 +169,7 @@ We believe everybody has the capacity to be more, so get ready to be your very b
 
 </div>
 <hr>
-<div style="margin-bottom: 16px">
+<div style="margin-bottom: 16px;margin-top: 16px">
   <table>
     <tbody>
       <tr>
