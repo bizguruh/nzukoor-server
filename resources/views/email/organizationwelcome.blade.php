@@ -46,6 +46,7 @@
     display: inline-block;
     overflow: hidden;
     text-decoration: none;
+    cursor: pointer;
 }
 .text-right{
   text-align: right;
