@@ -44,7 +44,7 @@ class MailController extends Controller
             'name' => $info->name
         ];
         Mail::send('email.organizationwelcome', $data, function ($message) use ($info) {
-            $message->to($info->email, $info->name)->subject('WELCOME MAIL');
+            $message->to($info->email, $info->name)->subject('Here’s Your Passport To Be More ');
             $message->from('successahon@gmail.com', 'SkillsGuruh');
         });
     }
@@ -77,16 +77,20 @@ class MailController extends Controller
 
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
+            $body = 'I would you to enroll for my course, **' . $request->title . '** on SkillsGuruh';
         }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
+            $body = 'I would you to enroll for my course, **' . $request->title . '** on SkillsGuruh';
         }
         if (auth('api')->user()) {
             $user = auth('api')->user();
+            $body = 'Would you enroll for the course, **' . $request->title . '** on SkillsGuruh with me?';
         }
         $name = trim($user->name);
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
+
 
 
         $details = [
@@ -94,9 +98,9 @@ class MailController extends Controller
             'from_email' => 'skillsguruh@gmail.com',
             'from_name' => 'SkillsGuruh',
             'greeting' => 'Hello ',
-            'body' => 'Would you enroll for the course, **' . $request->title . '** on SkillsGuruh with me?',
+            'body' => $body,
             'actionText' => 'Check it out here',
-            'url' => "https://skillsguruh.herokuapp.com/explore/courses/?referral_type=group&referral_code=" . $request->code,
+            'url' => $request->url
 
         ];
 
