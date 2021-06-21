@@ -16,7 +16,7 @@
     margin: 0;
     padding: 0;
     width: 100%;
-    text-align: left;
+    text-align: center;
 }
 .inner-body {
     -premailer-cellpadding: 0;
@@ -33,10 +33,11 @@
     line-height: 1.6;
 }
     .top_banner{
-      height: 150px;
+      min-height: 150px;
       width: 100%;
       background:#75b0b6;
-      text-align: center
+      text-align: center;
+      position: relative;
     }
     .button {
     -webkit-text-size-adjust: none;
@@ -86,10 +87,13 @@
 <img src="{{asset('welcome.png')}}" width="300" height="auto" alt="Welcome">
 </div>
 <div>
-  <h4>Greetings {{$name}}, Here’s your Passport to be more </h4>
-  <p>Welcome to the Social Learning Place.
-We believe everybody has the capacity to be more, so get ready to be your very best self. Browse our top courses, connect with like-minds, lend a voice to trending discussions and become a catalyst for change.
+  <h3>Greetings {{$name}}, Here’s your Passport to be more </h3>
+  <h4>Welcome to the Social Learning Place.</h4>
+  <p>
+We believe everybody has the capacity to be more, so get ready to be your very best self.
+
 </p>
+<p>Browse our top courses, connect with like-minds, lend a voice to trending discussions and become a catalyst for change.</p>
 
 </div>
 <a href="http://skillsguruh.herokuapp.com/explore"><button class="button button-blue">Explore Interest</button></a>
