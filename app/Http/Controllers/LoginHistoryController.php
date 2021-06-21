@@ -25,7 +25,13 @@ class LoginHistoryController extends Controller
             $user = auth('api')->user();
         }
 
-        return   $user->loginhistory()->get();
+        $history =   $user->loginhistory()->get();
+        if (count($history) == 1) {
+
+            $user->verification = true;
+            $user->save();
+        }
+        return $user;
     }
 
 

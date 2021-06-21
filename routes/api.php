@@ -251,6 +251,14 @@ Route::apiResource('answer-questionnaires', AnsweredQuestionnaireController::cla
 
 Route::apiResource('questionnaires', QuestionnaireController::class);
 Route::apiResource('question/templates', QuestionTemplateController::class);
+// Question drafts
+Route::get('question/drafts', [QuestionTemplateController::class, 'indexdraft']);
+Route::put('question/draft/{id}',  [QuestionTemplateController::class, 'updatedraft']);
+Route::post('question/drafts', [QuestionTemplateController::class, 'storedraft']);
+Route::delete('question/draft/{id}', [QuestionTemplateController::class, 'destroydraft']);
+Route::put('question/draft/update/{id}', [QuestionTemplateController::class, 'makeactive']);
+
+
 Route::post('delete-connection/{id}', [ConnectionController::class, 'deleteconnection']);
 
 Route::get('get-course/{id}', [CourseController::class, 'getcourse']);

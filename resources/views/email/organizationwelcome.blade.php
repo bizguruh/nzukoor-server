@@ -83,7 +83,7 @@
 
   <div class=" ">
 <div class="top_banner">
-<img src="{{asset('welcome.png')}}" width="120" height="auto" alt="Welcome">
+<img src="{{asset('welcome.png')}}" width="300" height="auto" alt="Welcome">
 </div>
 <div>
   <h4>Greetings {{$name}}, Here’s your Passport to be more </h4>

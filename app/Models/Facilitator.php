@@ -34,6 +34,14 @@ class Facilitator extends Authenticatable
         'country'
     ];
 
+    public function questiondrafts()
+    {
+        return $this->hasMany(QuestionDraft::class);
+    }
+    public function questiontemplates()
+    {
+        return $this->hasMany(QuestionTemplate::class);
+    }
 
     public function discussionrequest()
     {
