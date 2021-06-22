@@ -139,6 +139,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Referral::class);
     }
+    public function linkedSocialAccounts()
+    {
+        return $this->hasMany(LinkedSocialAccount::class);
+    }
     /**
      * The attributes that should be hidden for arrays.
      *
