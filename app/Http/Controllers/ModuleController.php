@@ -30,6 +30,7 @@ class ModuleController extends Controller
 
     public function store(Request $request)
     {
+
         $result = DB::transaction(function () use ($request) {
             if (auth('admin')->user()) {
                 $user = auth('admin')->user();
@@ -46,21 +47,11 @@ class ModuleController extends Controller
                 'cover_image' => $request->cover_image,
                 'modules' => json_encode($request->modules),
                 'course_id' => $request->course_id,
-                'organization_id' => $user->organization_id
+                'organization_id' => $user->organization_id,
+
             ]);
 
-            if (count($request->questionnaires)) {
-                foreach ($request->questionnaires as $key => $value) {
-                    Questionnaire::create([
-                        'course_id' => $request->course_id,
-                        'module_id' =>  $resource->id,
-                        'organization_id' => $user->organization_id,
-                        'module' => $request->module,
-                        'title' => $value['title'],
-                        'content' => json_encode($value['sections'])
-                    ]);
-                }
-            }
+
 
             if (count($request->templates)) {
                 foreach ($request->templates as $key => $value) {

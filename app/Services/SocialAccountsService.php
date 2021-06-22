@@ -36,7 +36,7 @@ class SocialAccountsService
           'firstName'      => $first_name,
           'lastName'      => $last_name,
           'email'         => $providerUser->getEmail(),
-          'profileImage'   => $providerUser->getAvatar(),
+          'profile'   => $providerUser->getAvatar(),
         ]);
       }
       $user->linkedSocialAccounts()->create([

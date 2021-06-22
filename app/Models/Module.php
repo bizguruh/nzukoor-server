@@ -9,8 +9,12 @@ class Module extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['module', 'modules', 'cover_image', 'organization_id', 'course_id', 'facilitator_id', 'admin_id'];
+    protected $fillable = ['module', 'modules', 'cover_image', 'organization_id', 'course_id', 'facilitator_id', 'admin_id', 'question_template_id'];
 
+    public  function questiontemplate()
+    {
+        return $this->hasOne(QuestionTemplate::class);
+    }
 
     public  function course()
     {

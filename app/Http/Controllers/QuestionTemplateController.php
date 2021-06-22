@@ -57,7 +57,7 @@ class QuestionTemplateController extends Controller
             'organization_id' => $user->organization_id,
             'interest' => $request->interest,
             'title' => $request->title,
-            'title' => $request->title,
+            'type' => $request->type,
             'status' => 'active',
             'sections' => json_encode($request->sections)
         ]);
@@ -78,6 +78,7 @@ class QuestionTemplateController extends Controller
             'organization_id' => $user->organization_id,
             'interest' => $request->interest,
             'title' => $request->title,
+            'type' => $request->type,
             'status' => 'draft',
             'sections' => json_encode($request->sections)
         ]);
@@ -125,6 +126,7 @@ class QuestionTemplateController extends Controller
     {
         $questionTemplate = QuestionTemplate::find($id);
         $questionTemplate->title = $request->title;
+        $questionTemplate->type = $request->type;
         $questionTemplate->sections = json_encode($request->sections);
         $questionTemplate->save();
         return $questionTemplate;
@@ -133,6 +135,7 @@ class QuestionTemplateController extends Controller
     {
         $questionTemplate = QuestionDraft::find($id);
         $questionTemplate->title = $request->title;
+        $questionTemplate->type = $request->type;
         $questionTemplate->sections = json_encode($request->sections);
         $questionTemplate->save();
         return $questionTemplate;

@@ -17,4 +17,8 @@ class QuestionTemplate extends Model
     {
         return  $this->belongsTo(Facilitator::class);
     }
+    public function module()
+    {
+        return  $this->belongsToMany(Module::class);
+    }
 }

@@ -37,7 +37,7 @@
             @endif
 
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                  <form action="/v1/auth/facebook/redirect" method="get">
+                  <form action="/v1/auth/google/redirect" method="get">
                        <button type="submit" style="padding: 10px 30px; background:green;color:white"> Goggle login</button>
                   </form>
                 {{-- <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">

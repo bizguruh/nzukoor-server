@@ -14,7 +14,7 @@ use App\Http\Controllers\SocialLoginController;
 |
 */
 
-Route::get('login', function () {
+Route::get('/', function () {
     return view('welcome');
 });
 
