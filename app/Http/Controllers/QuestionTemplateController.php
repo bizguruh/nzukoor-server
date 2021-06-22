@@ -51,7 +51,7 @@ class QuestionTemplateController extends Controller
             $user = auth('api')->user();
         }
 
-        return QuestionTemplate::create([
+        return $user->questiontemplates()->create([
 
 
             'organization_id' => $user->organization_id,
@@ -74,7 +74,7 @@ class QuestionTemplateController extends Controller
             $user = auth('api')->user();
         }
 
-        return QuestionTemplate::create([
+        return $user->questiontemplates()->create([
             'organization_id' => $user->organization_id,
             'interest' => $request->interest,
             'title' => $request->title,
