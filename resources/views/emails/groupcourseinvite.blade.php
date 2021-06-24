@@ -7,8 +7,9 @@
 {{$actionText}}
 @endcomponent
 
-<small>{{$url}}</small>
+<small>{{$url}}</small> <br>
+<small>Or use the code, {{$code}} to register</small>
 
 Thanks,<br>
-{{ config('app.name') }}
+{{ $sender }}
 @endcomponent

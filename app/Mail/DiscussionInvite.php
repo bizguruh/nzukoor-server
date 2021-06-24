@@ -30,7 +30,7 @@ class DiscussionInvite extends Mailable
     public function build()
     {
         return $this
-            ->subject('SKILSGURUH DISCUSSION INVITATION')
+            ->subject('SkillsGuruh Discussion Invitation')
             ->from($this->details['from_email'], $this->details['from_name'])
             ->markdown('emails.discussioninvite', $this->details);
     }

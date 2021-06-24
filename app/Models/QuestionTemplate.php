@@ -13,6 +13,11 @@ class QuestionTemplate extends Model
     {
         return  $this->belongsTo(Admin::class);
     }
+    public function assessment()
+    {
+        return  $this->hasMany(Assessment::class);
+    }
+
     public function facilitator()
     {
         return  $this->belongsTo(Facilitator::class);
@@ -20,5 +25,10 @@ class QuestionTemplate extends Model
     public function module()
     {
         return  $this->belongsToMany(Module::class);
+    }
+
+    public function questionresponse()
+    {
+        return $this->hasMany(QuestionResponse::class);
     }
 }

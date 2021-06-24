@@ -38,6 +38,11 @@ class User extends Authenticatable
         'country'
     ];
 
+    public function questionresponse()
+    {
+        return $this->hasOne(QuestionResponse::class);
+    }
+
     public function discussionrequest()
     {
         return $this->hasMany(DiscussionRequest::class);

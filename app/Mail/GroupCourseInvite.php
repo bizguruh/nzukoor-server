@@ -30,7 +30,7 @@ class GroupCourseInvite extends Mailable
     public function build()
     {
         return $this
-            ->subject('Course Invitation')
+            ->subject($this->details['title'])
             ->from($this->details['from_email'], $this->details['from_name'])
             ->markdown('emails.groupcourseinvite', $this->details);
     }

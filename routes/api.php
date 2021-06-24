@@ -6,6 +6,7 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\FacilitatorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
+use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\CourseCommunityController;
 use App\Http\Controllers\CourseCommunityLinkController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\QuestionnaireController;
+use App\Http\Controllers\QuestionResponseController;
 use App\Http\Controllers\QuestionTemplateController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ReviewController;
@@ -246,6 +248,9 @@ Route::apiResource('connections', ConnectionController::class);
 Route::apiResource('libraries', LibraryController::class);
 Route::apiResource('answer-questionnaires', AnsweredQuestionnaireController::class);
 
+Route::apiResource('question/responses', QuestionResponseController::class);
+
+Route::apiResource('assessments', AssessmentController::class);
 
 
 
@@ -307,9 +312,7 @@ Route::apiResource('add-community', CourseCommunityController::class);
 
 
 Route::apiResource('reviews', ReviewController::class);
-
 Route::get('mostenrolled', [CourseController::class, 'mostenrolled']);
-
 Route::get('toprated', [CourseController::class, 'toprated']);
 
 

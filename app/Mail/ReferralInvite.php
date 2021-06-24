@@ -30,6 +30,7 @@ class ReferralInvite extends Mailable
     public function build()
     {
         return $this
+            ->subject('Let’s Upskill Together!')
             ->from($this->details['from'], 'SkillsGuruh')
             ->markdown('emails.referral', $this->details);
     }
