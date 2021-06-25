@@ -18,4 +18,12 @@ class Library extends Model
     {
         return $this->hasMany(Course::class);
     }
+    public function assessment()
+    {
+        return $this->belongsTo(Assessment::class)->with('questiontemplate');
+    }
+    public function assessmentresponse()
+    {
+        return $this->belongsTo(AssessmentResponse::class);
+    }
 }

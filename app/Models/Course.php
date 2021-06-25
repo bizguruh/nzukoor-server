@@ -24,6 +24,11 @@ class Course extends Model
     ];
 
 
+    public function assessment()
+    {
+        return  $this->hasMany(Assessment::class);
+    }
+
     public function enroll()
     {
         return $this->hasOne(EnrollCount::class);

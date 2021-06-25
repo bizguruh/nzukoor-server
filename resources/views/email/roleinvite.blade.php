@@ -13,6 +13,8 @@
   </p>
   <p> Welcome to The Social Learning Place, we hope you like it here.</p>
 <p>Please log in to get started.</p>
+<p>Email: {{$email}}</p>
+<p>Password: {{$password}}</p>
 <a href="http://skillsguruh.com/login"><button class="button"></button></a>
 
 @component('mail::button', ['url' => 'http://skillsguruh.com/login', 'color' => 'primary'])

@@ -43,7 +43,7 @@ class AnsweredQuestionnaireController extends Controller
             'content' => json_encode($request->content),
             'module_id' => $request->module_id,
             'course_id' => intval($request->course_id),
-            'questionnaire_id' => $request->questionnaire_id
+            'question_template_id' => $request->questionnaire_id
         ]);
     }
 
@@ -66,7 +66,7 @@ class AnsweredQuestionnaireController extends Controller
             $user = auth('api')->user();
         }
 
-        return $user->answeredquestionnaire()->where('questionnaire_id', $id)->first();
+        return $user->answeredquestionnaire()->where('course_id', $id)->get();
     }
 
     /**

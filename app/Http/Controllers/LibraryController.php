@@ -14,7 +14,7 @@ class LibraryController extends Controller
     public function index()
     {
         $user  = auth('api')->user();
-        return  LibraryResource::collection(Library::where('user_id', $user->id)->get());
+        return  LibraryResource::collection(Library::where('user_id', $user->id)->with('assessment', 'assessmentresponse')->get());
     }
 
     public function store(Request $request)

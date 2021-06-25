@@ -35,6 +35,25 @@ class CourseController extends Controller
 
         return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->where('organization_id', $user->organization_id)->latest()->get();
     }
+
+    public function show($id)
+    {
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->id)->latest()->get();
+        }
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->where('id', $id)->latest()->first();
+    }
     public function guestcourses()
     {
         return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->latest()->get();

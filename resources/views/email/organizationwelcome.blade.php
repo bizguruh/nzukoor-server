@@ -130,8 +130,8 @@ h3 {
 
 p {
 
-    font-size: 14px;
-    line-height: 1.5em;
+    font-size: 16px;
+    line-height: 1.6em;
     margin-top: 0;
 }
 
@@ -163,13 +163,13 @@ p {
 <img src="{{asset('welcome.png')}}" width="300" height="auto" alt="Welcome">
 </div>
 <div class="text-left"  style="margin-bottom: 16px;padding-top:10px" >
-  <h1>Greetings {{$name}}, Here’s your Passport to be more </h1>
-  <h2 class="text-green">Welcome to the Social Learning Place.</h2>
+  <h2>Greetings {{$name}}, </h2>
+  <h1 class="text-green text-center">Welcome to the Social Learning Place</h1>
   <p>
 We believe everybody has the capacity to be more, so get ready to be your very best self.
  <br> Browse our top courses, connect with like-minds, lend a voice to trending discussions and become a catalyst for change.</p>
 
-<a href="http://skillsguruh.herokuapp.com/explore"><button class="button button-blue">Explore Interest</button></a>
+<a href="http://skillsguruh.com/explore"><button class="button button-blue">Explore Interest</button></a>
 
 </div>
 <hr>
@@ -177,17 +177,19 @@ We believe everybody has the capacity to be more, so get ready to be your very b
   <table>
     <tbody>
       <tr>
-        <td class="text-center">
+        <td class="text-justify">
+
           <img src="{{asset('welcome1.png')}}"   alt="Welcome">
-          <p> <strong class="text-green">Be part of something that has lasting value:</strong>  help people around the world experience growth and fulfillment by sharing what you know. </p>
-            <a href="http://skillsguruh.herokuapp.com/register"><button class="button button-primary-outline">Become a Facilitator</button></a>
+          <p> <span class="text-green">Be part of something that has lasting value:</span>  help people around the world experience growth and fulfillment by sharing what you know. </p>
+            <a href="http://skillsguruh.com/register"><button class="button button-primary-outline">Become a Facilitator</button></a>
 
         </td>
-         <td class="text-center" >
+         <td class="text-justify" >
           <img src="{{asset('welcome2.png')}}"alt="Welcome">
 
-  <p>  <strong class="mb-1 text-green">Your friendship counts!, </strong> Refer a friend and earn up to N100,000 credit points. Unlock group courses or join discussions of mutual interest. Trust us, life is better when you win with your tribe.</p>
-            <a href="http://skillsguruh.herokuapp.com/explore"><button class="button button-primary-outline">Invite Your Friends</button></a>
+  <p>  <span class="mb-1 text-green">Your friendship counts!, </span> Refer a friend and earn up to N100,000 credit points. Unlock group courses or join discussions of mutual interest. Trust us, life is better when you win with your tribe.</p>
+  <p>Here is your unique referral code - <span class="text-green">{{$referral_code}}</span></p>
+            <a href="http://skillsguruh.com/explore"><button class="button button-primary-outline">Invite Your Friends</button></a>
 
         </td>
       </tr>
@@ -196,7 +198,7 @@ We believe everybody has the capacity to be more, so get ready to be your very b
 
 </div>
 <footer class=" text-right text-green">
- <span><a href="http://skillsguruh.herokuapp.com/contact" class="text-green">Contact</a></span> | <span><a class="text-green" href="http://skillsguruh.herokuapp.com/about">About</a></span>
+ <span><a href="http://skillsguruh.com/contact" class="text-green">Contact</a></span> | <span><a class="text-green" href="http://skillsguruh.herokuapp.com/about">About</a></span>
 </footer>
   </div>
 </body>

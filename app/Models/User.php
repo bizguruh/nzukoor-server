@@ -38,6 +38,21 @@ class User extends Authenticatable
         'country'
     ];
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function learnerassessment()
+    {
+        return $this->hasMany(LearnerAssessment::class);
+    }
+
+    public function assessmentresponse()
+    {
+        return $this->hasMany(AssessmentResponse::class);
+    }
+
     public function questionresponse()
     {
         return $this->hasOne(QuestionResponse::class);

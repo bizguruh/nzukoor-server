@@ -34,6 +34,12 @@ class Facilitator extends Authenticatable
         'country'
     ];
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+
     public function assessments()
     {
         return $this->hasMany(Assessment::class);

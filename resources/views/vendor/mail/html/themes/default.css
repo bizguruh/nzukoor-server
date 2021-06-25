@@ -234,6 +234,7 @@ img {
     display: inline-block;
     overflow: hidden;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .button-blue,
@@ -293,4 +294,11 @@ img {
 
 .break-all {
     word-break: break-all;
+}
+
+.text-left {
+    text-align: left;
+}
+.text-justify {
+    text-align: justify;
 }

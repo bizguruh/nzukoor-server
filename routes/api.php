@@ -7,6 +7,7 @@ use App\Http\Controllers\FacilitatorController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
 use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\AssessmentResponseController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\CourseCommunityController;
 use App\Http\Controllers\CourseCommunityLinkController;
@@ -27,11 +28,13 @@ use App\Http\Controllers\DiscussionViewController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\LearnerAssessmentController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\LoginHistoryController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\QuestionResponseController;
@@ -251,6 +254,12 @@ Route::apiResource('answer-questionnaires', AnsweredQuestionnaireController::cla
 Route::apiResource('question/responses', QuestionResponseController::class);
 
 Route::apiResource('assessments', AssessmentController::class);
+
+Route::apiResource('assessment/responses', AssessmentResponseController::class);
+Route::apiResource('learner/assessments', LearnerAssessmentController::class);
+
+Route::apiResource('orders', OrderController::class);
+
 
 
 

@@ -14,7 +14,8 @@ class AssessmentResponseController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth('api')->user();
+        return   $user->assessmentresponse()->latest()->get();
     }
 
     /**
@@ -35,7 +36,15 @@ class AssessmentResponseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = auth('api')->user();
+
+        return $user->assessmentresponse()->create([
+
+            'assessment_id' => $request->assessment_id,
+            'response' => json_encode($request->response),
+            'your_score' => $request->your_score,
+            'total_score' => $request->total_score
+        ]);
     }
 
     /**

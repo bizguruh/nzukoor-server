@@ -20,9 +20,9 @@ class UserController extends Controller
 
     protected function generateCode($numChars)
     {
-        $string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
         //Return the job id.
-        return   substr(str_shuffle($string), 0, $numChars) . mt_rand(1000, 9999);
+        return  mt_rand(1000, 9999);
     }
 
 
@@ -81,7 +81,9 @@ class UserController extends Controller
             'actionText' => '',
             'url' => '',
             'to' => 'user',
-            'id' => $newuser->id
+            'id' => $newuser->id,
+            'email' => $request->email,
+            'password' => $request->password
         ];
 
 
@@ -92,6 +94,7 @@ class UserController extends Controller
 
         $newuser->notify(new SendNotification($details));
         $newuser->role = 'Learner';
+        $newuser->password = $request->password;
 
         $mail =  new MailController;
         $mail->sendroleinvite($user->name, $newuser);

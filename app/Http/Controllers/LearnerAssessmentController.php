@@ -14,7 +14,8 @@ class LearnerAssessmentController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth('api')->user();
+        return   $user->learnerassessment()->with('assessment')->latest()->get();
     }
 
     /**

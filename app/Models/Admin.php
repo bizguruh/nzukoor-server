@@ -14,6 +14,11 @@ class Admin extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
 
     public function questiondrafts()
     {

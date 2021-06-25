@@ -15,7 +15,7 @@ class AdminController extends Controller
     {
         $string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         //Return the job id.
-        return   substr(str_shuffle($string), 0, $numChars) . mt_rand(1000, 9999);
+        return  mt_rand(1000, 9999);
     }
 
 
@@ -69,7 +69,7 @@ class AdminController extends Controller
                 'role' => 'administrator',
                 'profile' => $request->profile,
                 'phone' => $request->phone,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
                 'verification' => false
             ]);
             $details = [
@@ -80,11 +80,13 @@ class AdminController extends Controller
                 'url' => '',
                 'to' => 'admin',
                 'id' => $newuser->id,
+                'email' => $request->email,
+                'password' => $request->password
 
             ];
             $newuser->notify(new SendNotification($details));
             $newuser->role = 'Admin';
-
+            $newuser->password = $request->password;
             $mail =  new MailController;
             $mail->sendroleinvite($user->name, $newuser);
             return $newuser;

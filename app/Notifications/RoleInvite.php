@@ -42,11 +42,13 @@ class RoleInvite extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('INVITATION MAIL')
+            ->subject('Role Invitation')
             ->from($this->details['from_email'], $this->details['from_name'])
             ->greeting($this->details['greeting'])
             ->line($this->details['body'])
-            ->line('SkillsGuruh is Social Learning Place, we hope you like it here.')
+            ->line('Login Credentials')
+            ->line('Email: ' . $this->details['email'])
+            ->line('Password: ' . $this->details['password'])
             ->line('Please click the link to get started')
             ->action($this->details['actionText'], $this->details['url']);
         //  ->line('Use this referral code ' . $this->details['code'] . ' to create an account');

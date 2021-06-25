@@ -8,7 +8,9 @@
 @endcomponent
 
 <small>{{$url}}</small> <br>
+@if($code)
 <small>Or use the code, {{$code}} to register</small>
+@endif
 
 Thanks,<br>
 {{ $sender }}

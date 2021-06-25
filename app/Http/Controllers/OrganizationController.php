@@ -21,7 +21,7 @@ class OrganizationController extends Controller
     {
         $string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         //Return the job id.
-        return   substr(str_shuffle($string), 0, $numChars) . mt_rand(1000, 9999);
+        return    mt_rand(1000, 9999);
     }
 
 
@@ -65,7 +65,7 @@ class OrganizationController extends Controller
                 'interest' => json_encode($request->interest),
                 'bio' => $request->bio,
                 'logo' => $request->profile,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
                 'verification' => $request->verification
             ]);
 

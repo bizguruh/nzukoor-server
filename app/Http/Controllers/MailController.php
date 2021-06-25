@@ -19,6 +19,7 @@ class MailController extends Controller
     public function sendroleinvite($organization, $user)
     {
 
+
         $userorg = auth('organization')->user();
         $name = trim($user->name);
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
@@ -31,7 +32,9 @@ class MailController extends Controller
             'body' => 'You have been invited by ' . $organization . ' to be a ' . $user->role . ' on SkillsGuruh',
             'actionText' => 'Click to login',
             'url' => "http://skillsguruh.com/login",
-            'code' => $userorg->referral_code
+            'code' => $userorg->referral_code,
+            'email' => $user->email,
+            'password' => $user->password
 
         ];
 
@@ -41,7 +44,8 @@ class MailController extends Controller
     {
 
         $data = [
-            'name' => $info->name
+            'name' => $info->name,
+            'referral_code' => $info->referral_code
         ];
         Mail::send('email.organizationwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject('Here’s Your Passport To Be More ');
@@ -78,7 +82,7 @@ class MailController extends Controller
             'name' => $user->name,
             'organization' => $organization->name,
             'from' => $user->email,
-            'url' => 'https://skillsguruh.herokuapp.com/register/?referral_code=' . $request->code
+            'url' => 'https://skillsguruh.com/register/?referral_code=' . $request->code
         ];
         Mail::to($request->emails)->send(new ReferralInvite($data));
     }
@@ -91,17 +95,17 @@ class MailController extends Controller
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
             $body = 'I would you to enroll for my course, **' . $request->title . '** on SkillsGuruh';
-            $title = ' I think you’d want to see this!';
+            $title = ' I think You’d Want To See This!';
         }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
             $body = 'I would you to enroll for my course, **' . $request->title . '** on SkillsGuruh';
-            $title = ' I think you’d want to see this!';
+            $title = ' I think You’d Want To See This!';
         }
         if (auth('api')->user()) {
             $user = auth('api')->user();
             $body = 'Would you enroll for the course, **' . $request->title . '** on SkillsGuruh with me?';
-            $title = ' Let’s unlock a new skill';
+            $title = ' Let’s Unlock A New Skill';
         }
         $name = trim($user->name);
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);

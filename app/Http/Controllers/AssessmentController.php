@@ -32,9 +32,10 @@ class AssessmentController extends Controller
             'duration' => $request->duration,
             'tools' => json_encode($request->tools),
             'feedback' => $request->feedback,
+            'course_id' => $request->course['id'],
             'status' => 'pending'
         ]);
-        return response($assessment->with('template'), 201);
+        return response($assessment->load('questiontemplate', 'course'), 201);
     }
 
 

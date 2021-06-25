@@ -51,6 +51,7 @@ class QuestionTemplateController extends Controller
             $user = auth('api')->user();
         }
 
+
         return $user->questiontemplates()->create([
 
 
@@ -59,6 +60,7 @@ class QuestionTemplateController extends Controller
             'title' => $request->title,
             'type' => $request->type,
             'status' => 'active',
+            'totalscore' => $request->totalscore,
             'sections' => json_encode($request->sections)
         ]);
     }
@@ -126,6 +128,7 @@ class QuestionTemplateController extends Controller
     {
         $questionTemplate = QuestionTemplate::find($id);
         $questionTemplate->title = $request->title;
+        $questionTemplate->totalscore = $request->totalscore;
         $questionTemplate->type = $request->type;
         $questionTemplate->sections = json_encode($request->sections);
         $questionTemplate->save();
@@ -136,6 +139,7 @@ class QuestionTemplateController extends Controller
         $questionTemplate = QuestionDraft::find($id);
         $questionTemplate->title = $request->title;
         $questionTemplate->type = $request->type;
+        $questionTemplate->totalscore = $request->totalscore;
         $questionTemplate->sections = json_encode($request->sections);
         $questionTemplate->save();
         return $questionTemplate;

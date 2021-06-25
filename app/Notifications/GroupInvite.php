@@ -42,7 +42,7 @@ class GroupInvite extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Let’s unlock a new skill')
+            ->subject('Let’s Unlock A New Skill')
             ->from($this->details['from_email'], $this->details['from_name'])
             ->greeting($this->details['greeting'])
             ->line($this->details['body'])
