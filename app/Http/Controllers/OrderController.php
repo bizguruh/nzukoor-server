@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Order;
+use App\Notifications\CoursePurchase;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -53,6 +55,12 @@ class OrderController extends Controller
                 'course_id' => $request->course_id
             ]);
         }
+        $body = "Thanks for your purchase of the course, " . strtoupper(Course::find($request->course_id)->title) . ", it has been added to your library ";
+        $details = [
+            'body' => $body,
+            'id' => $request->course_id,
+        ];
+        $user->notify(new CoursePurchase($details));
 
         return response($result, 201);
     }

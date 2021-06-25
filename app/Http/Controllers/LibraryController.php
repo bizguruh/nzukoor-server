@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\LibraryResource;
 use App\Http\Resources\SingleLibraryResource;
+use App\Models\Course;
 use App\Models\EnrollCount;
 use App\Models\Library;
+use App\Notifications\CoursePurchase;
+use App\Notifications\CourseToLibrary;
 use Illuminate\Http\Request;
 
 class LibraryController extends Controller
@@ -34,9 +37,18 @@ class LibraryController extends Controller
             $enroll->save();
         }
 
-        return $user->library()->create([
+        $result = $user->library()->create([
             'course_id' => $request->course_id
         ]);
+
+
+        $body = "The course, " . strtoupper(Course::find($request->course_id)->title) . " has been added to your library ";
+        $details = [
+            'body' => $body,
+            'id' => $request->course_id,
+        ];
+        $user->notify(new CourseToLibrary($details));
+        return response($result, 201);
     }
 
     public function show($id)

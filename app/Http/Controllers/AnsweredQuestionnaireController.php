@@ -38,13 +38,28 @@ class AnsweredQuestionnaireController extends Controller
     {
 
         $user = auth('api')->user();
-
-        return $user->answeredquestionnaire()->create([
-            'content' => json_encode($request->content),
-            'module_id' => $request->module_id,
-            'course_id' => intval($request->course_id),
-            'question_template_id' => $request->questionnaire_id
-        ]);
+        $find = $user->answeredquestionnaire()->where('course_id', $request->course_id)->where('question_template_id', $request->questionnaire_id)->where('module_id', $request->module_id)->first();
+        if (is_null($find)) {
+            return $user->answeredquestionnaire()->create([
+                'content' => json_encode($request->content),
+                'module_id' => $request->module_id,
+                'course_id' => intval($request->course_id),
+                'question_template_id' => $request->questionnaire_id,
+                'status' => $request->status,
+                'total_score' => $request->total_score,
+                'your_score' => $request->your_score
+            ]);
+        } else {
+            $find->content = json_encode($request->content);
+            $find->module_id = $request->module_id;
+            $find->course_id = intval($request->course_id);
+            $find->question_template_id = $request->questionnaire_id;
+            $find->status = $request->status;
+            $find->total_score = $request->total_score;
+            $find->your_score = $request->your_score;
+            $find->save();
+            return response($find, 201);
+        }
     }
 
     /**
@@ -67,6 +82,26 @@ class AnsweredQuestionnaireController extends Controller
         }
 
         return $user->answeredquestionnaire()->where('course_id', $id)->get();
+    }
+
+
+    public function editresponse($id)
+    {
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        $find = AnsweredQuestionnaire::find($id);
+        $find->status = 'edit';
+        $find->save();
+        return $find;
     }
 
     /**

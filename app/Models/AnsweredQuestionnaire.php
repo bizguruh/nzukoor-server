@@ -9,7 +9,7 @@ class AnsweredQuestionnaire extends Model
 {
     use HasFactory;
     protected $table = 'answered_questionnaire';
-    protected $fillable = ['user_id', 'question_template_id', 'module_id', 'course_id', 'content'];
+    protected $fillable = ['user_id', 'question_template_id', 'module_id', 'course_id', 'content', 'status', 'your_score', 'total_score'];
 
     public function user()
     {

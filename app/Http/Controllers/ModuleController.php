@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
+use App\Models\Library;
 use App\Models\Module;
 use App\Models\Questionnaire;
+use App\Models\User;
+use App\Notifications\NewModuleUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class ModuleController extends Controller
 {
@@ -53,21 +58,37 @@ class ModuleController extends Controller
 
 
 
-            if (count($request->templates)) {
-                foreach ($request->templates as $key => $value) {
-                    Questionnaire::create([
-                        'course_id' => $request->course_id,
-                        'module_id' =>  $resource->id,
-                        'organization_id' => $user->organization_id,
-                        'module' => $request->module,
-                        'title' => $value['title'],
-                        'type' => $request->type,
-                        'content' => $value['sections']
-                    ]);
+            // if (count($request->templates)) {
+            //     foreach ($request->templates as $key => $value) {
+            //         Questionnaire::create([
+            //             'course_id' => $request->course_id,
+            //             'module_id' =>  $resource->id,
+            //             'organization_id' => $user->organization_id,
+            //             'module' => $request->module,
+            //             'title' => $value['title'],
+            //             'type' => $request->type,
+            //             'content' => $value['sections']
+            //         ]);
+            //     }
+            // }
+
+
+            $users = Library::where('course_id', $request->course_id)->get();
+            if (count($users)) {
+                foreach ($users as $key => $value) {
+                    $user  = User::find($value->user_id);
+                    $body = "A new resource for the course " . strtoupper(Course::find($request->course_id)->title) . " has been added to your library ";
+                    $details = [
+
+                        'body' => $body,
+                        'id' => $request->course_id,
+
+
+                    ];
+
+                    $user->notify(new NewModuleUpload($details));
                 }
             }
-
-
             return $resource;
         });
 

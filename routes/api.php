@@ -251,6 +251,8 @@ Route::apiResource('connections', ConnectionController::class);
 Route::apiResource('libraries', LibraryController::class);
 Route::apiResource('answer-questionnaires', AnsweredQuestionnaireController::class);
 
+Route::get('edit/response/{id}', [AnsweredQuestionnaireController::class, 'editresponse']);
+
 Route::apiResource('question/responses', QuestionResponseController::class);
 
 Route::apiResource('assessments', AssessmentController::class);
