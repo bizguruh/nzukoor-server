@@ -14,7 +14,7 @@ class AddTotalscoreToQuestionTemplatesTable extends Migration
     public function up()
     {
         Schema::table('question_templates', function (Blueprint $table) {
-            $table->integer('totalscore')->default(0);
+            $table->integer('totalscore')->nullable()->default(0);
         });
     }
 
