@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\EnrollCount;
 use App\Models\Order;
 use App\Notifications\CoursePurchase;
 use Illuminate\Http\Request;
