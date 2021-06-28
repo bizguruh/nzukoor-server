@@ -29,6 +29,10 @@ class Course extends Model
         return  $this->hasMany(Assessment::class);
     }
 
+    public function viewcount()
+    {
+        return $this->hasOne(CourseViewCount::class);
+    }
     public function enroll()
     {
         return $this->hasOne(EnrollCount::class);

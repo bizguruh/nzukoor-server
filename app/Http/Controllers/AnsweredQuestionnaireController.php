@@ -15,8 +15,10 @@ class AnsweredQuestionnaireController extends Controller
     public function index()
     {
         $user = auth('api')->user();
-        return $user->answeredquestionnaire();
+        return $user->answeredquestionnaire()->with('questiontemplate', 'course')->get();
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -37,6 +39,7 @@ class AnsweredQuestionnaireController extends Controller
     public function store(Request $request)
     {
 
+
         $user = auth('api')->user();
         $find = $user->answeredquestionnaire()->where('course_id', $request->course_id)->where('question_template_id', $request->questionnaire_id)->where('module_id', $request->module_id)->first();
         if (is_null($find)) {
@@ -51,14 +54,10 @@ class AnsweredQuestionnaireController extends Controller
             ]);
         } else {
             $find->content = json_encode($request->content);
-            $find->module_id = $request->module_id;
-            $find->course_id = intval($request->course_id);
-            $find->question_template_id = $request->questionnaire_id;
             $find->status = $request->status;
-            $find->total_score = $request->total_score;
             $find->your_score = $request->your_score;
             $find->save();
-            return response($find, 201);
+            return response($find, 200);
         }
     }
 

@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseCommunity;
 use App\Models\CourseCommunityLink;
+use App\Models\EnrollCount;
 use App\Models\Facilitator;
 use App\Models\Organization;
 use App\Models\User;
@@ -215,6 +216,18 @@ class UserController extends Controller
                             $info->library()->create([
                                 'course_id' => $link->course_id
                             ]);
+                            $enroll = EnrollCount::where('course_id', $link->course_id)->where('organization_id', $info->organization_id)->first();
+
+                            if (is_null($enroll)) {
+                                EnrollCount::create([
+                                    'course_id' => $link->course_id,
+                                    'organization_id' => $info->organization_id,
+                                    'count' => 1
+                                ]);
+                            } else {
+                                $enroll->count = $enroll->count + 1;
+                                $enroll->save();
+                            }
 
                             $details = [
                                 'body' =>  \ucfirst(Course::find($link->course_id)->title) . ' course has just been added to your library',

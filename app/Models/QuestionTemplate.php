@@ -31,4 +31,8 @@ class QuestionTemplate extends Model
     {
         return $this->hasMany(QuestionResponse::class);
     }
+    public function answeredquestion()
+    {
+        return $this->hasMany(AnsweredQuestionnaire::class);
+    }
 }

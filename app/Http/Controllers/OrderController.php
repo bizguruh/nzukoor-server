@@ -55,6 +55,18 @@ class OrderController extends Controller
                 'course_id' => $request->course_id
             ]);
         }
+        $enroll = EnrollCount::where('course_id', $request->course_id)->where('organization_id', $user->organization_id)->first();
+
+        if (is_null($enroll)) {
+            EnrollCount::create([
+                'course_id' => $request->course_id,
+                'organization_id' => $user->organization_id,
+                'count' => 1
+            ]);
+        } else {
+            $enroll->count = $enroll->count + 1;
+            $enroll->save();
+        }
         $body = "Thanks for your purchase of the course, " . strtoupper(Course::find($request->course_id)->title) . ", it has been added to your library ";
         $details = [
             'body' => $body,

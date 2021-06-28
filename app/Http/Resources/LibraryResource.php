@@ -24,7 +24,7 @@ class LibraryResource extends JsonResource
             'current_module' => $this->current_module,
             'course_id' => $this->course_id,
             'user_id' => $this->user_id,
-            'course' => Course::find($this->course_id)->load('modules', 'courseoutline', 'review', 'enroll'),
+            'course' => Course::find($this->course_id)->load('modules', 'courseoutline', 'review', 'enroll', 'viewcount'),
             'assessment' => $this->assessment,
             'assessmentresponse' => $this->assessmentresponse,
 

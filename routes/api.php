@@ -19,6 +19,7 @@ use App\Http\Controllers\FeedStarController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseOutlineController;
 use App\Http\Controllers\CourseScheduleController;
+use App\Http\Controllers\CourseViewCountController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\DiscussionMessageController;
@@ -259,8 +260,10 @@ Route::apiResource('assessments', AssessmentController::class);
 
 Route::apiResource('assessment/responses', AssessmentResponseController::class);
 Route::apiResource('learner/assessments', LearnerAssessmentController::class);
+Route::get('add/assessment', [LearnerAssessmentController::class, 'addassessment']);
 
 Route::apiResource('orders', OrderController::class);
+Route::get('course/view/{id}', [CourseViewCountController::class, 'store']);
 
 
 

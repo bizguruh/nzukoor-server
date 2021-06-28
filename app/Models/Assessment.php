@@ -28,7 +28,7 @@ class Assessment extends Model
     }
     public function assessmentresponse()
     {
-        return $this->belongsTo(AssessmentResponse::class);
+        return $this->hasMany(AssessmentResponse::class)->with('user');
     }
     public function learnerassessment()
     {

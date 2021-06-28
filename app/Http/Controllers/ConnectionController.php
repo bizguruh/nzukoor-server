@@ -160,7 +160,7 @@ class ConnectionController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-        $courses = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->get();
+        $courses = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get();
         $interests = $user->interests ? json_decode($user->interests) : [];
         $allusers = [];
 

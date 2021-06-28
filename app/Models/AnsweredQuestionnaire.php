@@ -23,4 +23,8 @@ class AnsweredQuestionnaire extends Model
     {
         return $this->belongsTo(Module::class);
     }
+    public function questiontemplate()
+    {
+        return $this->belongsTo(QuestionTemplate::class);
+    }
 }

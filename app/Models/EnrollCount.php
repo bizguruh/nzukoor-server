@@ -12,6 +12,6 @@ class EnrollCount extends Model
 
     public function course()
     {
-        return $this->belongsTo(Course::class)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll');
+        return $this->belongsTo(Course::class)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount');
     }
 }

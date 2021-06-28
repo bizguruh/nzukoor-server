@@ -33,7 +33,7 @@ class CourseController extends Controller
             $user = auth('api')->user();
         }
 
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->where('organization_id', $user->organization_id)->latest()->get();
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
     public function show($id)
@@ -52,11 +52,11 @@ class CourseController extends Controller
             $user = auth('api')->user();
         }
 
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->where('id', $id)->latest()->first();
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('id', $id)->latest()->first();
     }
     public function guestcourses()
     {
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->latest()->get();
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get();
     }
 
 
@@ -158,7 +158,7 @@ class CourseController extends Controller
     public function toprated()
     {
         $user = auth('facilitator')->user();
-        $enrolled = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll')->get()->toArray();
+        $enrolled = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get()->toArray();
 
 
 

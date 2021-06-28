@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assessment;
 use App\Models\LearnerAssessment;
+use App\Models\Library;
 use Illuminate\Http\Request;
 
 class LearnerAssessmentController extends Controller
@@ -34,9 +36,17 @@ class LearnerAssessmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function addassessment(Request $request)
     {
-        //
+        $user = auth('api')->user();
+        $library = Library::where('user_id', $user->id)->get()->toArray();
+
+        $newarr = array_map(function ($v) {
+            return $v['course_id'];
+        }, $library);
+        $courseIds =  array_unique($newarr);
+
+        return  $assessments = Assessment::where('course_id', $courseIds)->with('questiontemplate', 'course')->get();
     }
 
     /**
