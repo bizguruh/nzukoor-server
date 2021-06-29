@@ -172,7 +172,7 @@ class FacilitatorController extends Controller
                     'qualifications' => json_encode($request->qualifications),
                     'country' => 'NG',
                     'verification' => false,
-                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                    'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
                 $referral_detail = [
                     'greeting' => 'Welcome',
@@ -217,7 +217,7 @@ class FacilitatorController extends Controller
                     'interest' => json_encode($request->interest),
                     'bio' => $request->bio,
                     'logo' => $request->profile,
-                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                    'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                     'verification' => $request->verification
                 ]);
 
@@ -235,7 +235,7 @@ class FacilitatorController extends Controller
                     'qualifications' => json_encode($request->qualifications),
                     'country' => 'NG',
                     'verification' => false,
-                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                    'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
 
 
                 ]);

@@ -65,7 +65,7 @@ class OrganizationController extends Controller
                 'interest' => json_encode($request->interest),
                 'bio' => $request->bio,
                 'logo' => $request->profile,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 'verification' => $request->verification
             ]);
 

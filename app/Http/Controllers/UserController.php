@@ -73,7 +73,7 @@ class UserController extends Controller
             'profile' => $request->profile,
             'country' => 'NG',
             'verification' => false,
-            'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+            'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
         ]);
         $details = [
             'greeting' => 'Welcome',
@@ -152,7 +152,7 @@ class UserController extends Controller
                     'profile' => $request->profile,
                     'country' => 'NG',
                     'verification' => false,
-                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                    'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
 
 
@@ -254,7 +254,7 @@ class UserController extends Controller
                     'profile' => $request->profile,
                     'country' => 'NG',
                     'verification' => false,
-                    'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
+                    'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
             }
 
@@ -305,7 +305,7 @@ class UserController extends Controller
                 'profile' => $request->profile,
                 'country' => 'NG',
                 'verification' => false,
-                'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . $referral_code,
+                'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . $referral_code,
             ]);
 
 
