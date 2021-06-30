@@ -106,12 +106,14 @@ class CourseController extends Controller
             foreach ($request->input('schedule') as $key => $value) {
 
                 $schedule = $course->courseschedule()->create([
+                    'all' => $value['all'],
                     'day' => 'default',
                     'url' =>  $value['url'],
                     'venue' =>  $value['venue'],
                     'facilitator_id' =>   $value['facilitator_id'],
                     'start_time' =>  $value['start_time'],
                     'end_time' =>  $value['end_time'],
+                    'modules' => json_encode($value['modules']),
                     'organization_id' => $user->organization_id,
                 ]);
 
@@ -221,33 +223,25 @@ class CourseController extends Controller
 
 
 
-
             foreach ($request->input('schedule') as $key => $value) {
 
                 $schedule =  CourseSchedule::firstOrNew(['id' => $value['id']]);
 
                 $schedule->day = $value['day'];
+                $schedule->all = $value['all'];
+                $schedule->modules = json_encode($value['modules']);
                 $schedule->venue = $value['venue'];
                 $schedule->facilitator_id =   $value['facilitator_id'];
                 $schedule->start_time =  $value['start_time'];
                 $schedule->end_time =  $value['end_time'];
                 $schedule->save();
+
+                $find = FacilitatorModule::where('course_id', $course->id)->first();
+                $find->modules = json_encode($value['modules']);
+                $find->save();
             }
             //return $request->questionnaires;
 
-            foreach ($request->questionnaires as $key => $value) {
-
-                if (is_null($value['id'])) {
-                    Questionnaire::create([
-                        'course_id' => $course->id,
-                        'module_id' => null,
-                        'organization_id' => $user->organization_id,
-                        'module' => $course->title,
-                        'title' => $value['title'],
-                        'content' => json_encode($value['sections'])
-                    ]);
-                }
-            }
             return $course->load('courseoutline', 'courseschedule');
         });
 

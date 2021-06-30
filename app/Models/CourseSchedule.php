@@ -9,6 +9,8 @@ class CourseSchedule extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'all',
+        'modules',
         'day',
         'venue',
         'url',
