@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\CourseSchedule;
 use App\Models\EnrollCount;
+use App\Models\FacilitatorModule;
 use App\Models\Questionnaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -113,17 +114,16 @@ class CourseController extends Controller
                     'end_time' =>  $value['end_time'],
                     'organization_id' => $user->organization_id,
                 ]);
+
+                FacilitatorModule::create([
+                    'course_id' => $course->id,
+                    'facilitator_id' => $value['facilitator_id'],
+                    'modules' => json_encode($value['modules'])
+                ]);
             }
-            // foreach ($request->questionnaires as $key => $value) {
-            //     Questionnaire::create([
-            //         'course_id' => $course->id,
-            //         'module_id' => null,
-            //         'organization_id' => $user->organization_id,
-            //         'module' => $course->title,
-            //         'title' => $value['title'],
-            //         'content' => json_encode($value['sections'])
-            //     ]);
-            // }
+
+
+
             return $course->load('courseoutline', 'courseschedule', 'modules', 'questionnaire');
         });
 

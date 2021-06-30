@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddFeed;
 use App\Models\Feed;
 use Illuminate\Http\Request;
 
@@ -71,6 +72,7 @@ class FeedController extends Controller
             'url' => $request->url,
             'message' => $request->message
         ]);
+        broadcast(new AddFeed($user, $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')))->toOthers();
         return $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars');
     }
 

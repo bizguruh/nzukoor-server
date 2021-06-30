@@ -12,6 +12,9 @@ Click to get started
 <div>or</div>
 <div>Use this referral code {{$code}} to create an account</div>
 
+
+<small>
 Thanks,<br>
 {{ config('app.name') }}
+</small>
 @endcomponent

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Http\Resources\InboxResource;
 use App\Models\Inbox;
 use Illuminate\Http\Request;
@@ -17,15 +18,15 @@ class InboxController extends Controller
     {
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
-            $data = Inbox::where([['receiver', '=', 'facilitator'], ['receiver_id', '=', $user->id]])->orWhere('facilitator_id', $user->id)->latest()->get();
+            $data = Inbox::where([['receiver', '=', 'facilitator'], ['receiver_id', '=', $user->id]])->orWhere('facilitator_id', $user->id)->get();
         }
         if (auth('api')->user()) {
             $user = auth('api')->user();
-            $data = Inbox::where([['receiver', '=', 'user'], ['receiver_id', '=', $user->id]])->orWhere('user_id', $user->id)->latest()->get();
+            $data = Inbox::where([['receiver', '=', 'user'], ['receiver_id', '=', $user->id]])->orWhere('user_id', $user->id)->get();
         }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
-            $data = Inbox::where([['receiver', '=', 'admin'], ['receiver_id', '=', $user->id]])->orWhere('admin_id', $user->id)->latest()->get();
+            $data = Inbox::where([['receiver', '=', 'admin'], ['receiver_id', '=', $user->id]])->orWhere('admin_id', $user->id)->get();
         }
 
         return InboxResource::collection($data);
@@ -49,14 +50,16 @@ class InboxController extends Controller
 
 
 
-        $data = $user->inbox()->create([
+        $message = $user->inbox()->create([
             'message' => $request->message,
             'attachment' => $request->attachment,
             'receiver' => $request->receiver,
             'receiver_id' => $request->receiver_id,
             'status' => false,
         ]);
-        return $data->load('admin', 'user', 'facilitator');
+        $data = $message->load('admin', 'user', 'facilitator');
+        broadcast(new MessageSent($user, $data))->toOthers();
+        return $message->load('admin', 'user', 'facilitator');
     }
 
     /**

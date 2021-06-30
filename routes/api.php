@@ -27,6 +27,7 @@ use App\Http\Controllers\DiscussionRequestController;
 use App\Http\Controllers\DiscussionVoteController;
 use App\Http\Controllers\DiscussionViewController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\FacilitatorModuleController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LearnerAssessmentController;
@@ -144,6 +145,8 @@ Route::middleware(['auth:facilitator'])->group(function () {
 
 
     Route::apiResource('facilitators', FacilitatorController::class);
+
+    Route::apiResource('facilitator/modules', FacilitatorModuleController::class);
 
     Route::get('facilitator/get-user/{id}', [OrganizationController::class, 'getuser']);
     Route::put('facilitator/update-user/{id}', [OrganizationController::class, 'updateuser']);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddDiscussion;
 use App\Models\DiscussionMessage;
 use Illuminate\Http\Request;
 
@@ -70,6 +71,8 @@ class DiscussionMessageController extends Controller
         $contribution->count = $contribution->count + 1;
         $contribution->save();
 
+
+        broadcast(new AddDiscussion($user, $data->load('admin', 'user', 'facilitator')))->toOthers();
         return $data->load('admin', 'user', 'facilitator');
     }
 

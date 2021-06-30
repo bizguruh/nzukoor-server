@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('inbox', function ($user) {
+    return Auth::check();
+});
+Broadcast::channel('addfeed', function ($user) {
+    return Auth::check();
+});
+Broadcast::channel('addcomment', function ($user) {
+    return Auth::check();
+});
+Broadcast::channel('adddiscussion', function ($user) {
+    return Auth::check();
 });

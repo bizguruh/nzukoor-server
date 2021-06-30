@@ -7,6 +7,9 @@
 
 
 
+
+<small>
 Thanks,<br>
 {{ config('app.name') }}
+</small>
 @endcomponent

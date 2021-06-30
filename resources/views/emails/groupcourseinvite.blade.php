@@ -12,6 +12,8 @@
 <small>Or use the code, {{$code}} to register</small>
 @endif
 
-Thanks,<br>
+<small>
+  Thanks,<br>
 {{ $sender }}
+</small>
 @endcomponent

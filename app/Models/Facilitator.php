@@ -39,6 +39,11 @@ class Facilitator extends Authenticatable
         return $this->belongsTo(Order::class);
     }
 
+    public function facilitatormodules()
+    {
+        return $this->hasMany(FacilitatorModule::class);
+    }
+
 
     public function assessments()
     {

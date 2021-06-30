@@ -23,6 +23,10 @@ class Course extends Model
 
     ];
 
+    public function facilitatormodules()
+    {
+        return $this->hasMany(FacilitatorModule::class);
+    }
 
     public function assessment()
     {

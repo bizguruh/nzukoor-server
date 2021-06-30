@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddCommment;
 use App\Models\FeedComment;
 use Illuminate\Http\Request;
 
@@ -54,6 +55,8 @@ class FeedCommentController extends Controller
             'feed_id' => $request->id,
             'comment' => $request->comment
         ]);
+
+        broadcast(new AddCommment($user, $data->load('admin', 'user', 'facilitator', 'feed')))->toOthers();
         return $data->load('admin', 'user', 'facilitator', 'feed');
     }
 
