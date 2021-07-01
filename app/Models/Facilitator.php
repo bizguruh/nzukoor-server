@@ -31,12 +31,19 @@ class Facilitator extends Authenticatable
         'gender',
         'lga',
         'state',
-        'country'
+        'country',
+        'facilitator_role',
+        'bank_name', 'account_number'
     ];
 
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function revenue()
+    {
+        return $this->hasOne(Revenue::class);
     }
 
     public function facilitatormodules()

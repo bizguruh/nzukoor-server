@@ -41,6 +41,10 @@ class Course extends Model
     {
         return $this->hasOne(EnrollCount::class);
     }
+    public function revenue()
+    {
+        return $this->belongsTo(Revenue::class);
+    }
 
     public function review()
     {

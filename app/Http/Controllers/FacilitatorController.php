@@ -23,7 +23,8 @@ class FacilitatorController extends Controller
 
     public function index()
     {
-        return Facilitator::all();
+        $user = auth('facilitator')->user();
+        return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
     }
 
 
@@ -95,6 +96,7 @@ class FacilitatorController extends Controller
                 'qualifications' => json_encode($request->qualifications),
                 'country' => 'NG',
                 'verification' => false,
+                'facilitator_role' => 'facilitator',
                 'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
 
 
@@ -172,6 +174,7 @@ class FacilitatorController extends Controller
                     'qualifications' => json_encode($request->qualifications),
                     'country' => 'NG',
                     'verification' => false,
+                    'facilitator_role' => 'creator',
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
                 $referral_detail = [
@@ -278,6 +281,8 @@ class FacilitatorController extends Controller
         $facilitator->age = $request->age;
         $facilitator->gender = $request->gender;
         $facilitator->lga = $request->lga;
+        $facilitator->bank_name = $request->bank_name;
+        $facilitator->account_number = $request->account_number;
         $facilitator->qualifications = json_encode($request->qualifications);
         $facilitator->save();
         return $facilitator;

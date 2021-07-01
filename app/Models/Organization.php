@@ -30,6 +30,11 @@ class Organization extends Authenticatable
         'referral_code'
     ];
 
+    public function revenue()
+    {
+        return $this->hasOne(Revenue::class);
+    }
+
     public function admins()
     {
         return $this->hasMany(Admin::class);

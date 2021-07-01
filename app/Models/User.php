@@ -38,6 +38,12 @@ class User extends Authenticatable
         'country'
     ];
 
+    public function revenue()
+    {
+        return $this->hasOne(Revenue::class);
+    }
+
+
     public function order()
     {
         return $this->belongsTo(Order::class);

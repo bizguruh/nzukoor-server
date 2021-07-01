@@ -5,17 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FacilitatorModule extends Model
+class HighestEarningCourse extends Model
 {
     use HasFactory;
-    protected $fillable = ['modules', 'facilitator_id', 'course_id'];
+    protected $fillable = ['revenue', 'course_id',  'organization_id'];
 
-    public function facilitator()
-    {
-        return $this->belongsTo(Facilitator::class);
-    }
+
     public function course()
     {
         return $this->belongsTo(Course::class)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount');
+    }
+
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
     }
 }

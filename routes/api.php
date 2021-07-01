@@ -29,6 +29,7 @@ use App\Http\Controllers\DiscussionViewController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FacilitatorModuleController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LearnerAssessmentController;
 use App\Http\Controllers\LibraryController;
@@ -42,6 +43,7 @@ use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\QuestionResponseController;
 use App\Http\Controllers\QuestionTemplateController;
 use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
@@ -261,12 +263,18 @@ Route::apiResource('question/responses', QuestionResponseController::class);
 
 Route::apiResource('assessments', AssessmentController::class);
 
+Route::apiResource('revenue', RevenueController::class);
+
+Route::get('facilitator/revenue', [RevenueController::class, 'facilitatorIndex']);
+
 Route::apiResource('assessment/responses', AssessmentResponseController::class);
 Route::apiResource('learner/assessments', LearnerAssessmentController::class);
 Route::get('add/assessment', [LearnerAssessmentController::class, 'addassessment']);
 
 Route::apiResource('orders', OrderController::class);
 Route::get('course/view/{id}', [CourseViewCountController::class, 'store']);
+
+Route::apiResource('highest/revenue/course', HighestEarningCourseController::class);
 
 
 

@@ -19,6 +19,11 @@ class Admin extends Authenticatable
         return $this->belongsTo(Order::class);
     }
 
+    public function revenue()
+    {
+        return $this->hasOne(Revenue::class);
+    }
+
 
     public function questiondrafts()
     {

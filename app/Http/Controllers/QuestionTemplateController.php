@@ -52,17 +52,24 @@ class QuestionTemplateController extends Controller
         }
 
 
-        return $user->questiontemplates()->create([
 
+        if (is_null($request->id)) {
+            return $user->questiontemplates()->create([
 
-            'organization_id' => $user->organization_id,
-            'interest' => $request->interest,
-            'title' => $request->title,
-            'type' => $request->type,
-            'status' => 'active',
-            'totalscore' => $request->totalscore,
-            'sections' => json_encode($request->sections)
-        ]);
+                'organization_id' => $user->organization_id,
+                'interest' => $request->interest,
+                'title' => $request->title,
+                'type' => $request->type,
+                'status' => 'active',
+                'totalscore' => $request->totalscore,
+                'sections' => json_encode($request->sections)
+            ]);
+        } else {
+            $template =  $user->questiontemplates()->where('id', $request->id)->first();
+            $template->totalscore = $request->totalscore;
+            $template->sections = json_encode($request->sections);
+            $template->save();
+        }
     }
     public function storedraft(Request $request)
     {
@@ -76,14 +83,22 @@ class QuestionTemplateController extends Controller
             $user = auth('api')->user();
         }
 
-        return $user->questiontemplates()->create([
-            'organization_id' => $user->organization_id,
-            'interest' => $request->interest,
-            'title' => $request->title,
-            'type' => $request->type,
-            'status' => 'draft',
-            'sections' => json_encode($request->sections)
-        ]);
+
+        if (is_null($request->id)) {
+            return $user->questiontemplates()->create([
+                'organization_id' => $user->organization_id,
+                'interest' => $request->interest,
+                'title' => $request->title,
+                'type' => $request->type,
+                'status' => 'draft',
+                'sections' => json_encode($request->sections)
+            ]);
+        } else {
+            $template =  $user->questiontemplates()->where('id', $request->id)->first();
+            $template->sections = json_encode($request->sections);
+            $template->save();
+            return $template;
+        }
     }
 
 

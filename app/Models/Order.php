@@ -19,7 +19,8 @@ class Order extends Model
         'course_id',
         'user_id',
         'facilitator_id',
-        'admin_id'
+        'admin_id',
+        'organization_id'
     ];
     public function user()
     {
