@@ -23,6 +23,11 @@ class EventController extends Controller
 
         return Event::where('organization_id', $user->organization_id)->with('eventattendance')->get();
     }
+    public function guestindex()
+    {
+
+        return Event::with('eventattendance')->get();
+    }
     public function facilitatorgetevents()
     {
         $user = auth('facilitator')->user();

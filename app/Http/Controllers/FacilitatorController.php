@@ -27,6 +27,12 @@ class FacilitatorController extends Controller
         return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
     }
 
+    public function guestindex()
+    {
+
+        return Facilitator::all();
+    }
+
 
 
 

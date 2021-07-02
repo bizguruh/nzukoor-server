@@ -318,6 +318,7 @@ Route::get('interest-courses', [ConnectionController::class, 'getidenticalcourse
 Route::get('send-mail', [MailController::class, 'sendwelcome']);
 Route::post('send-referral', [MailController::class, 'sendreferral']);
 
+Route::post('guest/send/invite', [MailController::class, 'guestsendcourseinvite']);
 Route::post('send/invite', [MailController::class, 'sendcourseinvite']);
 Route::post('send/discussion/invite', [MailController::class, 'senddiscussioninvite']);
 Route::post('send/event/invite', [MailController::class, 'sendeventinvite']);
@@ -347,10 +348,10 @@ Route::get('toprated', [CourseController::class, 'toprated']);
 // Guest
 Route::get('guest/mostenrolled', [CourseController::class, 'guestmostenrolled']);
 Route::get('guest/learners', [UserController::class, 'index']);
-Route::get('guest/facilitators', [FacilitatorController::class, 'index']);
+Route::get('guest/facilitators', [FacilitatorController::class, 'guestindex']);
 Route::get('guest/courses', [CourseController::class, 'guestcourses']);
 Route::get('guest/discussions', [DiscussionController::class, 'guestdiscussions']);
-Route::get('guest/events', [EventController::class, 'index']);
+Route::get('guest/events', [EventController::class, 'guestindex']);
 Route::get('guest/feeds', [FeedController::class, 'guestfeeds']);
 
 

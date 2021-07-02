@@ -133,6 +133,35 @@ class MailController extends Controller
         Mail::to($request->users)->send(new GroupCourseInvite($details));
         return response($details, 200);
     }
+    public function guestsendcourseinvite(Request $request)
+    {
+
+
+
+        $body = 'I would you to enroll for the course, **' . $request->title . '** on SkillsGuruh';
+        $title = ' I think You’d Want To See This!';
+
+
+
+
+
+        $details = [
+
+            'title' => $title,
+            'from_email' => 'skillsguruh@gmail.com',
+            'from_name' => 'SkillsGuruh',
+            'greeting' => 'Hello ',
+            'body' => $body,
+            'actionText' => 'Check it out here',
+            'url' => $request->url,
+            'sender' => '',
+            'code' => $request->code
+
+        ];
+
+        Mail::to($request->users)->send(new GroupCourseInvite($details));
+        return response($details, 200);
+    }
     public function contactmail(Request $request)
     {
 
