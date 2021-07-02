@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
+
+Broadcast::channel('notifications', function ($user) {
+    return Auth::check();
+});
 Broadcast::channel('inbox', function ($user) {
     return Auth::check();
 });

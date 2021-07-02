@@ -26,6 +26,7 @@ use App\Http\Controllers\DiscussionMessageController;
 use App\Http\Controllers\DiscussionRequestController;
 use App\Http\Controllers\DiscussionVoteController;
 use App\Http\Controllers\DiscussionViewController;
+use App\Http\Controllers\EventAttendanceController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FacilitatorModuleController;
 use App\Http\Controllers\FeedbackController;
@@ -275,6 +276,8 @@ Route::apiResource('orders', OrderController::class);
 Route::get('course/view/{id}', [CourseViewCountController::class, 'store']);
 
 Route::apiResource('highest/revenue/course', HighestEarningCourseController::class);
+
+Route::apiResource('event/attendance', EventAttendanceController::class);
 
 
 

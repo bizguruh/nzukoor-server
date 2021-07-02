@@ -12,6 +12,11 @@ class Event extends Model
 
     protected $fillable = ['type', 'venue', 'title', 'description', 'schedule', 'facilitators', 'resource', 'url', 'cover', 'organization_id', 'start', 'end', 'status', 'facilitator_id', 'admin_id'];
 
+
+    public  function eventattendance()
+    {
+        return $this->hasMany(EventAttendance::class);
+    }
     public  function organization()
     {
         return $this->belongsTo(Organization::class);

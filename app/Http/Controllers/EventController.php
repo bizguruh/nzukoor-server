@@ -11,17 +11,27 @@ class EventController extends Controller
 
     public function index()
     {
-        return Event::all();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        return Event::where('organization_id', $user->organization_id)->with('eventattendance')->get();
     }
     public function facilitatorgetevents()
     {
         $user = auth('facilitator')->user();
-        return Event::where('organization_id', $user->organization_id)->get();
+        return Event::where('organization_id', $user->organization_id)->with('eventattendance')->get();
     }
 
     public function facilitatorgetevent($id)
     {
-        return Event::where('id', $id)->first();
+        return Event::where('id', $id)->with('eventattendance')->first();
     }
     public function checkEvents()
     {
@@ -80,7 +90,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return $event;
+        return $event->load('eventattendance');
     }
 
     /**

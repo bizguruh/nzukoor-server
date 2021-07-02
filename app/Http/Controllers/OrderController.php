@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Course;
 use App\Models\EnrollCount;
 use App\Models\HighestEarningCourse;
@@ -112,6 +113,7 @@ class OrderController extends Controller
                 'id' => $request->course_id,
             ];
             $user->notify(new CoursePurchase($details));
+            broadcast(new NotificationSent());
             return $result;
         });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Admin;
 use App\Models\Discussion;
 use App\Models\DiscussionRequest;
@@ -51,6 +52,7 @@ class NotificationController extends Controller
             'id' => $user->id
         ];
         Notification::send($user, new FirstNotify($details));
+        broadcast(new NotificationSent());
         return 'done';
     }
 
@@ -86,6 +88,7 @@ class NotificationController extends Controller
             'id' => $user->id
         ];
         $user->notify(new SendNotification($details));
+        broadcast(new NotificationSent());
         return 'Notification sent';
     }
 
@@ -175,6 +178,7 @@ class NotificationController extends Controller
         ];
 
         $user->notify(new DiscussionReject($details));
+        broadcast(new NotificationSent());
 
         if (auth('organization')->user()) {
             $creator = auth('organization')->user();

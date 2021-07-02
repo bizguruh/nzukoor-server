@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Http\Resources\LibraryResource;
 use App\Http\Resources\SingleLibraryResource;
 use App\Models\Course;
@@ -10,6 +11,7 @@ use App\Models\Library;
 use App\Notifications\CoursePurchase;
 use App\Notifications\CourseToLibrary;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification;
 
 class LibraryController extends Controller
 {
@@ -48,6 +50,7 @@ class LibraryController extends Controller
             'id' => $request->course_id,
         ];
         $user->notify(new CourseToLibrary($details));
+        broadcast(new NotificationSent());
         return response($result, 201);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Mail\ContactMail;
 use App\Mail\DiscussionInvite;
 use App\Mail\EventInvite;
@@ -39,6 +40,7 @@ class MailController extends Controller
         ];
 
         $user->notify(new RoleInvite($details));
+        broadcast(new NotificationSent());
     }
     public function sendwelcome($info)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Course;
 use App\Models\Library;
 use App\Models\Module;
@@ -87,6 +88,7 @@ class ModuleController extends Controller
                     ];
 
                     $user->notify(new NewModuleUpload($details));
+                    broadcast(new NotificationSent());
                 }
             }
             return $resource;

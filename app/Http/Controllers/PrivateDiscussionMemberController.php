@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Admin;
 use App\Models\Discussion;
 use App\Models\DiscussionRequest;
@@ -101,7 +102,7 @@ class PrivateDiscussionMemberController extends Controller
 
 
         $user->notify(new DiscussionAcceptance($details));
-
+        broadcast(new NotificationSent());
         $disrequest = DiscussionRequest::where('id', $request->id)->first();
         $disrequest->response = 'accepted';
         $disrequest->save();

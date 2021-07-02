@@ -43,7 +43,10 @@ class User extends Authenticatable
         return $this->hasOne(Revenue::class);
     }
 
-
+    public  function eventattendance()
+    {
+        return $this->hasMany(EventAttendance::class);
+    }
     public function order()
     {
         return $this->belongsTo(Order::class);
