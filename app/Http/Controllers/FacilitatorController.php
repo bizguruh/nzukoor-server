@@ -101,6 +101,7 @@ class FacilitatorController extends Controller
                 'profile' => $request->profile,
                 'qualifications' => json_encode($request->qualifications),
                 'country' => 'NG',
+                'state' => 'Lagos',
                 'verification' => false,
                 'facilitator_role' => 'facilitator',
                 'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
@@ -179,6 +180,7 @@ class FacilitatorController extends Controller
                     'profile' => $request->profile,
                     'qualifications' => json_encode($request->qualifications),
                     'country' => 'NG',
+                    'state' => 'Lagos',
                     'verification' => false,
                     'facilitator_role' => 'creator',
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
@@ -242,7 +244,8 @@ class FacilitatorController extends Controller
                     'bio' => $request->bio,
                     'profile' => $request->profile,
                     'qualifications' => json_encode($request->qualifications),
-                    'country' => 'NG',
+
+                    'state' => 'Lagos',
                     'verification' => false,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
 

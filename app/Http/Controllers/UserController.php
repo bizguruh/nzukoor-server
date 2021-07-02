@@ -72,6 +72,7 @@ class UserController extends Controller
             'bio' => $request->bio,
             'profile' => $request->profile,
             'country' => 'NG',
+            'state' => 'Lagos',
             'verification' => false,
             'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
         ]);
@@ -151,6 +152,7 @@ class UserController extends Controller
                     'bio' => $request->bio,
                     'profile' => $request->profile,
                     'country' => 'NG',
+                    'state' => 'Lagos',
                     'verification' => false,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
@@ -253,6 +255,7 @@ class UserController extends Controller
                     'bio' => $request->bio,
                     'profile' => $request->profile,
                     'country' => 'NG',
+                    'state' => 'Lagos',
                     'verification' => false,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
@@ -304,6 +307,7 @@ class UserController extends Controller
                 'bio' => $request->bio,
                 'profile' => $request->profile,
                 'country' => 'NG',
+                'state' => 'Lagos',
                 'verification' => false,
                 'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . $referral_code,
             ]);
