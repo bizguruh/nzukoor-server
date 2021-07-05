@@ -52,6 +52,7 @@ class AssessmentResponseController extends Controller
     {
         $user = auth('api')->user();
 
+
         return $user->assessmentresponse()->create([
 
             'assessment_id' => $request->assessment_id,

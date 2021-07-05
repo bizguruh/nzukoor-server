@@ -41,7 +41,9 @@ class AssessmentController extends Controller
 
     public function show(Assessment $assessment)
     {
-        return $assessment->with('questiontemplate', 'assessmentresponse')->first();
+
+
+        return $assessment->load('questiontemplate', 'assessmentresponse');
     }
 
 
