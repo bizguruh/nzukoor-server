@@ -145,16 +145,18 @@ class QuestionTemplateController extends Controller
         $questionTemplate->title = $request->title;
         $questionTemplate->totalscore = $request->totalscore;
         $questionTemplate->type = $request->type;
+        $questionTemplate->status = 'active';
         $questionTemplate->sections = json_encode($request->sections);
         $questionTemplate->save();
         return $questionTemplate;
     }
     public function updatedraft(Request $request, $id)
     {
-        $questionTemplate = QuestionDraft::find($id);
+        $questionTemplate = QuestionTemplate::find($id);
         $questionTemplate->title = $request->title;
-        $questionTemplate->type = $request->type;
         $questionTemplate->totalscore = $request->totalscore;
+        $questionTemplate->type = $request->type;
+        $questionTemplate->status = 'draft';
         $questionTemplate->sections = json_encode($request->sections);
         $questionTemplate->save();
         return $questionTemplate;

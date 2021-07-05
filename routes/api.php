@@ -286,7 +286,7 @@ Route::apiResource('questionnaires', QuestionnaireController::class);
 Route::apiResource('question/templates', QuestionTemplateController::class);
 // Question drafts
 Route::get('question/drafts', [QuestionTemplateController::class, 'indexdraft']);
-Route::put('question/draft/{id}',  [QuestionTemplateController::class, 'updatedraft']);
+Route::put('question/drafts/{id}',  [QuestionTemplateController::class, 'updatedraft']);
 Route::post('question/drafts', [QuestionTemplateController::class, 'storedraft']);
 Route::delete('question/draft/{id}', [QuestionTemplateController::class, 'destroydraft']);
 Route::put('question/draft/update/{id}', [QuestionTemplateController::class, 'makeactive']);
