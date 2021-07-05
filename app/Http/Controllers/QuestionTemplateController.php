@@ -68,6 +68,7 @@ class QuestionTemplateController extends Controller
             $template =  $user->questiontemplates()->where('id', $request->id)->first();
             $template->totalscore = $request->totalscore;
             $template->sections = json_encode($request->sections);
+            $template->status = 'active';
             $template->save();
         }
     }
@@ -96,6 +97,7 @@ class QuestionTemplateController extends Controller
         } else {
             $template =  $user->questiontemplates()->where('id', $request->id)->first();
             $template->sections = json_encode($request->sections);
+            $template->status = 'draft';
             $template->save();
             return $template;
         }
