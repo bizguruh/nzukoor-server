@@ -35,7 +35,7 @@ class AssessmentController extends Controller
             'course_id' => $request->course['id'],
             'status' => 'pending'
         ]);
-        return response($assessment->load('questiontemplate', 'course'), 201);
+        return response($assessment->load('questiontemplate', 'course', 'assessmentresponse'), 201);
     }
 
 
