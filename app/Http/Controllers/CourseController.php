@@ -205,6 +205,7 @@ class CourseController extends Controller
             }
 
             $course->title = $request->input('general.title');
+            $course->course_code = $request->input('general.code');
             $course->type = $request->input('general.type');
             $course->amount = $request->input('general.amount');
             $course->description = $request->input('general.description');
