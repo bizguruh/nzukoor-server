@@ -15,6 +15,7 @@ class AddOptionsToQuestionTemplatesTable extends Migration
     {
         Schema::table('question_templates', function (Blueprint $table) {
             $table->string('options')->nullable();
+            $table->string('duration')->nullable();
         });
     }
 
@@ -26,7 +27,7 @@ class AddOptionsToQuestionTemplatesTable extends Migration
     public function down()
     {
         Schema::table('question_templates', function (Blueprint $table) {
-            $table->dropColumn('options');
+            $table->dropColumn('options', 'duration');
         });
     }
 }

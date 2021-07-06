@@ -62,12 +62,14 @@ class QuestionTemplateController extends Controller
                 'type' => $request->type,
                 'options' => json_encode($request->options),
                 'status' => 'active',
+                'duration' => $request->duration,
                 'totalscore' => $request->totalscore,
                 'sections' => json_encode($request->sections)
             ]);
         } else {
             $template =  $user->questiontemplates()->where('id', $request->id)->first();
             $template->totalscore = $request->totalscore;
+            $template->duration = $request->duration;
             $template->options = json_encode($request->options);
             $template->sections = json_encode($request->sections);
             $template->status = 'active';
@@ -94,6 +96,7 @@ class QuestionTemplateController extends Controller
                 'title' => $request->title,
                 'options' => json_encode($request->options),
                 'type' => $request->type,
+                'duration' => $request->duration,
                 'status' => 'draft',
                 'sections' => json_encode($request->sections)
             ]);
@@ -101,6 +104,7 @@ class QuestionTemplateController extends Controller
             $template =  $user->questiontemplates()->where('id', $request->id)->first();
             $template->sections = json_encode($request->sections);
             $template->options = json_encode($request->options);
+            $template->duration = $request->duration;
             $template->status = 'draft';
             $template->save();
             return $template;
@@ -152,6 +156,7 @@ class QuestionTemplateController extends Controller
         $questionTemplate->totalscore = $request->totalscore;
         $questionTemplate->type = $request->type;
         $questionTemplate->status = 'active';
+        $questionTemplate->duration = $request->duration;
         $questionTemplate->options = json_encode($request->options);
         $questionTemplate->sections = json_encode($request->sections);
         $questionTemplate->save();
@@ -163,6 +168,7 @@ class QuestionTemplateController extends Controller
         $questionTemplate->title = $request->title;
         $questionTemplate->totalscore = $request->totalscore;
         $questionTemplate->type = $request->type;
+        $questionTemplate->duration = $request->duration;
         $questionTemplate->status = 'draft';
         $questionTemplate->options = json_encode($request->options);
         $questionTemplate->sections = json_encode($request->sections);

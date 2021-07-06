@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class QuestionTemplate extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'sections', 'options', 'interest', 'status', 'totalscore', 'type', 'organization_id', 'admin_id', 'user_id', 'facilitator_id'];
+    protected $fillable = ['title', 'sections', 'options', 'duration', 'interest', 'status', 'totalscore', 'type', 'organization_id', 'admin_id', 'user_id', 'facilitator_id'];
     public function admin()
     {
         return  $this->belongsTo(Admin::class);
