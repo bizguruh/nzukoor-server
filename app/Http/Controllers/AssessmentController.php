@@ -15,7 +15,7 @@ class AssessmentController extends Controller
     public function index()
     {
         $user = auth('facilitator')->user();
-        return $user->assessments()->with('questiontemplate', 'assessmentresponse')->latest()->get();
+        return $user->assessments()->with('questiontemplate', 'course', 'assessmentresponse')->latest()->get();
     }
 
 
@@ -43,7 +43,7 @@ class AssessmentController extends Controller
     {
 
 
-        return $assessment->load('questiontemplate', 'assessmentresponse');
+        return $assessment->load('questiontemplate', 'course', 'assessmentresponse');
     }
 
 
