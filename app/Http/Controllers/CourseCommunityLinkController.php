@@ -36,7 +36,7 @@ class CourseCommunityLinkController extends Controller
     {
         $user = auth('api')->user();
         $course =  Course::find($request->course_id);
-        $code = $new_str = preg_replace("/\s+/", "-", $course->title); . '-' . $this->generateCode(2);
+        $code = $new_str = preg_replace("/\s+/", "-", $course->title) . '-' . $this->generateCode(2);
         $check = $user->communitylink()->where('code', $code)->first();
 
         while (!is_null($check)) {
