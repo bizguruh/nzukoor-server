@@ -11,6 +11,7 @@ use App\Models\Facilitator;
 use App\Models\Organization;
 use App\Models\User;
 use App\Notifications\AddedToLibrary;
+use App\Notifications\PrivateDiscussionCreated;
 use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -235,12 +236,19 @@ class UserController extends Controller
                                 'body' =>  \ucfirst(Course::find($link->course_id)->title) . ' course has just been added to your library',
                             ];
 
+
+
                             $info->notify(new AddedToLibrary($details));
+
 
                             $info->privatediscusion()->create([
                                 'discussion_id' => $discussion->id,
                                 'type' => 'user'
                             ]);
+                            $detail = [
+                                'body' => 'A private discussion titled ' . \ucfirst($request->referral) . ' has been started. Check your discussions to view!',
+                            ];
+                            $info->notify(new PrivateDiscussionCreated($detail));
                         }
                     }
                 }
