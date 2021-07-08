@@ -28,6 +28,11 @@ class EventController extends Controller
 
         return Event::with('eventattendance')->get();
     }
+    public function guestevent($id)
+    {
+
+        return Event::find($id)->with('eventattendance')->first();
+    }
     public function facilitatorgetevents()
     {
         $user = auth('facilitator')->user();

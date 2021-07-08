@@ -180,6 +180,23 @@ class MailController extends Controller
     public function senddiscussioninvite(Request $request)
     {
 
+        if (!auth('admin')->user() && !auth('admin')->user() && !auth('admin')->user()) {
+            $details = [
+
+                'from_email' => 'skillsguruh@gmail.com',
+                'from_name' => 'SkillsGuruh',
+                'greeting' => 'Hello',
+                'body' => 'I just started a discussion, **' . $request->title . '** on SkillsGuruh and I’d like to hear your thoughts. ',
+                'actionText' => 'Join here',
+                'url' => "https://skillsguruh.com/discussion/" . $request->id,
+
+            ];
+
+            Mail::to($request->users)->send(new DiscussionInvite($details));
+            return response($details, 200);
+        }
+
+
 
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
@@ -202,7 +219,7 @@ class MailController extends Controller
             'greeting' => 'Hello',
             'body' => 'I just started a discussion, **' . $request->title . '** on SkillsGuruh and I’d like to hear your thoughts. ',
             'actionText' => 'Join here',
-            'url' => "https://skillsguruh.herokuapp.com/learner/discussion/" . $request->id,
+            'url' => "https://skillsguruh.com/discussion/" . $request->id,
 
         ];
 
@@ -212,6 +229,23 @@ class MailController extends Controller
 
     public function sendeventinvite(Request $request)
     {
+
+        if (!auth('admin')->user() && !auth('admin')->user() && !auth('admin')->user()) {
+
+            $details = [
+
+                'from_email' => 'skillsguruh@gmail.com',
+                'from_name' => 'SkillsGuruh',
+                'greeting' => 'Hello',
+                'body' => 'I will be attending the event, **' . $request->title . '** on SkillsGuruh and I think you’d like it. Join me! ',
+                'actionText' => 'Join here',
+                'url' => "https://skillsguruh.com/event/" . $request->id,
+
+            ];
+
+            Mail::to($request->users)->send(new EventInvite($details));
+            return response($details, 200);
+        }
 
 
         if (auth('admin')->user()) {
@@ -235,7 +269,7 @@ class MailController extends Controller
             'greeting' => 'Hello',
             'body' => 'I will be attending the event, **' . $request->title . '** on SkillsGuruh and I think you’d like it. Join me! ',
             'actionText' => 'Join here',
-            'url' => "https://skillsguruh.herokuapp.com/learner/event/" . $request->id,
+            'url' => "https://skillsguruh.com/event/" . $request->id,
 
         ];
 

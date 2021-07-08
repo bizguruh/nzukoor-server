@@ -13,8 +13,8 @@
   </p>
   <p> A Social Learning Place, we hope you like it here.</p>
 
-<a href="'https://skillsguruh.herokuapp.com/register/?referral_code='{{$code}}">
-  https://skillsguruh.herokuapp.com/register/?referral_code={{$code}}
+<a href="'https://skillsguruh.com/register/?referral_code='{{$code}}">
+  https://skillsguruh.com/register/?referral_code={{$code}}
 </a>
 <div>or</div>
 <div>Use this referral code {{$code}} to create an account</div>

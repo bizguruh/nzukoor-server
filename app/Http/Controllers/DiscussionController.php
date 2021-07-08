@@ -85,6 +85,32 @@ class DiscussionController extends Controller
      * @param  \App\Models\Discussion  $discussion
      * @return \Illuminate\Http\Response
      */
+    public function guestdiscussion($id)
+    {
+        function sorttag($arr)
+        {
+            return  array_map(function ($val) {
+                return $val->value;
+            }, $arr);
+        }
+
+
+        $alldiscussions =  Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+
+        $discussion = Discussion::find($id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->first();
+
+        $newdis = [];
+        foreach ($alldiscussions as $key => $value) {
+            $intersect =   array_intersect(sorttag(json_decode($value->tags)), sorttag(json_decode($discussion->tags)));
+            if (count($intersect) > 0) {
+                array_push($newdis, $value);
+            }
+        }
+
+        $discussion->related = $newdis;
+
+        return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
+    }
     public function show(Discussion $discussion)
     {
         if (auth('admin')->user()) {

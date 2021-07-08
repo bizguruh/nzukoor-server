@@ -198,7 +198,7 @@ We believe everybody has the capacity to be more, so get ready to be your very b
 
 </div>
 <footer class=" text-right text-green">
- <span><a href="http://skillsguruh.com/contact" class="text-green">Contact</a></span> | <span><a class="text-green" href="http://skillsguruh.herokuapp.com/about">About</a></span>
+ <small><a href="http://skillsguruh.com/contact" class="text-green">Contact</a></small> | <small><a class="text-green" href="http://skillsguruh.com/about">About</a></small>
 </footer>
   </div>
 </body>

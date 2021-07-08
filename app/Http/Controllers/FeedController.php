@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Events\AddFeed;
+use App\Http\Resources\ConnectionResource;
+use App\Models\Facilitator;
 use App\Models\Feed;
+use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 
 class FeedController extends Controller
@@ -31,7 +35,47 @@ class FeedController extends Controller
             $user = auth('api')->user();
             $type = 'user';
         }
-        return Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->where('organization_id', $user->organization_id)->latest()->get();
+        $connection = $user->connections()->get()->toArray();
+        $connections = ConnectionResource::collection($connection);
+        $myfeeds = $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->toArray();
+
+
+        $newarr =  array_map(function ($a) {
+            if ($a['follow_type'] == 'user') {
+                $u = User::find($a['following_id']);
+                return $u->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get();
+            }
+            if ($a['follow_type'] == 'facilitator') {
+                $u = Facilitator::find($a['following_id']);
+                return $u->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get();
+            }
+        }, $connection);
+        $filterArray = array_filter($newarr, function ($a) {
+            if (count($a)) {
+                return $a;
+            }
+        });
+        $singleArray = [];
+
+        foreach ($filterArray as $child) {
+            foreach ($child as $value) {
+                $singleArray[] = $value;
+            }
+        }
+        $mergedfeeds =  array_merge($myfeeds, $singleArray);
+        usort($mergedfeeds, function ($a, $b) {
+            return new DateTime($b['created_at']) <=> new DateTime($a['created_at']);
+        });
+        return $mergedfeeds;
+
+
+        // $notFlat = [[1, 2], [3, 4]];
+        // // $filterArray
+        // $flat = array_merge($filterArray);
+        // return  $flat;
+
+
+        //  return Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
     /**
@@ -39,9 +83,22 @@ class FeedController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function getMyFeeds()
     {
-        //
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+            $type = 'admin';
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+            $type = 'facilitator';
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+            $type = 'user';
+        }
+
+        return  $connections = $user->connections()->toArray();
     }
 
     /**

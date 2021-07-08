@@ -323,6 +323,11 @@ Route::post('send/invite', [MailController::class, 'sendcourseinvite']);
 Route::post('send/discussion/invite', [MailController::class, 'senddiscussioninvite']);
 Route::post('send/event/invite', [MailController::class, 'sendeventinvite']);
 
+Route::get('guest/events/{id}', [EventController::class, 'guestevent']);
+Route::get('guest/discussions/{id}', [DiscussionController::class, 'guestdiscussion']);
+
+Route::post('guest/send/discussion/invite', [MailController::class, 'senddiscussioninvite']);
+Route::post('guest/send/event/invite', [MailController::class, 'sendeventinvite']);
 
 
 //Referral routes

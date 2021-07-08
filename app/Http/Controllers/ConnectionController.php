@@ -19,6 +19,9 @@ class ConnectionController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('admin')->user() && !auth('admin')->user()) {
+            return ('Unauthorized');
+        }
 
         if (auth('admin')->user()) {
             $user = auth('admin')->user();

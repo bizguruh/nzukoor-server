@@ -178,12 +178,12 @@ Shoot us a mail via the contact page or connect with our support team between 9:
 
 <p>Sincerely, <br>
 The Team @ SkillsGuruh</p>
-<a href="http://skillsguruh.herokuapp.com/login"><button class="button button-blue">Explore SkillsGuruh</button></a>
+<a href="http://skillsguruh.com/login"><button class="button button-blue">Explore SkillsGuruh</button></a>
 
 </div>
 
 <footer class=" text-right text-green">
- <span><a href="http://skillsguruh.herokuapp.com/contact" class="text-green">Contact</a></span> | <span><a class="text-green" href="http://skillsguruh.herokuapp.com/about">About</a></span>
+ <span><a href="http://skillsguruh.com/contact" class="text-green">Contact</a></span> | <span><a class="text-green" href="http://skillsguruh.com/about">About</a></span>
 </footer>
   </div>
 </body>
