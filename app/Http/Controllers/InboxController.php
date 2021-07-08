@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
 use App\Http\Resources\InboxResource;
+use App\Http\Resources\SingleInboxResource;
 use App\Models\Inbox;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Return_;
 
 class InboxController extends Controller
 {
@@ -35,31 +38,34 @@ class InboxController extends Controller
 
     public function store(Request $request)
     {
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $sender_type = 'facilitator';
-        }
-        if (auth('api')->user()) {
-            $user = auth('api')->user();
-            $sender_type = null;
-        }
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $sender_type = 'admin';
-        }
+        return $result =  DB::transaction(function () use ($request) {
+            if (auth('facilitator')->user()) {
+                $user = auth('facilitator')->user();
+                $sender_type = 'facilitator';
+            }
+            if (auth('api')->user()) {
+                $user = auth('api')->user();
+                $sender_type = null;
+            }
+            if (auth('admin')->user()) {
+                $user = auth('admin')->user();
+                $sender_type = 'admin';
+            }
 
 
 
-        $message = $user->inbox()->create([
-            'message' => $request->message,
-            'attachment' => $request->attachment,
-            'receiver' => $request->receiver,
-            'receiver_id' => $request->receiver_id,
-            'status' => false,
-        ]);
-        $data = $message->load('admin', 'user', 'facilitator');
-        broadcast(new MessageSent($user, $data))->toOthers();
-        return $message->load('admin', 'user', 'facilitator');
+            $message = $user->inbox()->create([
+                'message' => $request->message,
+                'attachment' => $request->attachment,
+                'receiver' => $request->receiver,
+                'receiver_id' => $request->receiver_id,
+                'status' => false,
+            ]);
+
+            $data = $message->load('admin', 'user', 'facilitator');
+            broadcast(new MessageSent($user, new SingleInboxResource($data)))->toOthers();
+            return $message->load('admin', 'user', 'facilitator');
+        });
     }
 
     /**
