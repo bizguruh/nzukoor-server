@@ -23,6 +23,10 @@ class FeedController extends Controller
     }
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
             $type = 'admin';
@@ -85,6 +89,10 @@ class FeedController extends Controller
      */
     public function getMyFeeds()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
             $type = 'admin';
@@ -101,6 +109,41 @@ class FeedController extends Controller
         return  $connections = $user->connections()->toArray();
     }
 
+    public function getFeedsByInterest()
+    {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
+
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        $tags = $user->interests ? json_decode($user->interests) : [];
+        $feeds = Feed::where('organization_id', $user->organization_id)->get()->toArray();
+        $allfeeds = [];
+        if (count($tags)) {
+            foreach ($feeds as $key => $value) {
+                if (!is_null($value['tags'])) {
+
+
+                    $check =  array_intersect($tags, array_map(function ($a) {
+                        return $a->value;
+                    }, json_decode($value['tags'])));
+
+                    if (count($check)) {
+                        array_push($allfeeds, $value);
+                    }
+                }
+            }
+        }
+        return $allfeeds;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -109,6 +152,10 @@ class FeedController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
             $type = 'admin';
@@ -127,7 +174,8 @@ class FeedController extends Controller
             'organization_id' => $user->organization_id,
             'media' => $request->media,
             'url' => $request->url,
-            'message' => $request->message
+            'message' => $request->message,
+            'tags' => json_encode($request->tags)
         ]);
         broadcast(new AddFeed($user, $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')))->toOthers();
         return $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars');

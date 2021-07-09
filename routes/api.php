@@ -376,3 +376,4 @@ Route::get('facilitator/connections/{id}', [FacilitatorController::class, 'facil
 Route::get('facilitator/discussions/{id}', [FacilitatorController::class, 'facilitatordiscussions']);
 Route::get('facilitator/info/{id}', [FacilitatorController::class, 'facilitatorinfo']);
 Route::get('facilitator/events/{id}', [FacilitatorController::class, 'facilitatorevents']);
+Route::get('get/feeds/tags', [FeedController::class, 'getFeedsByInterest']);

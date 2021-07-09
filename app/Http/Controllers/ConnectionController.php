@@ -19,9 +19,13 @@ class ConnectionController extends Controller
      */
     public function index()
     {
+
+
+
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
             return ('Unauthorized');
         }
+
 
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
@@ -40,6 +44,12 @@ class ConnectionController extends Controller
 
     public function store(Request $request)
     {
+
+
+
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
 
 
         if (auth('admin')->user()) {
@@ -136,6 +146,12 @@ class ConnectionController extends Controller
 
     public function getidenticaldiscusiions()
     {
+
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -171,6 +187,12 @@ class ConnectionController extends Controller
 
     public function getidenticalcourses()
     {
+
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -203,6 +225,12 @@ class ConnectionController extends Controller
 
     public function deleteconnection(Request $request, $id)
     {
+
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
