@@ -367,7 +367,12 @@ Route::apiResource('contributors', ContributorController::class);
 
 
 Route::apiResource('discussion/private', PrivateDiscussionMemberController::class);
-
 Route::apiResource('discussion/requests', DiscussionRequestController::class);
-
 Route::post('discussion/reject', [NotificationController::class, 'discussionreject']);
+
+
+Route::get('facilitator/feeds/{id}', [FacilitatorController::class, 'facilitatorfeeds']);
+Route::get('facilitator/connections/{id}', [FacilitatorController::class, 'facilitatorconnections']);
+Route::get('facilitator/discussions/{id}', [FacilitatorController::class, 'facilitatordiscussions']);
+Route::get('facilitator/info/{id}', [FacilitatorController::class, 'facilitatorinfo']);
+Route::get('facilitator/events/{id}', [FacilitatorController::class, 'facilitatorevents']);

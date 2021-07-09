@@ -21,27 +21,27 @@ class EventController extends Controller
             $user = auth('api')->user();
         }
 
-        return Event::where('organization_id', $user->organization_id)->with('eventattendance')->get();
+        return Event::where('organization_id', $user->organization_id)->with('eventattendance', 'facilitator')->latest()->get();
     }
     public function guestindex()
     {
 
-        return Event::with('eventattendance')->get();
+        return Event::with('eventattendance', 'facilitator')->latest()->get();
     }
     public function guestevent($id)
     {
 
-        return Event::find($id)->with('eventattendance')->first();
+        return Event::find($id)->with('eventattendance', 'facilitator')->first();
     }
     public function facilitatorgetevents()
     {
         $user = auth('facilitator')->user();
-        return Event::where('organization_id', $user->organization_id)->with('eventattendance')->get();
+        return Event::where('organization_id', $user->organization_id)->with('eventattendance', 'facilitator')->latest()->get();
     }
 
     public function facilitatorgetevent($id)
     {
-        return Event::where('id', $id)->with('eventattendance')->first();
+        return Event::where('id', $id)->with('eventattendance', 'facilitator')->first();
     }
     public function checkEvents()
     {
@@ -74,7 +74,7 @@ class EventController extends Controller
         }
 
 
-        return $user->event()->create([
+        $event = $user->event()->create([
             'type' => $request->type,
             'title' => $request->title,
             'venue' => $request->venue,
@@ -90,6 +90,7 @@ class EventController extends Controller
             'cover' => $request->cover,
 
         ]);
+        return response($event->load('eventattendance', 'facilitator'), 201);
     }
 
     /**
@@ -100,7 +101,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return $event->load('eventattendance');
+        return $event->load('eventattendance', 'facilitator');
     }
 
     /**

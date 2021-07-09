@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ConnectionResource;
 use App\Models\Facilitator;
 use App\Models\Organization;
 use Illuminate\Http\Request;
@@ -34,7 +35,35 @@ class FacilitatorController extends Controller
     }
 
 
+    public function facilitatorinfo($id)
+    {
+        return Facilitator::find($id);
+    }
 
+    public function facilitatorfeeds($id)
+    {
+        $user = Facilitator::find($id);
+        return   $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get();
+    }
+
+    public function facilitatordiscussions($id)
+    {
+        $user =  Facilitator::find($id);
+        return $user->discussions()->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->get();
+    }
+
+    public function facilitatorevents($id)
+    {
+        $user =  Facilitator::find($id);
+        return $user->event()->with('eventattendance')->get();
+    }
+
+    public function facilitatorconnections($id)
+    {
+        $user =  Facilitator::find($id);
+
+        return  ConnectionResource::collection($user->connections()->latest()->get());
+    }
 
 
     public function getfacilitator($id)
@@ -277,14 +306,14 @@ class FacilitatorController extends Controller
 
     public function update(Request $request, Facilitator $facilitator)
     {
-        return $facilitator;
+
         $facilitator->name = $request->name;
         $facilitator->email = $request->email;
         $facilitator->address = $request->address;
         $facilitator->phone = $request->phone;
         $facilitator->bio = $request->bio;
         $facilitator->profile = $request->profile;
-        $facilitator->verfication = $request->verfication;
+        $facilitator->verification = $request->verification;
         $facilitator->state = $request->state;
         $facilitator->country = $request->country;
         $facilitator->age = $request->age;

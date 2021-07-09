@@ -19,7 +19,7 @@ class ConnectionController extends Controller
      */
     public function index()
     {
-        if (!auth('admin')->user() && !auth('admin')->user() && !auth('admin')->user()) {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
             return ('Unauthorized');
         }
 
@@ -52,7 +52,7 @@ class ConnectionController extends Controller
             $user = auth('api')->user();
         }
 
-        $check = Connection::where([['follow_type', $request->follow_type], ['following_id', $request->following_id]])->first();
+        $check = $user->connections()->where([['follow_type', $request->follow_type], ['following_id', $request->following_id]])->first();
         if (is_null($check)) {
             return  $user->connections()->create([
                 'follow_type' => $request->follow_type,
@@ -63,8 +63,17 @@ class ConnectionController extends Controller
 
     public function getlearnerswithinterests()
     {
-        $user = auth('api')->user();
-        $myusers = User::where('organization_id', $user->organization_id)->where('id', '!=', $user->id)->get();
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+            $myusers = User::where('organization_id', $user->organization_id)->get();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+            $myusers = User::where('organization_id', $user->organization_id)->where('id', '!=', $user->id)->get();
+        }
 
         $users =  array_filter(json_decode(json_encode($myusers)), function ($a) use ($user) {
             $connection = $user->connections()->where('follow_type', 'user')->where('following_id', $a->id)->first();
@@ -92,8 +101,16 @@ class ConnectionController extends Controller
 
     public function getfacilitatorswithinterests()
     {
-        $user = auth('api')->user();
-        $myusers = Facilitator::where('organization_id', $user->organization_id)->get();
+
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+            $myusers = Facilitator::where('organization_id', $user->organization_id)->where('id', '!=', $user->id)->get();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+            $myusers = Facilitator::where('organization_id', $user->organization_id)->get();
+        }
+
         $users =  array_filter(json_decode(json_encode($myusers)), function ($a) use ($user) {
             $connection = $user->connections()->where('follow_type', 'facilitator')->where('following_id', $a->id)->first();
             if (is_null($connection)) {
