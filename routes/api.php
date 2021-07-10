@@ -30,6 +30,7 @@ use App\Http\Controllers\EventAttendanceController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FacilitatorModuleController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\LearnerAssessmentController;
@@ -377,3 +378,6 @@ Route::get('facilitator/discussions/{id}', [FacilitatorController::class, 'facil
 Route::get('facilitator/info/{id}', [FacilitatorController::class, 'facilitatorinfo']);
 Route::get('facilitator/events/{id}', [FacilitatorController::class, 'facilitatorevents']);
 Route::get('get/feeds/tags', [FeedController::class, 'getFeedsByInterest']);
+
+
+Route::get('get/interests/{interest}', [GuestController::class, 'getInterestContent']);

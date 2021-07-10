@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseCommunity;
 use App\Models\CourseCommunityLink;
+use App\Models\Discussion;
 use App\Models\EnrollCount;
 use App\Models\Facilitator;
 use App\Models\Organization;
@@ -32,7 +33,6 @@ class UserController extends Controller
     {
         return User::all();
     }
-
 
     public function facilitatorgetusers()
     {
