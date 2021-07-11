@@ -202,7 +202,7 @@ Route::post('user-register', [UserController::class, 'storeuser']);
 
 // Social auths
 Route::get('/auth/{provider}/redirect', [SocialLoginController::class, 'redirect']);
-Route::post('/auth/{provider}/callback', [SocialLoginController::class, 'callback']);
+Route::get('/auth/{provider}/callback', [SocialLoginController::class, 'callback']);
 
 
 //Inbox routes
