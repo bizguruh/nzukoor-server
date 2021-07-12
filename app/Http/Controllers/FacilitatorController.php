@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ConnectionResource;
+use App\Models\Course;
+use App\Models\CourseSchedule;
 use App\Models\Facilitator;
 use App\Models\Organization;
 use Illuminate\Http\Request;
@@ -56,6 +58,20 @@ class FacilitatorController extends Controller
     {
         $user =  Facilitator::find($id);
         return $user->event()->with('eventattendance')->get();
+    }
+    public function facilitatorcourses($id)
+    {
+        $schedules =  CourseSchedule::where('facilitator_id', $id)->get()->toArray();
+
+        $courseIds = array_map(function ($a) {
+            return $a['course_id'];
+        }, $schedules);
+        $uniqueArr = array_unique($courseIds);
+        $courses = [];
+        foreach ($uniqueArr as $key => $value) {
+            array_push($courses, Course::find($value)->load('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount'));
+        }
+        return $courses;
     }
 
     public function facilitatorconnections($id)

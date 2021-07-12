@@ -377,6 +377,15 @@ Route::get('facilitator/connections/{id}', [FacilitatorController::class, 'facil
 Route::get('facilitator/discussions/{id}', [FacilitatorController::class, 'facilitatordiscussions']);
 Route::get('facilitator/info/{id}', [FacilitatorController::class, 'facilitatorinfo']);
 Route::get('facilitator/events/{id}', [FacilitatorController::class, 'facilitatorevents']);
+Route::get('facilitator/courses/{id}', [FacilitatorController::class, 'facilitatorcourses']);
+
+Route::get('learner/feeds/{id}', [UserController::class, 'userfeeds']);
+Route::get('learner/connections/{id}', [UserController::class, 'userconnections']);
+Route::get('learner/discussions/{id}', [UserController::class, 'userdiscussions']);
+Route::get('learner/info/{id}', [UserController::class, 'userinfo']);
+Route::get('learner/events/{id}', [UserController::class, 'userevents']);
+
+
 Route::get('get/feeds/tags', [FeedController::class, 'getFeedsByInterest']);
 
 

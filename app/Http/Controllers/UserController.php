@@ -34,6 +34,36 @@ class UserController extends Controller
         return User::all();
     }
 
+    public function userinfo($id)
+    {
+        return User::find($id);
+    }
+
+    public function userfeeds($id)
+    {
+        $user = User::find($id);
+        return   $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get();
+    }
+
+    public function userdiscussions($id)
+    {
+        $user =  User::find($id);
+        return $user->discussions()->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->get();
+    }
+
+    public function userevents($id)
+    {
+        $user =  User::find($id);
+        return $user->event()->with('eventattendance')->get();
+    }
+
+    public function userconnections($id)
+    {
+        $user =  User::find($id);
+
+        return  ConnectionResource::collection($user->connections()->latest()->get());
+    }
+
     public function facilitatorgetusers()
     {
         $user = auth('facilitator')->user();
