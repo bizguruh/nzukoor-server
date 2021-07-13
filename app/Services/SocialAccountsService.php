@@ -29,12 +29,9 @@ class SocialAccountsService
         $user = User::where('email', $email)->first();
       }
       if (!$user) {
-        $name = trim($providerUser->getName());
-        $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
-        $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
+
         $user = User::create([
-          'firstName'      => $first_name,
-          'lastName'      => $last_name,
+          'name'      => $providerUser->getName(),
           'email'         => $providerUser->getEmail(),
           'profile'   => $providerUser->getAvatar(),
         ]);
