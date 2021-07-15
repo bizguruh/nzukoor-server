@@ -17,7 +17,6 @@ class CreateModulesTable extends Migration
             $table->id();
             $table->string('module');
             $table->text('modules');
-            $table->string('cover_image')->nullable();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('facilitator_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('organization_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
