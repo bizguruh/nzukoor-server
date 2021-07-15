@@ -19,6 +19,9 @@ class InboxController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
             $data = Inbox::where([['receiver', '=', 'facilitator'], ['receiver_id', '=', $user->id]])->orWhere('facilitator_id', $user->id)->get();
@@ -38,6 +41,9 @@ class InboxController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         return $result =  DB::transaction(function () use ($request) {
             if (auth('facilitator')->user()) {
                 $user = auth('facilitator')->user();

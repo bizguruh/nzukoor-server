@@ -18,13 +18,18 @@ class LibraryController extends Controller
 
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user  = auth('api')->user();
         return  LibraryResource::collection(Library::where('user_id', $user->id)->with('assessment', 'assessmentresponse')->get());
     }
 
     public function store(Request $request)
     {
-
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user  = auth('api')->user();
         $enroll = EnrollCount::where('course_id', $request->course_id)->where('organization_id', $user->organization_id)->first();
 
@@ -56,6 +61,9 @@ class LibraryController extends Controller
 
     public function show($id)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user  = auth('api')->user();
         $library = Library::where('user_id', $user->id)->where('course_id', $id)->first();
         return new SingleLibraryResource($library);

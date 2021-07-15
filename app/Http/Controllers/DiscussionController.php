@@ -16,6 +16,9 @@ class DiscussionController extends Controller
 
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -44,6 +47,9 @@ class DiscussionController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
             $sender = 'admin';
@@ -113,6 +119,9 @@ class DiscussionController extends Controller
     }
     public function show(Discussion $discussion)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -148,6 +157,9 @@ class DiscussionController extends Controller
 
     public function getdiscussion($id)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
         } else {

@@ -14,7 +14,9 @@ class RevenueController extends Controller
      */
     public function index()
     {
-
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -29,7 +31,9 @@ class RevenueController extends Controller
     }
     public function facilitatorIndex()
     {
-
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
 
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();

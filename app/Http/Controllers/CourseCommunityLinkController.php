@@ -16,6 +16,10 @@ class CourseCommunityLinkController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         $user = auth('api')->user();
         return $user->communitylink()->get();
     }
@@ -34,6 +38,10 @@ class CourseCommunityLinkController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         $user = auth('api')->user();
         $course =  Course::find($request->course_id);
         $code = $new_str = preg_replace("/\s+/", "-", $course->title) . '-' . $this->generateCode(2);
@@ -76,6 +84,10 @@ class CourseCommunityLinkController extends Controller
      */
     public function show($id)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         $user = auth('api')->user();
         return $user->coursecommunity()->where('course_id', $id)->first();
     }

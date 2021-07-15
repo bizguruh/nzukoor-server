@@ -26,6 +26,9 @@ class FacilitatorController extends Controller
 
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('facilitator')->user();
         return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
     }
@@ -44,18 +47,21 @@ class FacilitatorController extends Controller
 
     public function facilitatorfeeds($id)
     {
+
         $user = Facilitator::find($id);
         return   $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get();
     }
 
     public function facilitatordiscussions($id)
     {
+
         $user =  Facilitator::find($id);
         return $user->discussions()->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->get();
     }
 
     public function facilitatorevents($id)
     {
+
         $user =  Facilitator::find($id);
         return $user->event()->with('eventattendance')->get();
     }
@@ -84,33 +90,51 @@ class FacilitatorController extends Controller
 
     public function getfacilitator($id)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('organization')->user();
         return Facilitator::where('id', $id)->with('loginhistory')->first();
     }
     public function getfacilitators()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('organization')->user();
         return $user->facilitator()->with('loginhistory')->latest()->get();
     }
 
     public function admingetfacilitator($id)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('admin')->user();
         return Facilitator::where('id', $id)->with('loginhistory')->first();
     }
     public function admingetfacilitators()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('admin')->user();
         return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
     }
 
     public function usergetfacilitator($id)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('api')->user();
         return Facilitator::where('id', $id)->first();
     }
     public function usergetfacilitators()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('api')->user();
         return Facilitator::where('organization_id', $user->organization_id)->get();
     }

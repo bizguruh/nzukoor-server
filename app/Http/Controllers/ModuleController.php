@@ -22,6 +22,9 @@ class ModuleController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -36,7 +39,9 @@ class ModuleController extends Controller
 
     public function store(Request $request)
     {
-
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $result = DB::transaction(function () use ($request) {
             if (auth('admin')->user()) {
                 $user = auth('admin')->user();

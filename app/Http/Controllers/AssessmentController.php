@@ -14,6 +14,10 @@ class AssessmentController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         $user = auth('facilitator')->user();
         return $user->assessments()->with('questiontemplate', 'course', 'assessmentresponse')->latest()->get();
     }
@@ -21,6 +25,10 @@ class AssessmentController extends Controller
 
     public function store(Request $request)
     {
+
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
 
 
         $user = auth('facilitator')->user();

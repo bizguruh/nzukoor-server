@@ -16,6 +16,9 @@ class LearnerAssessmentController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('api')->user();
         return   $user->learnerassessment()->with('assessment')->latest()->get();
     }
@@ -38,6 +41,9 @@ class LearnerAssessmentController extends Controller
      */
     public function addassessment(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('api')->user();
         $library = Library::where('user_id', $user->id)->get()->toArray();
 

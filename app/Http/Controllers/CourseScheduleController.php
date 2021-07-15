@@ -17,6 +17,9 @@ class CourseScheduleController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
 
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
@@ -54,6 +57,9 @@ class CourseScheduleController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
         }

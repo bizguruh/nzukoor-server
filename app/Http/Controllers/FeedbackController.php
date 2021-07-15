@@ -25,6 +25,9 @@ class FeedbackController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('api')->user();
 
         return $user->feedback()->create([

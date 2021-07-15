@@ -11,6 +11,9 @@ class EventController extends Controller
 
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -35,6 +38,9 @@ class EventController extends Controller
     }
     public function facilitatorgetevents()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('facilitator')->user();
         return Event::where('organization_id', $user->organization_id)->with('eventattendance', 'facilitator')->latest()->get();
     }
@@ -63,6 +69,9 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }

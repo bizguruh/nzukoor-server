@@ -20,6 +20,10 @@ class CourseController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
+
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
             return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->id)->latest()->get();
@@ -39,6 +43,9 @@ class CourseController extends Controller
 
     public function show($id)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
             return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->id)->latest()->get();
@@ -68,6 +75,9 @@ class CourseController extends Controller
     }
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
 
         $result = DB::transaction(function () use ($request) {
             if (auth('admin')->user()) {
@@ -134,6 +144,9 @@ class CourseController extends Controller
 
     public function mostenrolled()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('facilitator')->user();
         $enrolled = EnrollCount::where('organization_id', $user->organization_id)->with('course')->get()->toArray();
 
@@ -159,6 +172,9 @@ class CourseController extends Controller
 
     public function toprated()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('facilitator')->user();
         $enrolled = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get()->toArray();
 
@@ -193,6 +209,9 @@ class CourseController extends Controller
     {
 
 
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $result = DB::transaction(function () use ($request, $course) {
             if (auth('admin')->user()) {
                 $user = auth('admin')->user();

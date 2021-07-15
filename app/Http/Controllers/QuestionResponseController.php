@@ -15,7 +15,9 @@ class QuestionResponseController extends Controller
      */
     public function index()
     {
-
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('api')->user();
         return   $user->questionresponse()->latest()->get();
     }
@@ -27,7 +29,9 @@ class QuestionResponseController extends Controller
 
     public function store(Request $request)
     {
-
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('api')->user();
         return $user->questionresponse()->create([
             'question_template_id' => 4,

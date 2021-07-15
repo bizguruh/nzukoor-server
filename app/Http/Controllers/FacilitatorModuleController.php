@@ -14,6 +14,9 @@ class FacilitatorModuleController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('facilitator')->user();
         return  $user->facilitatormodules()->with('course')->get();
     }
@@ -47,6 +50,9 @@ class FacilitatorModuleController extends Controller
      */
     public function show($id)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('facilitator')->user();
         return  $user->facilitatormodules()->where('course_id', $id)->with('course')->first();
     }

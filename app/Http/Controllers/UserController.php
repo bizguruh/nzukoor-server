@@ -66,6 +66,9 @@ class UserController extends Controller
 
     public function facilitatorgetusers()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $user = auth('facilitator')->user();
         return User::where('organization_id', $user->organization_id)->with('loginhistory')->get();
     }
@@ -78,6 +81,9 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         $validated = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|unique:users',
@@ -369,6 +375,9 @@ class UserController extends Controller
     }
     public function saveinterests(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -412,7 +421,9 @@ class UserController extends Controller
     public function updatepassword(Request $request)
     {
 
-
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('organization')->user()) {
             $user = auth('admin')->user();
             $find = Organization::find($user->id);
@@ -501,6 +512,9 @@ class UserController extends Controller
 
     public function resetpassword(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
 
         if ($request->role == 'organization') {
             $user = auth('admin')->user();

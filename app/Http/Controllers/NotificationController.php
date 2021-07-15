@@ -24,6 +24,9 @@ class NotificationController extends Controller
     }
     public function sendnotifications(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
             $type = 'organization';
@@ -58,6 +61,9 @@ class NotificationController extends Controller
 
     public function sendnotification(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
 
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
@@ -94,7 +100,9 @@ class NotificationController extends Controller
 
     public function joinDiscussionRequest(Request $request)
     {
-
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
             $sender = 'admin';

@@ -14,12 +14,20 @@ class AssessmentResponseController extends Controller
      */
     public function index()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         $user = auth('api')->user();
         return   $user->assessmentresponse()->latest()->get();
     }
 
     public function getresponses()
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
@@ -50,6 +58,10 @@ class AssessmentResponseController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
         $user = auth('api')->user();
 
 
