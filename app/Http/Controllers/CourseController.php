@@ -240,8 +240,10 @@ class CourseController extends Controller
                 ]);
 
                 $find = FacilitatorModule::where('course_id', $course->id)->first();
-                $find->modules = json_encode($value['modules']);
-                $find->save();
+                if (!is_null($find)) {
+                    $find->modules = json_encode($value['modules']);
+                    $find->save();
+                }
             }
             //return $request->questionnaires;
 
