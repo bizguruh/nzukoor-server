@@ -151,7 +151,8 @@ class NotificationController extends Controller
             'type_id' => $user->id,
             'type' => $sender,
             'discussion_id' => $request->discussion_id,
-            'body' => $user->name . " has requested access to join your discussion, " . strtoupper($discussion->name),
+            'response' => 'pending',
+            'body' => $user->name . " has requested to join your discussion, " . strtoupper($discussion->name),
         ]);
         return 'Notification sent';
     }
