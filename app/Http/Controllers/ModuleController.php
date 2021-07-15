@@ -50,7 +50,7 @@ class ModuleController extends Controller
             $resource = $user->module()->create([
 
                 'module' => $request->module,
-                'cover_image' => $request->cover_image,
+
                 'modules' => json_encode($request->modules),
                 'course_id' => $request->course_id,
                 'organization_id' => $user->organization_id,
@@ -103,9 +103,9 @@ class ModuleController extends Controller
      * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function show(Module $module)
+    public function show($module)
     {
-        return $module;
+        return Module::where('course_id', $module)->with('course')->get();
     }
 
     /**
@@ -118,7 +118,7 @@ class ModuleController extends Controller
     public function update(Request $request, Module $module)
     {
 
-        $module->cover_image = $request->cover_image;
+
         $module->modules = json_encode($request->modules);
         $module->save();
         return $module->load('course');
