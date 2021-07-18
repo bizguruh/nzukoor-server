@@ -172,6 +172,7 @@ class FacilitatorController extends Controller
                 'country' => 'NG',
                 'state' => 'Lagos',
                 'verification' => false,
+                'voice' => 1,
                 'facilitator_role' => 'facilitator',
                 'referral_code' =>  preg_replace('/\s+/', '_', $request->name) . '_' . $referral_code,
 
@@ -251,6 +252,7 @@ class FacilitatorController extends Controller
                     'country' => 'NG',
                     'state' => 'Lagos',
                     'verification' => false,
+                    'voice' => 1,
                     'facilitator_role' => 'creator',
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
@@ -313,7 +315,7 @@ class FacilitatorController extends Controller
                     'bio' => $request->bio,
                     'profile' => $request->profile,
                     'qualifications' => json_encode($request->qualifications),
-
+                    'voice' => 1,
                     'state' => 'Lagos',
                     'verification' => false,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
@@ -362,6 +364,7 @@ class FacilitatorController extends Controller
         $facilitator->bank_name = $request->bank_name;
         $facilitator->account_number = $request->account_number;
         $facilitator->qualifications = json_encode($request->qualifications);
+        $facilitator->voice = $request->voice;
         $facilitator->save();
         return $facilitator;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ConnectionResource;
 use App\Models\Admin;
 use App\Models\Course;
 use App\Models\CourseCommunity;
@@ -111,6 +112,7 @@ class UserController extends Controller
             'country' => 'NG',
             'state' => 'Lagos',
             'verification' => false,
+            'voice' => 1,
             'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
         ]);
         $details = [
@@ -191,6 +193,7 @@ class UserController extends Controller
                     'country' => 'NG',
                     'state' => 'Lagos',
                     'verification' => false,
+                    'voice' => 1,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
 
@@ -301,6 +304,7 @@ class UserController extends Controller
                     'country' => 'NG',
                     'state' => 'Lagos',
                     'verification' => false,
+                    'voice' => 1,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
             }
@@ -353,6 +357,7 @@ class UserController extends Controller
                 'country' => 'NG',
                 'state' => 'Lagos',
                 'verification' => false,
+                'voice' => 1,
                 'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . $referral_code,
             ]);
 
@@ -402,6 +407,7 @@ class UserController extends Controller
 
     public function update(Request $request,    User $user)
     {
+
         $user->name = $request->name;
         $user->email = $request->email;
         $user->address = $request->address;
@@ -413,6 +419,7 @@ class UserController extends Controller
         $user->age = $request->age;
         $user->gender = $request->gender;
         $user->lga = $request->lga;
+        $user->voice = $request->voice;
         $user->verification = $request->verification;
         $user->save();
         return $user;

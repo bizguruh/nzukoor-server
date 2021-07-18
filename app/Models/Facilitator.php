@@ -33,7 +33,8 @@ class Facilitator extends Authenticatable
         'state',
         'country',
         'facilitator_role',
-        'bank_name', 'account_number'
+        'bank_name', 'account_number',
+        "voice"
     ];
 
     public function order()

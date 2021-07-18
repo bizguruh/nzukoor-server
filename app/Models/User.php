@@ -35,7 +35,8 @@ class User extends Authenticatable
         'gender',
         'lga',
         'state',
-        'country'
+        'country',
+        'voice'
     ];
 
     public function revenue()
