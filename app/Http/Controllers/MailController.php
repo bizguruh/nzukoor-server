@@ -96,17 +96,17 @@ class MailController extends Controller
 
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
-            $body = 'I created a course titled, **' . $request->title . '** on SkillsGuruh. Check it out here!';
+            $body = 'I created a course titled, **' . $request->title . '** on SkillsGuruh.';
             $title = ' I think You’d Want To See This!';
         }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
-            $body = 'I created a course titled, **' . $request->title .  '** on SkillsGuruh. Check it out here!';
+            $body = 'I created a course titled, **' . $request->title .  '** on SkillsGuruh.';
             $title = ' I think You’d Want To See This!';
         }
         if (auth('api')->user()) {
             $user = auth('api')->user();
-            $body = 'Lets enroll for the course titled, **' . $request->title .  '** on SkillsGuruh. Check it out here!';
+            $body = 'Lets enroll for the course titled, **' . $request->title .  '** on SkillsGuruh.';
             $title = ' Let’s Unlock A New Skill';
         }
         $name = trim($user->name);
@@ -138,7 +138,7 @@ class MailController extends Controller
 
 
 
-        $body = 'Lets enroll for the course titled, **' . $request->title . '** on SkillsGuruh. Check it out here!';
+        $body = 'Lets enroll for the course titled, **' . $request->title . '** on SkillsGuruh.';
         $title = ' I think You’d Want To See This!';
 
 

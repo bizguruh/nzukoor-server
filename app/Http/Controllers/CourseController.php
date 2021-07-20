@@ -258,11 +258,13 @@ class CourseController extends Controller
                     'organization_id' => $user->organization_id,
                 ]);
 
-                $find = FacilitatorModule::where('course_id', $course->id)->first();
-                if (!is_null($find)) {
-                    $find->modules = json_encode($value['modules']);
-                    $find->save();
-                }
+                $find = FacilitatorModule::where('course_id', $course->id)->delete();
+
+                FacilitatorModule::create([
+                    'course_id' => $course->id,
+                    'facilitator_id' => $value['facilitator_id'],
+                    'modules' => json_encode($value['modules'])
+                ]);
             }
             //return $request->questionnaires;
 
