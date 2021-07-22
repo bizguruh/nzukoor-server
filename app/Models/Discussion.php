@@ -10,7 +10,7 @@ class Discussion extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['type', 'name', 'description', 'tags', 'creator', 'course_id', 'organization_id', 'user_id', 'facilitator_id', 'admin_id'];
+    protected $fillable = ['type', 'name', 'description', 'tags', 'creator', 'course_id', 'organization_id', 'user_id', 'facilitator_id', 'admin_id',];
 
 
     public function contributions()

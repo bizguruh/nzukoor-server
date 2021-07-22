@@ -209,6 +209,8 @@ Route::post('/auth/{provider}/callback', [SocialLoginController::class, 'callbac
 
 Route::apiResource('inboxes', InboxController::class);
 
+Route::post('inboxes/mark/read', [InboxController::class, 'markread']);
+
 
 //Todos routes
 

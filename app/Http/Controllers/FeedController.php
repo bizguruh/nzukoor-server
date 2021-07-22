@@ -174,6 +174,7 @@ class FeedController extends Controller
             'organization_id' => $user->organization_id,
             'media' => $request->media,
             'url' => $request->url,
+            'publicId' => $request->publicId,
             'message' => $request->message,
             'tags' => json_encode($request->tags)
         ]);

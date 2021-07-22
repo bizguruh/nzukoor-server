@@ -74,6 +74,16 @@ class InboxController extends Controller
         });
     }
 
+    public function markread(Request $request)
+    {
+
+
+        $mesages =  Inbox::whereIn('id', $request->ids)->update(['status' => true]);
+        return response()->json([
+            'message' => 'updated'
+        ]);
+    }
+
     /**
      * Display the specified resource.
      *
