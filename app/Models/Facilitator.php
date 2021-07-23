@@ -149,6 +149,10 @@ class Facilitator extends Authenticatable
     {
         return $this->hasMany(DiscussionMessage::class);
     }
+    public function discussionmessagecomment()
+    {
+        return $this->hasMany(DiscussionMessageComment::class);
+    }
     public function discussionvote()
     {
         return $this->hasMany(DiscussionVote::class);

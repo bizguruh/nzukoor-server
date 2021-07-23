@@ -124,6 +124,10 @@ class AdminController extends Controller
         return $admin;
     }
 
+    public function discussionmessagecomment()
+    {
+        return $this->hasMany(DiscussionMessageComment::class);
+    }
     /**
      * Remove the specified resource from storage.
      *

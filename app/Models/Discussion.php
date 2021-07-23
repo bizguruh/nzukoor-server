@@ -33,7 +33,7 @@ class Discussion extends Model
 
     public function discussionmessage()
     {
-        return $this->hasMany(DiscussionMessage::class)->with('user', 'admin', 'facilitator');
+        return $this->hasMany(DiscussionMessage::class)->with('user', 'admin', 'facilitator', 'discussionmessagecomment');
     }
     public function discussionvote()
     {

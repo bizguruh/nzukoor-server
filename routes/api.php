@@ -22,6 +22,7 @@ use App\Http\Controllers\CourseScheduleController;
 use App\Http\Controllers\CourseViewCountController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\DiscussionMessageCommentController;
 use App\Http\Controllers\DiscussionMessageController;
 use App\Http\Controllers\DiscussionRequestController;
 use App\Http\Controllers\DiscussionVoteController;
@@ -221,6 +222,7 @@ Route::get('todos-destroy', [TodoController::class, 'destroyall']);
 
 Route::apiResource('discussions', DiscussionController::class);
 Route::apiResource('discussion-messages', DiscussionMessageController::class);
+Route::apiResource('discussion/message/replies', DiscussionMessageCommentController::class);
 
 Route::apiResource('views', DiscussionViewController::class);
 Route::apiResource('votes', DiscussionVoteController::class);

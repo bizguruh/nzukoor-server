@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class DiscussionMessage extends Model
+class DiscussionMessageComment extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'discussion_messages';
-    protected $fillable = ['facilitator_id', 'user_id', 'admin_id', 'message', 'attachment', 'publicId', 'discussion_id', 'organization_id'];
+    protected $table = 'discussion_message_comments';
+    protected $fillable = ['facilitator_id', 'user_id', 'admin_id', 'message', 'discussion_id', 'discussion_message_id', 'organization_id'];
 
     public function discussion()
     {
         return $this->belongsTo(Discussion::class);
     }
-    public function discussionmessagecomment()
+    public function discussionmessage()
     {
-        return $this->hasMany(DiscussionMessageComment::class)->with('user', 'admin', 'facilitator');
+        return $this->belongsTo(DiscussionMessage::class);
     }
     public function user()
     {
