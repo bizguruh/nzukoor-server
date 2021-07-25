@@ -34,7 +34,7 @@ class LoginHistoryController extends Controller
             $user->verification = true;
             $user->save();
         }
-        return $user;
+        return $history;
     }
 
 

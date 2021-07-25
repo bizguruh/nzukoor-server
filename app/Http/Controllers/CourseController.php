@@ -75,6 +75,7 @@ class CourseController extends Controller
     }
     public function store(Request $request)
     {
+        return $request->all();
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
         }
@@ -94,7 +95,7 @@ class CourseController extends Controller
             $course = Course::create([
                 'title' =>  $request->input('general.title'),
                 'description' =>  $request->input('general.description'),
-                'code' => $request->input('general.code'),
+                'course_code' => $request->input('general.code'),
                 'cover'  =>  $request->input('general.cover'),
                 'type' => $request->input('general.type'),
                 'amount' => $request->input('general.amount'),
