@@ -180,7 +180,7 @@ class FacilitatorController extends Controller
             ]);
             $details = [
                 'greeting' => 'Welcome',
-                'body' => "Welcome to " . $user->name . ", Access learners,Create courses,events and so much more.",
+                'body' => "Welcome to " . $user->name . ",Create courses,events and so much more.",
                 'thanks' => 'Thanks',
                 'actionText' => '',
                 'url' => '',

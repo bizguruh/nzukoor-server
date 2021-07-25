@@ -378,6 +378,59 @@ class UserController extends Controller
 
         return response($result->load('loginhistory'), 201);
     }
+
+    public function adminStoreUser(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|unique:users',
+            'password' => 'required',
+            'phone' => ' required|unique:users'
+        ]);
+
+        $result =  DB::transaction(function () use ($request) {
+            $user = auth('admin')->user();
+            $referral_code =  $this->generateCode(2);
+            $check = User::where('referral_code', $referral_code)->first();
+            while (!is_null($check)) {
+                $referral_code =  $this->generateCode(2);
+                $check = User::where('referral_code', $referral_code)->first();
+            }
+
+
+            $newuser = User::create([
+                'organization_id' => $user->organization_id,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'bio' => $request->bio,
+                'profile' => $request->profile,
+                'country' => 'NG',
+                'state' => 'Lagos',
+                'verification' => false,
+                'voice' => 1,
+                'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . $referral_code,
+            ]);
+
+
+            $details = [
+                'greeting' => 'Welcome',
+                'body' => "Welcome to " . $newuser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
+                'thanks' => 'Thanks',
+                'actionText' => '',
+                'url' => '',
+                'to' => 'user',
+                'id' => $newuser->id
+            ];
+            $newuser->notify(new SendNotification($details));
+            return $newuser;
+        });
+
+
+        return response($result->load('loginhistory'), 201);
+    }
     public function saveinterests(Request $request)
     {
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {

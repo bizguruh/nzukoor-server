@@ -49,7 +49,7 @@ class RoleInvite extends Notification
             ->line('Login Credentials')
             ->line('Email: ' . $this->details['email'])
             ->line('Password: ' . $this->details['password'])
-            ->line('Please click the link to get started')
+            ->line('Click the link to get started')
             ->action($this->details['actionText'], $this->details['url']);
         //  ->line('Use this referral code ' . $this->details['code'] . ' to create an account');
     }

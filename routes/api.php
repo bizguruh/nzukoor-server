@@ -115,8 +115,11 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::apiResource('admins', AdminController::class);
 
     // Route::get('admin-get-facilitator/{id}', [OrganizationController::class, 'getfacilitator']);
+
     Route::put('admin-update-facilitator/{id}', [OrganizationController::class, 'updatefacilitator']);
     Route::delete('admin-delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
+
+    Route::post('admin-register-user', [UserController::class, 'adminStoreUser']);
 
     Route::get('admin-get-users', [OrganizationController::class, 'admingetusers']);
     Route::get('admin-get-user/{id}', [OrganizationController::class, 'getuser']);

@@ -25,14 +25,19 @@ class MailController extends Controller
         $name = trim($user->name);
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
+        if ($user->role == 'admin') {
+            $body = 'You have been invited by ' . $organization . ' to be an ' . $user->role . ' on SkillsGuruh';
+        } else {
+            $body = 'You have been invited by ' . $organization . ' to be a ' . $user->role . ' on SkillsGuruh';
+        }
 
         $details = [
             'from_email' => 'skillsguruh@gmail.com',
             'from_name' => 'SkillsGuruh',
             'greeting' => 'Hello ' . $first_name,
-            'body' => 'You have been invited by ' . $organization . ' to be a ' . $user->role . ' on SkillsGuruh',
+            'body' => $body,
             'actionText' => 'Click to login',
-            'url' => "http://skillsguruh.com/login",
+            'url' => "https://skillsguruh.com/login",
             'code' => $userorg->referral_code,
             'email' => $user->email,
             'password' => $user->password

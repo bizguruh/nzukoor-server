@@ -14,6 +14,10 @@ class EventController extends Controller
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
         }
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+            return Event::where('organization_id', $user->id)->with('eventattendance', 'facilitator')->latest()->get();
+        }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
         }
