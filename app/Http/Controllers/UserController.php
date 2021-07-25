@@ -112,7 +112,7 @@ class UserController extends Controller
             'country' => 'NG',
             'state' => 'Lagos',
             'verification' => false,
-            'voice' => 1,
+            'voice' => 49,
             'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
         ]);
         $details = [
@@ -193,7 +193,7 @@ class UserController extends Controller
                     'country' => 'NG',
                     'state' => 'Lagos',
                     'verification' => false,
-                    'voice' => 1,
+                    'voice' => 49,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
 
@@ -304,7 +304,7 @@ class UserController extends Controller
                     'country' => 'NG',
                     'state' => 'Lagos',
                     'verification' => false,
-                    'voice' => 1,
+                    'voice' => 49,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
             }
@@ -357,7 +357,7 @@ class UserController extends Controller
                 'country' => 'NG',
                 'state' => 'Lagos',
                 'verification' => false,
-                'voice' => 1,
+                'voice' => 49,
                 'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . $referral_code,
             ]);
 
@@ -410,7 +410,7 @@ class UserController extends Controller
                 'country' => 'NG',
                 'state' => 'Lagos',
                 'verification' => false,
-                'voice' => 1,
+                'voice' => 49,
                 'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . $referral_code,
             ]);
 
