@@ -131,13 +131,14 @@ class FeedController extends Controller
                 foreach ($feeds as $key => $value) {
                     if (!is_null($value['tags'])) {
 
+                        if (count(json_decode($value['tags']))) {
+                            $check =  array_intersect($tags, array_map(function ($a) {
+                                return $a->value;
+                            }, json_decode($value['tags'])));
 
-                        $check =  array_intersect($tags, array_map(function ($a) {
-                            return $a->value;
-                        }, json_decode($value['tags'])));
-
-                        if (count($check)) {
-                            array_push($allfeeds, $value);
+                            if (count($check)) {
+                                array_push($allfeeds, $value);
+                            }
                         }
                     }
                 }
