@@ -126,20 +126,23 @@ class FeedController extends Controller
         $tags = $user->interests ? json_decode($user->interests) : [];
         $feeds = Feed::where('organization_id', $user->organization_id)->get()->toArray();
         $allfeeds = [];
-        if (count($tags)) {
-            foreach ($feeds as $key => $value) {
-                if (!is_null($value['tags'])) {
+        if (count($feeds)) {
+            if (count($tags)) {
+                foreach ($feeds as $key => $value) {
+                    if (!is_null($value['tags'])) {
 
 
-                    $check =  array_intersect($tags, array_map(function ($a) {
-                        return $a->value;
-                    }, json_decode($value['tags'])));
+                        $check =  array_intersect($tags, array_map(function ($a) {
+                            return $a->value;
+                        }, json_decode($value['tags'])));
 
-                    if (count($check)) {
-                        array_push($allfeeds, $value);
+                        if (count($check)) {
+                            array_push($allfeeds, $value);
+                        }
                     }
                 }
             }
+            return $allfeeds;
         }
         return $allfeeds;
     }
