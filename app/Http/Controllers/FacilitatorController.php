@@ -9,12 +9,14 @@ use App\Models\Facilitator;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use App\Notifications\SendNotification;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 
 class FacilitatorController extends Controller
 {
+    public $ttl = 60 * 60 * 24;
 
     protected function generateCode($numChars)
     {
@@ -30,13 +32,17 @@ class FacilitatorController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
+        return Cache::remember('key', $this->ttl, function () use ($user) {
+            return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
+        });
     }
 
     public function guestindex()
     {
 
-        return Facilitator::all();
+        return Cache::remember('key', $this->ttl, function () {
+            return Facilitator::all();
+        });
     }
 
 

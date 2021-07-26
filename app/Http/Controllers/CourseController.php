@@ -8,6 +8,7 @@ use App\Models\EnrollCount;
 use App\Models\FacilitatorModule;
 use App\Models\Questionnaire;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\Cast\Object_;
 
@@ -18,6 +19,7 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public $ttl = 60 * 60 * 24;
     public function index()
     {
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
@@ -38,7 +40,10 @@ class CourseController extends Controller
             $user = auth('api')->user();
         }
 
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('organization_id', $user->organization_id)->latest()->get();
+
+        return Cache::remember('key', $this->ttl, function () use ($user) {
+            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('organization_id', $user->organization_id)->latest()->get();
+        });
     }
 
     public function show($id)
@@ -60,18 +65,27 @@ class CourseController extends Controller
             $user = auth('api')->user();
         }
 
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('id', $id)->latest()->first();
+        return Cache::remember('key', $this->ttl, function () use ($id) {
+            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('id', $id)->latest()->first();
+        });
     }
     public function guestcourses()
     {
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get();
+
+        return Cache::remember('key', $this->ttl, function () {
+            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get();
+        });
     }
 
 
 
     public function getcourse($id)
     {
-        return Course::with('courseoutline', 'courseschedule', 'modules')->where('id', $id)->first();
+
+
+        return Cache::remember('key', $this->ttl, function () use ($id) {
+            return Course::with('courseoutline', 'courseschedule', 'modules')->where('id', $id)->first();
+        });
     }
     public function store(Request $request)
     {
@@ -168,7 +182,9 @@ class CourseController extends Controller
 
             return strcmp($param2['count'], $param1['count']);
         });
-        return $enrolled;
+        return Cache::remember('key', $this->ttl, function () use ($enrolled) {
+            return $enrolled;
+        });
     }
 
     public function toprated()
@@ -201,7 +217,9 @@ class CourseController extends Controller
 
             return strcmp($param2[0]['total_review'], $param1[0]['total_review']);
         });
-        return $courses;
+        return Cache::remember('key', $this->ttl, function () use ($courses) {
+            return $courses;
+        });
     }
 
 

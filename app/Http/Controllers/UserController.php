@@ -16,6 +16,7 @@ use App\Notifications\AddedToLibrary;
 use App\Notifications\PrivateDiscussionCreated;
 use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -30,6 +31,7 @@ class UserController extends Controller
     }
 
 
+    public $ttl = 60 * 60 * 24;
     public function index()
     {
         return User::all();
@@ -71,12 +73,18 @@ class UserController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        return User::where('organization_id', $user->organization_id)->with('loginhistory')->get();
+
+        return  Cache::remember('users', $this->ttl, function () use ($user) {
+            return User::where('organization_id', $user->organization_id)->with('loginhistory')->get();
+        });
     }
 
     public function facilitatorgetuser($id)
     {
-        return User::where('id', $id)->first();
+        $ttl = 3600;
+        return  Cache::remember('user', $this->ttl, function () use ($id) {
+            return User::where('id', $id)->first();
+        });
     }
 
 
