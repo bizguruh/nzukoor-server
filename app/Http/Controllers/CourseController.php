@@ -177,14 +177,11 @@ class CourseController extends Controller
     {
 
         $enrolled = EnrollCount::with('course')->get()->toArray();
-
         usort($enrolled, function ($param1, $param2) {
 
             return strcmp($param2['count'], $param1['count']);
         });
-        return Cache::remember('key', $this->ttl, function () use ($enrolled) {
-            return $enrolled;
-        });
+        return $enrolled;
     }
 
     public function toprated()
