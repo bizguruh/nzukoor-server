@@ -41,9 +41,9 @@ class CourseController extends Controller
         }
 
 
-        return Cache::remember('key', $this->ttl, function () use ($user) {
+       
             return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('organization_id', $user->organization_id)->latest()->get();
-        });
+        
     }
 
     public function show($id)
@@ -65,16 +65,16 @@ class CourseController extends Controller
             $user = auth('api')->user();
         }
 
-        return Cache::remember('key', $this->ttl, function () use ($id) {
+    
             return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('id', $id)->latest()->first();
-        });
+       
     }
     public function guestcourses()
     {
 
-        return Cache::remember('key', $this->ttl, function () {
+        
             return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get();
-        });
+       
     }
 
 
@@ -83,9 +83,9 @@ class CourseController extends Controller
     {
 
 
-        return Cache::remember('key', $this->ttl, function () use ($id) {
+        
             return Course::with('courseoutline', 'courseschedule', 'modules')->where('id', $id)->first();
-        });
+       
     }
     public function store(Request $request)
     {
@@ -214,9 +214,9 @@ class CourseController extends Controller
 
             return strcmp($param2[0]['total_review'], $param1[0]['total_review']);
         });
-        return Cache::remember('key', $this->ttl, function () use ($courses) {
+        
             return $courses;
-        });
+        
     }
 
 
