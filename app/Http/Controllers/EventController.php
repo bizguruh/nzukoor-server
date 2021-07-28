@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Event;
+use App\Models\User;
+use App\Notifications\EventReminder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+
 
 class EventController extends Controller
 {
@@ -117,6 +122,36 @@ class EventController extends Controller
         return $event->load('eventattendance', 'facilitator');
     }
 
+    public function eventReminder()
+    {
+        $events = Event::get();
+        $filtered = $events->filter(function ($event) {
+            $now  = Carbon::now('Africa/Lagos');
+            $start = Carbon::parse($event->start);
+            $diff = $start->diffInHours($now);
+
+            return $event->status == 'pending' && $diff <= 2;
+        });
+
+
+        foreach ($filtered as $key => $value) {
+            $details = [
+
+                'from_email' => 'skillsguruh@gmail.com',
+                'from_name' => 'SkillsGuruh',
+                'greeting' => 'Hello',
+                'body' => 'The event, **' . $value['title'] . '** will be starting in few hours. Don\'t forget to Join! ',
+                'actionText' => 'Join here',
+                'url' => "https://skillsguruh.com/learner/event/" . $value['id'],
+
+            ];
+            $emails =  $value->eventattendance()->get()->map(function ($user) {
+                return User::find($user['user_id']);
+            });
+
+            Notification::send($emails, new EventReminder($details));
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *
