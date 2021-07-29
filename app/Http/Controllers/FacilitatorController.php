@@ -32,17 +32,15 @@ class FacilitatorController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        return Cache::remember('key', $this->ttl, function () use ($user) {
-            return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
-        });
+
+        return Facilitator::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
     }
 
     public function guestindex()
     {
 
-        return Cache::remember('key', $this->ttl, function () {
-            return Facilitator::all();
-        });
+
+        return Facilitator::all();
     }
 
 

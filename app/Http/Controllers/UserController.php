@@ -74,17 +74,15 @@ class UserController extends Controller
         }
         $user = auth('facilitator')->user();
 
-        return  Cache::remember('users', $this->ttl, function () use ($user) {
-            return User::where('organization_id', $user->organization_id)->with('loginhistory')->get();
-        });
+
+        return User::where('organization_id', $user->organization_id)->with('loginhistory')->get();
     }
 
     public function facilitatorgetuser($id)
     {
         $ttl = 3600;
-        return  Cache::remember('user', $this->ttl, function () use ($id) {
-            return User::where('id', $id)->first();
-        });
+
+        return User::where('id', $id)->first();
     }
 
 
