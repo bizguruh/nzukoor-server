@@ -16,7 +16,7 @@ class CreateCourseOutlinesTable extends Migration
         Schema::create('course_outlines', function (Blueprint $table) {
             $table->id();
             $table->string('knowledge_areas');
-            $table->string('modules')->nullable();
+            $table->text('modules')->nullable();
             $table->string('duration');
             $table->string('certification')->nullable();
             $table->text('faqs')->nullable();

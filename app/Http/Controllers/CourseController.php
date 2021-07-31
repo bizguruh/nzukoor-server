@@ -41,9 +41,8 @@ class CourseController extends Controller
         }
 
 
-       
-            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('organization_id', $user->organization_id)->latest()->get();
-        
+
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
     public function show($id)
@@ -65,16 +64,14 @@ class CourseController extends Controller
             $user = auth('api')->user();
         }
 
-    
-            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('id', $id)->latest()->first();
-       
+
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('id', $id)->latest()->first();
     }
     public function guestcourses()
     {
 
-        
-            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get();
-       
+
+        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get();
     }
 
 
@@ -83,12 +80,12 @@ class CourseController extends Controller
     {
 
 
-        
-            return Course::with('courseoutline', 'courseschedule', 'modules')->where('id', $id)->first();
-       
+
+        return Course::with('courseoutline', 'courseschedule', 'modules')->where('id', $id)->first();
     }
     public function store(Request $request)
     {
+
 
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
@@ -214,9 +211,8 @@ class CourseController extends Controller
 
             return strcmp($param2[0]['total_review'], $param1[0]['total_review']);
         });
-        
-            return $courses;
-        
+
+        return $courses;
     }
 
 
@@ -267,20 +263,23 @@ class CourseController extends Controller
                     'day' => 'default',
                     'url' =>  $value['url'],
                     'venue' =>  $value['venue'],
-                    'facilitator_id' =>   $value['facilitator_id'],
+                    'facilitator_id' =>   $value['facilitator_id'] ? $value['facilitator_id'] : 'N/A',
                     'start_time' =>  $value['start_time'],
                     'end_time' =>  $value['end_time'],
                     'modules' => json_encode($value['modules']),
                     'organization_id' => $user->organization_id,
                 ]);
 
-                $find = FacilitatorModule::where('course_id', $course->id)->delete();
 
-                FacilitatorModule::create([
-                    'course_id' => $course->id,
-                    'facilitator_id' => $value['facilitator_id'],
-                    'modules' => json_encode($value['modules'])
-                ]);
+
+                if (!is_null($value['facilitator_id'])) {
+                    $find = FacilitatorModule::where('course_id', $course->id)->delete();
+                    FacilitatorModule::create([
+                        'course_id' => $course->id,
+                        'facilitator_id' => $value['facilitator_id'],
+                        'modules' => json_encode($value['modules'])
+                    ]);
+                }
             }
             //return $request->questionnaires;
 

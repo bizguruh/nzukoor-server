@@ -24,7 +24,7 @@ class CourseSchedule extends Model
 
     public function course()
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class)->with('courseoutline');
     }
     public function facilitator()
     {

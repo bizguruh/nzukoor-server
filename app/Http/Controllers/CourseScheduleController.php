@@ -79,12 +79,14 @@ class CourseScheduleController extends Controller
 
 
             $schedule = $course->courseschedule()->create([
+                'all' => 1,
                 'day' =>  'monday',
                 'url' =>  $value['url'],
                 'venue' =>  $value['venue'],
                 'facilitator_id' =>   $value['facilitator_id'],
                 'start_time' =>  $value['start_time'],
                 'end_time' =>  $value['end_time'],
+                'modules' => $course->courseoutline()->value('modules'),
                 'organization_id' => $user->organization_id
             ])->load('course', 'facilitator');
         }
