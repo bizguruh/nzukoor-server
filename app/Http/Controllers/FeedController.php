@@ -9,6 +9,8 @@ use App\Models\Feed;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
+use App\Support\Collection;
+
 
 class FeedController extends Controller
 {
@@ -19,7 +21,7 @@ class FeedController extends Controller
      */
     public function guestfeeds()
     {
-        return Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->get();
+        return Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->paginate(15);
     }
     public function index()
     {
@@ -70,7 +72,7 @@ class FeedController extends Controller
         usort($mergedfeeds, function ($a, $b) {
             return new DateTime($b['created_at']) <=> new DateTime($a['created_at']);
         });
-        return $mergedfeeds;
+        return (new Collection($mergedfeeds))->paginate(5);
 
 
         // $notFlat = [[1, 2], [3, 4]];
