@@ -366,6 +366,8 @@ Route::get('guest/courses', [CourseController::class, 'guestcourses']);
 Route::get('guest/discussions', [DiscussionController::class, 'guestdiscussions']);
 Route::get('guest/events', [EventController::class, 'guestindex']);
 Route::get('guest/feeds', [FeedController::class, 'guestfeeds']);
+Route::get('guest/trending/feeds', [FeedController::class, 'getTrendingFeedInterest']);
+Route::get('guest/trending/feed/{interest}', [FeedController::class, 'getSpecificFeed']);
 
 
 // Contact message

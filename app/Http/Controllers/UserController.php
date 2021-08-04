@@ -317,7 +317,7 @@ class UserController extends Controller
 
             $details = [
                 'greeting' => 'Welcome',
-                'body' => "Welcome to " . $olduser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
+                'body' => "Welcome to " . $newuser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
                 'thanks' => 'Thanks',
                 'actionText' => '',
                 'url' => '',

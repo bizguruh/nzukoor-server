@@ -72,7 +72,7 @@ class FeedController extends Controller
         usort($mergedfeeds, function ($a, $b) {
             return new DateTime($b['created_at']) <=> new DateTime($a['created_at']);
         });
-        return (new Collection($mergedfeeds))->paginate(5);
+        return (new Collection($mergedfeeds))->paginate(15);
 
 
         // $notFlat = [[1, 2], [3, 4]];
@@ -148,6 +148,72 @@ class FeedController extends Controller
             return $allfeeds;
         }
         return $allfeeds;
+    }
+    public function getTrendingFeedInterest()
+    {
+        $interests = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) {
+            return json_decode($i->tags);
+        })->filter(function ($tag) {
+            return $tag;
+        })->flatten(1)->map(function ($a) {
+            return $a->text;
+        })->unique();
+
+        $feeds  = Feed::get()->map(function ($i) {
+            if (!is_null($i->tags) && count(json_decode($i->tags)))
+                $i->tags = collect(json_decode($i->tags))->map(function ($v) {
+                    return $v->text;
+                });
+            else {
+                $i->tags = null;
+            }
+            return $i;
+        });
+
+        $filteredFeeds =   $feeds->filter(function ($tag) {
+            return $tag->tags;
+        });
+
+        $trend =   $interests->map(function ($in) use ($filteredFeeds) {
+
+            $count =  count($filteredFeeds->filter(function ($feed) use ($in) {
+
+                return \in_array($in, $feed->tags->toArray());
+            }));
+            return  [
+                'name' => $in,
+                'count' => $count
+
+            ];
+        });
+
+        return $trend;
+    }
+
+    public function getSpecificFeed($interest)
+    {
+        $feeds = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) use ($interest) {
+            if (!is_null($i->tags) && count(json_decode($i->tags)))
+                $i->tags = collect(json_decode($i->tags))->map(function ($v) {
+                    return $v->text;
+                });
+            else {
+                $i->tags = null;
+            }
+            return $i;
+        });
+        $filteredFeeds =   $feeds->filter(function ($tag) {
+            return $tag->tags;
+        });
+
+        $trend =   $filteredFeeds->filter(function ($in) use ($interest) {
+            return \in_array($interest, $in->tags->toArray());
+        });
+        $res = [];
+        foreach ($trend as $key => $value) {
+            array_push($res, $value);
+        }
+        return (new Collection($res))->paginate(15);
     }
 
     /**
