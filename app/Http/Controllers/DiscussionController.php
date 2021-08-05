@@ -33,11 +33,89 @@ class DiscussionController extends Controller
             ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
     }
 
+
     public function guestdiscussions()
     {
         return Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->latest()->get();
     }
 
+    public function customdiscussions()
+    {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
+
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+
+        $connections = $user->connections()->get();
+        $facilitators = $connections->filter(function ($a) {
+            if ($a->follow_type == 'facilitator') {
+                return $a;
+            }
+        })->map(function ($f) {
+            return $f->facilitator_id;
+        });
+
+        $users = $connections->filter(function ($a) {
+            if ($a->follow_type == 'user') {
+                return $a;
+            }
+        })->map(function ($f) {
+            return $f->user_id;
+        });
+        return Discussion::where('organization_id', 99)
+            ->orWhereIn('facilitator_id', $facilitators)
+            ->orWhereIn('user_id', $users)
+            ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')
+            ->latest()
+            ->get();
+    }
+
+
+    public function trenddiscussions()
+    {
+
+        $discussion = Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->get();
+        $sorted = $discussion->sortByDesc(function ($a) {
+            return count($a['discussionmessage']);
+        });
+        return $sorted->values()->all();
+    }
+
+    public function interestdiscussions()
+    {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        if (is_null($user->interests)) return;
+        $interests = json_decode($user->interests);
+        $discussion = Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $result =   $discussion->filter(function ($a) use ($interests) {
+            $tags = collect(json_decode($a->tags))->map(function ($t) {
+                return $t->value;
+            });
+
+            $check = array_intersect($interests, $tags->toArray());
+            return count($check);
+        });
+
+        return $result->values()->all();
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -139,19 +217,18 @@ class DiscussionController extends Controller
         }
 
 
-        $alldiscussions =  Discussion::where('organization_id', $user->organization_id)
-            ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $alldiscussions =  Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
 
-        $newdis = [];
-        foreach ($alldiscussions as $key => $value) {
-            $intersect =   array_intersect(sorttags(json_decode($value->tags)), sorttags(json_decode($discussion->tags)));
-            if (count($intersect) > 0) {
-                array_push($newdis, $value);
+        $related =  $alldiscussions->filter(function ($a) use ($discussion) {
+
+
+            if (!is_null($a['tags']) && count(json_decode($a['tags']))) {
+                $interests = array_intersect(sorttags(json_decode($discussion->tags)), sorttags(json_decode($a->tags)));
+
+                return count($interests);
             }
-        }
-
-        $discussion->related = $newdis;
-
+        });
+        $discussion->related = $related;
         return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
 

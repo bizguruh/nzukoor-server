@@ -15,7 +15,6 @@ class CreateFeedCommentsTable extends Migration
     {
         Schema::create('feed_comments', function (Blueprint $table) {
             $table->id();
-
             $table->text('comment')->nullable();
             $table->foreignId('feed_id')->nullable()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_id')->nullable()->cascadeOnDelete()->cascadeOnUpdate();

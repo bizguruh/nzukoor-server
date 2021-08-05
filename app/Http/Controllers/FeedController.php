@@ -73,15 +73,6 @@ class FeedController extends Controller
             return new DateTime($b['created_at']) <=> new DateTime($a['created_at']);
         });
         return (new Collection($mergedfeeds))->paginate(15);
-
-
-        // $notFlat = [[1, 2], [3, 4]];
-        // // $filterArray
-        // $flat = array_merge($filterArray);
-        // return  $flat;
-
-
-        //  return Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
     /**
@@ -187,7 +178,10 @@ class FeedController extends Controller
             ];
         });
 
-        return $trend;
+        $res = $trend->sortByDesc(function ($a) {
+            return $a['count'];
+        });
+        return $res->values()->all();
     }
 
     public function getSpecificFeed($interest)
@@ -209,13 +203,88 @@ class FeedController extends Controller
         $trend =   $filteredFeeds->filter(function ($in) use ($interest) {
             return \in_array($interest, $in->tags->toArray());
         });
-        $res = [];
-        foreach ($trend as $key => $value) {
-            array_push($res, $value);
-        }
-        return (new Collection($res))->paginate(15);
+
+        return (new Collection($trend->values()->all()))->paginate(15);
     }
 
+    public function recentFeedsByInterest()
+    {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        if (is_null($user->interests)) return;
+        $interests = json_decode($user->interests);
+        $feeds = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->filter(function ($f)
+        use ($interests) {
+            $tags = collect(json_decode($f->tags))->map(function ($t) {
+                return $t->value;
+            });
+
+            $check = array_intersect($interests, $tags->toArray());
+            return count($check);
+        });
+        return (new Collection($feeds->values()->all()))->paginate(15);
+    }
+
+    public function customFeeds()
+    {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
+
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+
+        $connections = $user->connections()->get();
+
+        $facilitators = $connections->filter(function ($a) {
+            if ($a->follow_type == 'facilitator') {
+                return $a;
+            }
+        })->map(function ($f) {
+            return $f->facilitator_id;
+        });
+        $users = $connections->filter(function ($a) {
+            if ($a->follow_type == 'user') {
+                return $a;
+            }
+        })->map(function ($f) {
+            return $f->user_id;
+        });
+
+
+
+        $feeds = Feed::where('organization_id', 99)
+            ->orWhereIn('facilitator_id', $facilitators)
+            ->orWhereIn('user_id', $users)
+            ->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')
+            ->latest()
+            ->get();
+        return (new Collection($feeds->values()->all()))->paginate(15);
+    }
+    public function trendingFeedsByComments()
+    {
+        $sorted = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->sortByDesc(function ($f) {
+            return count($f['comments']);
+        });
+
+
+        return (new Collection($sorted->values()->all()))->paginate(15);
+    }
     /**
      * Store a newly created resource in storage.
      *

@@ -39,7 +39,10 @@ class Organization extends Authenticatable
     {
         return $this->hasMany(Admin::class);
     }
-
+    public function referral()
+    {
+        return $this->hasMany(Referral::class);
+    }
     public function facilitator()
     {
         return $this->hasMany(Facilitator::class);

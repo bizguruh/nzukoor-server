@@ -170,6 +170,23 @@ class CourseController extends Controller
         });
         return $enrolled;
     }
+    public function usermostenrolled()
+    {
+
+        // if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+        //     return ('Unauthorized');
+        // }
+        // $user = auth('api')->user();
+        $enrolled = EnrollCount::with('course')->get()->toArray();
+
+
+
+        usort($enrolled, function ($param1, $param2) {
+
+            return strcmp($param2['count'], $param1['count']);
+        });
+        return $enrolled;
+    }
     public function guestmostenrolled()
     {
 

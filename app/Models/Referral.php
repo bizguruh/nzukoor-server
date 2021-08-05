@@ -22,4 +22,8 @@ class Referral extends Model
     {
         return $this->belongsTo(Admin::class);
     }
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
 }

@@ -144,6 +144,83 @@ class ConnectionController extends Controller
         return $allusers;
     }
 
+    public function getotherswithinterests()
+    {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
+
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+            $userconnection = $user->connections()->get();
+
+            $connectedusers = $user->connections()->get()->filter(function ($u) {
+                if ($u->follow_type == 'user')  return $u;
+            })->map(function ($u) {
+
+                return $u->following_id;
+            });
+            $connectedfacilitators = $user->connections()->get()->filter(function ($u) {
+                if ($u->follow_type == 'facilitator')  return $u;
+            })->map(function ($u) {
+
+                return $u->following_id;
+            });
+
+
+            $allusers = User::whereNotIn('id', $connectedusers->toArray())->get();
+            $allfacilitators = Facilitator::where('id', '!=', $user->id)->whereNotIn('id', $connectedfacilitators->toArray())->get();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+            $connectedusers = $user->connections()->get()->filter(function ($u) {
+                if ($u->follow_type == 'user')  return $u;
+            })->map(function ($u) {
+
+                return $u->following_id;
+            });
+            $connectedfacilitators = $user->connections()->get()->filter(function ($u) {
+                if ($u->follow_type == 'facilitator')  return $u;
+            })->map(function ($u) {
+
+                return $u->following_id;
+            });
+
+
+            $allusers = User::where('id', '!=', $user->id)->whereNotIn('id', $connectedusers->toArray())->get();
+            $allfacilitators = Facilitator::whereNotIn('id',  $connectedfacilitators->toArray())->get();
+        }
+        if (is_null($user->interests)) return;
+        $interests = json_decode($user->interests);
+        $similarUsers = $allusers->filter(function ($f)
+        use ($interests) {
+            $userinterests = json_decode($f->interests) ? json_decode($f->interests) : [];
+            $check = array_intersect($interests, $userinterests);
+            return count($check);
+        });
+        $similarFacilitators = $allfacilitators->filter(function ($f)
+        use ($interests) {
+            $userinterests = json_decode($f->interests) ? json_decode($f->interests) : [];
+            $check = array_intersect($interests, $userinterests);
+            return count($check);
+        });
+
+        $mapsimilarusers = $similarUsers->map(function ($a) use ($interests) {
+
+            $a->similar = count(array_intersect($interests, json_decode($a->interests)));
+            return $a;
+        });
+        $mapsimilarfacilitators = $similarFacilitators->map(function ($a) use ($interests) {
+
+            $a->similar = count(array_intersect($interests, json_decode($a->interests)));
+            return $a;
+        });
+
+        $mergedUsers = array_merge($mapsimilarfacilitators->values()->all(), $mapsimilarusers->values()->all());
+        return $mergedUsers;
+    }
+
     public function getidenticaldiscusiions()
     {
 
@@ -161,28 +238,19 @@ class ConnectionController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-        $discussions = Discussion::where('organization_id', $user->organization_id)->get();
-        $interests = $user->interests ? json_decode($user->interests) : [];
-        $allusers = [];
 
-        if (count($interests)) {
-            foreach ($discussions as $key => $value) {
+        if (is_null($user->interests)) return;
+        $interests = json_decode($user->interests);
+        $discussion = Discussion::where('organization_id', $user->organization_id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $result =   $discussion->filter(function ($a) use ($interests) {
+            $tags = collect(json_decode($a->tags))->map(function ($t) {
+                return $t->value;
+            });
 
-                if (!is_null($value->tags)) {
-                    $dis = array_map(function ($a) {
-                        return $a->value;
-                    }, json_decode($value->tags));
-
-
-                    $check =  array_intersect($interests, $dis);
-                    if (count($check)) {
-                        $value->similar = count($check);
-                        array_push($allusers, $value->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview'));
-                    }
-                }
-            }
-        }
-        return $allusers;
+            $check = array_intersect($interests, $tags->toArray());
+            return count($check);
+        });
+        return $result->values()->all();
     }
 
     public function getidenticalcourses()
@@ -202,7 +270,7 @@ class ConnectionController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-        $courses = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get();
+        $courses = Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get();
         $interests = $user->interests ? json_decode($user->interests) : [];
         $allusers = [];
 
@@ -242,5 +310,13 @@ class ConnectionController extends Controller
         }
         $check = $user->connections()->where([['follow_type', $request->follow_type], ['following_id', $request->following_id]])->first();
         $check->delete();
+    }
+    public function destroy(Connection $connection)
+    {
+
+        $connection->delete();
+        return response()->json([
+            'message' => 'Delete successful'
+        ]);
     }
 }

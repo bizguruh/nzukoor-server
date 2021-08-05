@@ -224,6 +224,10 @@ Route::get('todos-destroy', [TodoController::class, 'destroyall']);
 // discussions route
 
 Route::apiResource('discussions', DiscussionController::class);
+Route::get('custom/discussions', [DiscussionController::class, 'customdiscussions']);
+Route::get('trending/discussions', [DiscussionController::class, 'trenddiscussions']);
+Route::get('interest/discussions', [DiscussionController::class, 'interestdiscussions']);
+
 Route::apiResource('discussion-messages', DiscussionMessageController::class);
 Route::apiResource('discussion/message/replies', DiscussionMessageCommentController::class);
 
@@ -234,6 +238,9 @@ Route::get('add-view/{id}', [DiscussionViewController::class, 'addview']);
 Route::apiResource('votes', DiscussionVoteController::class);
 Route::apiResource('tags', TagController::class);
 Route::apiResource('feeds', FeedController::class);
+Route::get('trending/feeds', [FeedController::class, 'trendingFeedsByComments']);
+Route::get('custom/feeds', [FeedController::class, 'customFeeds']);
+Route::get('recent/feeds', [FeedController::class, 'recentFeedsByInterest']);
 Route::apiResource('feed-comments', FeedCommentController::class);
 Route::apiResource('feed-likes', FeedLikeController::class);
 Route::apiResource('feed-stars', FeedStarController::class);
@@ -317,6 +324,9 @@ Route::post('save-interests', [UserController::class, 'saveinterests']);
 Route::get('identical-learners', [ConnectionController::class, 'getlearnerswithinterests']);
 Route::get('identical-facilitators', [ConnectionController::class, 'getfacilitatorswithinterests']);
 
+Route::get('similar/users', [ConnectionController::class, 'getotherswithinterests']);
+
+
 
 Route::get('other-discussions', [ConnectionController::class, 'getidenticaldiscusiions']);
 Route::get('interest-courses', [ConnectionController::class, 'getidenticalcourses']);
@@ -355,6 +365,7 @@ Route::apiResource('add-community', CourseCommunityController::class);
 
 Route::apiResource('reviews', ReviewController::class);
 Route::get('mostenrolled', [CourseController::class, 'mostenrolled']);
+Route::get('learner/mostenrolled', [CourseController::class, 'usermostenrolled']);
 Route::get('toprated', [CourseController::class, 'toprated']);
 
 

@@ -170,25 +170,42 @@ class UserController extends Controller
             if ($request->referral) {
                 if (CourseCommunityLink::where('code', $request->referral)->first()) {
                     $referral_type = 'group_course';
+                } else if (Organization::where('referral_code', $request->referral)->first()) {
+                    $referral_type = 'organization';
+                    $ref = 'organization';
                 } else {
                     $referral_type = 'normal';
                 }
+
+
                 if ($referral_type == 'normal') {
                     if (User::where('referral_code', $request->referral)->with('organization')->first()) {
                         $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
+                        $ref = 'learner';
+                    } else if (Admin::where('referral_code', $request->referral)->with('organization')->first()) {
+                        $olduser = Admin::where('referral_code', $request->referral)->with('organization')->first();
+                        $ref = 'admin';
                     } else {
                         $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
+                        $ref = 'facilitator';
                     }
+                    $organization_id = $olduser->organization_id;
+                }
+
+                if ($referral_type == 'organization') {
+
+                    $olduser = Organization::where('referral_code', $request->referral)->first();
+                    $organization_id = $olduser->id;
                 }
                 if ($referral_type == 'group_course') {
                     $link = CourseCommunityLink::where('code', $request->referral)->first();
                     $olduser = User::find($link->user_id)->first();
                     $co = Course::find($link->course_id);
+                    $organization_id = $olduser->organization_id;
                 }
-                $referree_type = 'learner';
 
                 $newuser = User::create([
-                    'organization_id' => $olduser->organization_id,
+                    'organization_id' => $organization_id,
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -218,7 +235,7 @@ class UserController extends Controller
                     ];
                     $olduser->notify(new SendNotification($referral_detail));
                     $olduser->referral()->create([
-                        'referree_type' =>    $referree_type,
+                        'referree_type' =>    $ref,
                         'referree_id'    =>  $newuser->id
                     ]);
                 }
@@ -297,9 +314,18 @@ class UserController extends Controller
                         }
                     }
                 }
+                $details = [
+                    'greeting' => 'Welcome',
+                    'body' => "Welcome to " . $newuser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
+                    'thanks' => 'Thanks',
+                    'actionText' => '',
+                    'url' => '',
+                    'to' => 'user',
+                    'id' => $newuser->id
+                ];
             } else {
                 $newuser = User::create([
-                    'organization_id' => null,
+
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -313,17 +339,18 @@ class UserController extends Controller
                     'voice' => 49,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
+                $details = [
+                    'greeting' => 'Welcome',
+                    'body' => "Welcome to SkillsGuruh, Find facilitators, courses,events according to your personal interests.",
+                    'thanks' => 'Thanks',
+                    'actionText' => '',
+                    'url' => '',
+                    'to' => 'user',
+                    'id' => $newuser->id
+                ];
             }
 
-            $details = [
-                'greeting' => 'Welcome',
-                'body' => "Welcome to " . $newuser->organization->name . ", Find facilitators, courses,events according to your personal interests.",
-                'thanks' => 'Thanks',
-                'actionText' => '',
-                'url' => '',
-                'to' => 'user',
-                'id' => $newuser->id
-            ];
+
             $newuser->notify(new SendNotification($details));
             return $newuser;
         });
