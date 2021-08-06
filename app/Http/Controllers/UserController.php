@@ -217,6 +217,7 @@ class UserController extends Controller
                     'state' => 'Lagos',
                     'verification' => false,
                     'voice' => 49,
+                    'username' => $request->username,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
 
@@ -337,6 +338,7 @@ class UserController extends Controller
                     'state' => 'Lagos',
                     'verification' => false,
                     'voice' => 49,
+                    'username' => $request->username,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
                 $details = [
@@ -506,6 +508,7 @@ class UserController extends Controller
         $user->gender = $request->gender;
         $user->lga = $request->lga;
         $user->voice = $request->voice;
+        $user->username = $request->username;
         $user->verification = $request->verification;
         $user->save();
         return $user;
