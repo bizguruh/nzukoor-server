@@ -141,11 +141,12 @@ class DiscussionController extends Controller
             $sender = 'user';
         }
 
-        $request->all();
+
 
         $data = $user->discussions()->create([
             'type' => $request->type,
             'name' => $request->name,
+            'category' => json_encode($request->category),
             'tags' => json_encode($request->tags),
             'creator' => $sender,
             'description' => $request->description,
@@ -256,6 +257,7 @@ class DiscussionController extends Controller
     {
         $discussion->type = $request->type;
         $discussion->name = $request->name;
+        $discussion->category = json_encode($request->category);
         $discussion->tags = json_encode($request->tags);
         $discussion->creator = $request->creator;
         $discussion->course_id = $request->course_id;

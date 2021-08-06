@@ -21,8 +21,7 @@ class GuestController extends Controller
         $feeds = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->get()->toArray();
         $courses = Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get()->toArray();
         $discussions = Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get()->toArray();
-        $users = User::latest()->get()->toArray();
-        $facilitators = Facilitator::latest()->get()->toArray();
+
 
 
         $myfeeds = array_filter($feeds, function ($item) use ($interest) {
@@ -53,28 +52,9 @@ class GuestController extends Controller
             }
         });
 
-        $myusers = array_filter($users, function ($item) use ($interest) {
-            if (is_null($item['interests'])) {
-                return;
-            }
-
-            if (in_array($interest,  json_decode($item['interests']))) {
-                return $item;
-            }
-        });
-        $myfacilitators = array_filter($facilitators, function ($item) use ($interest) {
-            if (is_null($item['interests'])) {
-                return;
-            }
-
-            if (in_array($interest,  json_decode($item['interests']))) {
-                return $item;
-            }
-        });
 
         $response = [
-            'users' => $myusers,
-            'facilitators' => $myfacilitators,
+
             'feeds' => $myfeeds,
             'courses' => $mycourses,
             'discussions' => $mydiscussion

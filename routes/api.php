@@ -380,6 +380,8 @@ Route::get('guest/feeds', [FeedController::class, 'guestfeeds']);
 Route::get('guest/trending/feeds', [FeedController::class, 'getTrendingFeedInterest']);
 Route::get('guest/trending/feed/{interest}', [FeedController::class, 'getSpecificFeed']);
 
+Route::get('guest/users/{interest}', [ConnectionController::class, 'getUsersWithInterest']);
+
 
 // Contact message
 Route::post('send/message', [MailController::class, 'contactmail']);

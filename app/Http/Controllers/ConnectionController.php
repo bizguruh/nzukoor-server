@@ -220,6 +220,38 @@ class ConnectionController extends Controller
         $mergedUsers = array_merge($mapsimilarfacilitators->values()->all(), $mapsimilarusers->values()->all());
         return $mergedUsers;
     }
+    public function getUsersWithInterest($interest)
+    {
+
+
+        $allusers = User::get()->filter(function ($a) {
+            return $a->interests && count(json_decode($a->interests));
+        });
+        $allfacilitators = Facilitator::get()->filter(function ($a) {
+            return $a->interests && count(json_decode($a->interests));
+        });
+
+
+
+        $similarUsers = $allusers->filter(function ($a) use ($interest) {
+            $userinterests = json_decode($a->interests) ? json_decode($a->interests) : [];
+            $mappedusers = collect($userinterests)->map(function ($f) {
+                return strtolower($f);
+            });
+            return  in_array(strtolower($interest), $mappedusers->toArray());
+        });
+        $similarFacilitators = $allfacilitators->filter(function ($a) use ($interest) {
+            $userinterests = json_decode($a->interests) ? json_decode($a->interests) : [];
+            $mappedusers = collect($userinterests)->map(function ($f) {
+                return strtolower($f);
+            });
+            return  in_array(strtolower($interest), $mappedusers->toArray());
+        });
+
+        $mergedUsers = array_merge($similarFacilitators->values()->all(), $similarUsers->values()->all());
+        return $mergedUsers;
+    }
+
 
     public function getidenticaldiscusiions()
     {
