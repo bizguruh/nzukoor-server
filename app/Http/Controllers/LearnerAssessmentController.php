@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assessment;
-use App\Models\LearnerAssessment;
+use App\Models\MemberAssessment;
 use App\Models\Library;
 use Illuminate\Http\Request;
 
-class LearnerAssessmentController extends Controller
+class MemberAssessmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class LearnerAssessmentController extends Controller
             return ('Unauthorized');
         }
         $user = auth('api')->user();
-        return   $user->learnerassessment()->with('assessment')->latest()->get();
+        return   $user->memberassessment()->with('assessment')->latest()->get();
     }
 
     /**
@@ -58,10 +58,10 @@ class LearnerAssessmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\LearnerAssessment  $learnerAssessment
+     * @param  \App\Models\MemberAssessment  $memberAssessment
      * @return \Illuminate\Http\Response
      */
-    public function show(LearnerAssessment $learnerAssessment)
+    public function show(MemberAssessment $memberAssessment)
     {
         //
     }
@@ -69,10 +69,10 @@ class LearnerAssessmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\LearnerAssessment  $learnerAssessment
+     * @param  \App\Models\MemberAssessment  $memberAssessment
      * @return \Illuminate\Http\Response
      */
-    public function edit(LearnerAssessment $learnerAssessment)
+    public function edit(MemberAssessment $memberAssessment)
     {
         //
     }
@@ -81,10 +81,10 @@ class LearnerAssessmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\LearnerAssessment  $learnerAssessment
+     * @param  \App\Models\MemberAssessment  $memberAssessment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, LearnerAssessment $learnerAssessment)
+    public function update(Request $request, MemberAssessment $memberAssessment)
     {
         //
     }
@@ -92,10 +92,10 @@ class LearnerAssessmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\LearnerAssessment  $learnerAssessment
+     * @param  \App\Models\MemberAssessment  $memberAssessment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(LearnerAssessment $learnerAssessment)
+    public function destroy(MemberAssessment $memberAssessment)
     {
         //
     }

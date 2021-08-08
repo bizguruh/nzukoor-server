@@ -164,7 +164,7 @@ p {
 </div>
 <div class="text-left"  style="margin-bottom: 16px;padding-top:10px" >
   <h1>Greetings {{$name}}, </h1>
-  <h2 class="text-green">Welcome to SkillsGuruh!, the Social Learning Place.</h2>
+  <h2 class="text-green">Welcome to Nzukoor!, the Social Learning Place.</h2>
 <p> We’ve created a home for you to share your experience or expertise. This can be in video, audio or text format; long, short, serious, funny, reported or opinionated. What matters is the quality of your content
 </p>
 
@@ -177,13 +177,13 @@ Shoot us a mail via the contact page or connect with our support team between 9:
 <p>See attached Onboarding document to get you started. The world needs a hero, just like you!</p>
 
 <p>Sincerely, <br>
-The Team @ SkillsGuruh</p>
-<a href="http://skillsguruh.com/login"><button class="button button-blue">Explore SkillsGuruh</button></a>
+The Team @ Nzukoor</p>
+<a href="http://nzukoor.com/login"><button class="button button-blue">Explore Nzukoor</button></a>
 
 </div>
 
 <footer class=" text-right text-green">
- <span><a href="http://skillsguruh.com/contact" class="text-green">Contact</a></span> | <span><a class="text-green" href="http://skillsguruh.com/about">About</a></span>
+ <span><a href="http://nzukoor.com/contact" class="text-green">Contact</a></span> | <span><a class="text-green" href="http://nzukoor.com/about">About</a></span>
 </footer>
   </div>
 </body>

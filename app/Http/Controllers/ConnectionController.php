@@ -71,7 +71,7 @@ class ConnectionController extends Controller
         }
     }
 
-    public function getlearnerswithinterests()
+    public function getmemberswithinterests()
     {
         if (auth('admin')->user()) {
             $user = auth('admin')->user();

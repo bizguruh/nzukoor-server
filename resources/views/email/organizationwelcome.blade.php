@@ -169,7 +169,7 @@ p {
 We believe everybody has the capacity to be more, so get ready to be your very best self.
  <br> Browse our top courses, connect with like-minds, lend a voice to trending discussions and become a catalyst for change.</p>
 
-<a href="http://skillsguruh.com/explore"><button class="button button-blue">Explore Interest</button></a>
+<a href="http://nzukoor.com/explore"><button class="button button-blue">Explore Interest</button></a>
 
 </div>
 <hr>
@@ -181,7 +181,7 @@ We believe everybody has the capacity to be more, so get ready to be your very b
 
           <img src="{{asset('welcome1.png')}}"   alt="Welcome">
           <p> <span class="text-green">Be part of something that has lasting value:</span>  help people around the world experience growth and fulfillment by sharing what you know. </p>
-            <a href="http://skillsguruh.com/register"><button class="button button-primary-outline">Become a Facilitator</button></a>
+            <a href="http://nzukoor.com/register"><button class="button button-primary-outline">Become a Facilitator</button></a>
 
         </td>
          <td class="text-justify" >
@@ -189,7 +189,7 @@ We believe everybody has the capacity to be more, so get ready to be your very b
 
   <p>  <span class="mb-1 text-green">Your friendship counts!, </span> Refer a friend and earn up to N100,000 credit points. Unlock group courses or join discussions of mutual interest. Trust us, life is better when you win with your tribe.</p>
   <p>Here is your unique referral code - <span class="text-green">{{$referral_code}}</span></p>
-            <a href="http://skillsguruh.com/explore"><button class="button button-primary-outline">Invite Your Friends</button></a>
+            <a href="http://nzukoor.com/explore"><button class="button button-primary-outline">Invite Your Friends</button></a>
 
         </td>
       </tr>
@@ -198,7 +198,7 @@ We believe everybody has the capacity to be more, so get ready to be your very b
 
 </div>
 <footer class=" text-right text-green">
- <small><a href="http://skillsguruh.com/contact" class="text-green">Contact</a></small> | <small><a class="text-green" href="http://skillsguruh.com/about">About</a></small>
+ <small><a href="http://nzukoor.com/contact" class="text-green">Contact</a></small> | <small><a class="text-green" href="http://nzukoor.com/about">About</a></small>
 </footer>
   </div>
 </body>

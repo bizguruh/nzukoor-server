@@ -54,9 +54,9 @@ class User extends Authenticatable
         return $this->belongsTo(Order::class);
     }
 
-    public function learnerassessment()
+    public function memberassessment()
     {
-        return $this->hasMany(LearnerAssessment::class);
+        return $this->hasMany(MemberAssessment::class);
     }
 
     public function assessmentresponse()

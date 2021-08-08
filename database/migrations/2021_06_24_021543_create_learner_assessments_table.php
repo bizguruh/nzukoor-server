@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLearnerAssessmentsTable extends Migration
+class CreateMemberAssessmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateLearnerAssessmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('learner_assessments', function (Blueprint $table) {
+        Schema::create('member_assessments', function (Blueprint $table) {
             $table->id();
             $table->string('status');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
@@ -30,6 +30,6 @@ class CreateLearnerAssessmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('learner_assessments');
+        Schema::dropIfExists('member_assessments');
     }
 }

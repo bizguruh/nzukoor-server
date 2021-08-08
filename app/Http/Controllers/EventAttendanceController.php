@@ -76,8 +76,8 @@ class EventAttendanceController extends Controller
         $details = [
 
 
-            'from_email' => 'skillsguruh@gmail.com',
-            'from_name' => 'SkillsGuruh',
+            'from_email' => 'nzukoor@gmail.com',
+            'from_name' => 'Nzukoor',
             'greeting' => 'Hello ' . $first_name,
             'body' => $body,
 

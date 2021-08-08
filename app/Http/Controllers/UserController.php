@@ -140,7 +140,7 @@ class UserController extends Controller
 
 
         $newuser->notify(new SendNotification($details));
-        $newuser->role = 'Learner';
+        $newuser->role = 'Member';
         $newuser->password = $request->password;
 
         $mail =  new MailController;
@@ -181,7 +181,7 @@ class UserController extends Controller
                 if ($referral_type == 'normal') {
                     if (User::where('referral_code', $request->referral)->with('organization')->first()) {
                         $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
-                        $ref = 'learner';
+                        $ref = 'member';
                     } else if (Admin::where('referral_code', $request->referral)->with('organization')->first()) {
                         $olduser = Admin::where('referral_code', $request->referral)->with('organization')->first();
                         $ref = 'admin';
@@ -255,7 +255,7 @@ class UserController extends Controller
                     $olduser->notify(new SendNotification($referral_detail));
 
                     $olduser->referral()->create([
-                        'referree_type' =>    'learner',
+                        'referree_type' =>    'member',
                         'referree_id'    =>  $newuser->id
                     ]);
                     $newuser->coursecommunity()->create([
@@ -343,7 +343,7 @@ class UserController extends Controller
                 ]);
                 $details = [
                     'greeting' => 'Welcome',
-                    'body' => "Welcome to SkillsGuruh, Find facilitators, courses,events according to your personal interests.",
+                    'body' => "Welcome to Nzukoor, Find facilitators, courses,events according to your personal interests.",
                     'thanks' => 'Thanks',
                     'actionText' => '',
                     'url' => '',

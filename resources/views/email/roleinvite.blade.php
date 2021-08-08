@@ -9,15 +9,15 @@
 
 <div>
 
-<p>You have been invited by {{$organization}} to be a {{$role}} on SkillsGuruh.
+<p>You have been invited by {{$organization}} to be a {{$role}} on Nzukoor.
   </p>
   <p> Welcome to The Social Learning Place, we hope you like it here.</p>
 <p>Please log in to get started.</p>
 <p>Email: {{$email}}</p>
 <p>Password: {{$password}}</p>
-<a href="http://skillsguruh.com/login"><button class="button"></button></a>
+<a href="http://nzukoor.com/login"><button class="button"></button></a>
 
-@component('mail::button', ['url' => 'http://skillsguruh.com/login', 'color' => 'primary'])
+@component('mail::button', ['url' => 'http://nzukoor.com/login', 'color' => 'primary'])
 Click to login
 @endcomponent
 
@@ -29,7 +29,7 @@ Click to login
 {{ $salutation }}
 @else
 @lang('Thank you for using our platform') <br>
-<p>The Team @ SkillsGuruh</p>
+<p>The Team @ Nzukoor</p>
 
 @endif
 

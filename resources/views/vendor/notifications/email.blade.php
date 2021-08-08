@@ -44,7 +44,7 @@
 {{ $salutation }}
 @else
 @lang('Thank you for using our platform') <br>
-<p>The Team @ SkillsGuruh</p>
+<p>The Team @ Nzukoor</p>
 
 @endif
 

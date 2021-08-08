@@ -26,18 +26,18 @@ class MailController extends Controller
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
         if ($user->role == 'admin') {
-            $body = 'You have been invited by ' . $organization . ' to be an ' . $user->role . ' on SkillsGuruh';
+            $body = 'You have been invited by ' . $organization . ' to be an ' . $user->role . ' on Nzukoor';
         } else {
-            $body = 'You have been invited by ' . $organization . ' to be a ' . $user->role . ' on SkillsGuruh';
+            $body = 'You have been invited by ' . $organization . ' to be a ' . $user->role . ' on Nzukoor';
         }
 
         $details = [
-            'from_email' => 'skillsguruh@gmail.com',
-            'from_name' => 'SkillsGuruh',
+            'from_email' => 'nzukoor@gmail.com',
+            'from_name' => 'Nzukoor',
             'greeting' => 'Hello ' . $first_name,
             'body' => $body,
             'actionText' => 'Click to login',
-            'url' => "https://skillsguruh.com/login",
+            'url' => "https://nzukoor.com/login",
             'code' => $userorg->referral_code,
             'email' => $user->email,
             'password' => $user->password
@@ -56,7 +56,7 @@ class MailController extends Controller
         ];
         Mail::send('email.organizationwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject('Here’s Your Passport To Be More ');
-            $message->from('skillsguruh@gmail.com', 'SkillsGuruh');
+            $message->from('nzukoor@gmail.com', 'Nzukoor');
         });
     }
 
@@ -68,7 +68,7 @@ class MailController extends Controller
         ];
         Mail::send('email.facilitatorwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject(' A Home For You To Share');
-            $message->from('skillsguruh@gmail.com', 'SkillsGuruh');
+            $message->from('nzukoor@gmail.com', 'Nzukoor');
         });
     }
 
@@ -89,7 +89,7 @@ class MailController extends Controller
             'name' => $user->name,
             'organization' => $organization->name,
             'from' => $user->email,
-            'url' => 'https://skillsguruh.com/register/?referral_code=' . $request->code
+            'url' => 'https://nzukoor.com/register/?referral_code=' . $request->code
         ];
         Mail::to($request->emails)->send(new ReferralInvite($data));
     }
@@ -101,17 +101,17 @@ class MailController extends Controller
 
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
-            $body = 'I created a course titled, **' . $request->title . '** on SkillsGuruh.';
+            $body = 'I created a course titled, **' . $request->title . '** on Nzukoor.';
             $title = ' I think You’d Want To See This!';
         }
         if (auth('facilitator')->user()) {
             $user = auth('facilitator')->user();
-            $body = 'I created a course titled, **' . $request->title .  '** on SkillsGuruh.';
+            $body = 'I created a course titled, **' . $request->title .  '** on Nzukoor.';
             $title = ' I think You’d Want To See This!';
         }
         if (auth('api')->user()) {
             $user = auth('api')->user();
-            $body = 'Lets enroll for the course titled, **' . $request->title .  '** on SkillsGuruh.';
+            $body = 'Lets enroll for the course titled, **' . $request->title .  '** on Nzukoor.';
             $title = ' Let’s Unlock A New Skill';
         }
         $name = trim($user->name);
@@ -124,8 +124,8 @@ class MailController extends Controller
         $details = [
 
             'title' => $title,
-            'from_email' => 'skillsguruh@gmail.com',
-            'from_name' => 'SkillsGuruh',
+            'from_email' => 'nzukoor@gmail.com',
+            'from_name' => 'Nzukoor',
             'greeting' => 'Hello ',
             'body' => $body,
             'actionText' => 'Check it out here',
@@ -143,7 +143,7 @@ class MailController extends Controller
 
 
 
-        $body = 'Lets enroll for the course titled, **' . $request->title . '** on SkillsGuruh.';
+        $body = 'Lets enroll for the course titled, **' . $request->title . '** on Nzukoor.';
         $title = ' I think You’d Want To See This!';
 
 
@@ -153,8 +153,8 @@ class MailController extends Controller
         $details = [
 
             'title' => $title,
-            'from_email' => 'skillsguruh@gmail.com',
-            'from_name' => 'SkillsGuruh',
+            'from_email' => 'nzukoor@gmail.com',
+            'from_name' => 'Nzukoor',
             'greeting' => 'Hello ',
             'body' => $body,
             'actionText' => 'Check it out here',
@@ -179,7 +179,7 @@ class MailController extends Controller
 
         ];
 
-        Mail::to('skillsguruh@gmail.com')->send(new ContactMail($details));
+        Mail::to('nzukoor@gmail.com')->send(new ContactMail($details));
         return response($details, 200);
     }
     public function senddiscussioninvite(Request $request)
@@ -188,12 +188,12 @@ class MailController extends Controller
         if (!auth('admin')->user() && !auth('admin')->user() && !auth('admin')->user()) {
             $details = [
 
-                'from_email' => 'skillsguruh@gmail.com',
-                'from_name' => 'SkillsGuruh',
+                'from_email' => 'nzukoor@gmail.com',
+                'from_name' => 'Nzukoor',
                 'greeting' => 'Hello',
-                'body' => 'I just started a discussion, **' . $request->title . '** on SkillsGuruh and I’d like to hear your thoughts. ',
+                'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
                 'actionText' => 'Join here',
-                'url' => "https://skillsguruh.com/discussion/" . $request->id,
+                'url' => "https://nzukoor.com/discussion/" . $request->id,
 
             ];
 
@@ -222,9 +222,9 @@ class MailController extends Controller
             'from_email' => $user->email,
             'from_name' => $user->name,
             'greeting' => 'Hello',
-            'body' => 'I just started a discussion, **' . $request->title . '** on SkillsGuruh and I’d like to hear your thoughts. ',
+            'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
             'actionText' => 'Join here',
-            'url' => "https://skillsguruh.com/discussion/" . $request->id,
+            'url' => "https://nzukoor.com/discussion/" . $request->id,
 
         ];
 
@@ -239,12 +239,12 @@ class MailController extends Controller
 
             $details = [
 
-                'from_email' => 'skillsguruh@gmail.com',
-                'from_name' => 'SkillsGuruh',
+                'from_email' => 'nzukoor@gmail.com',
+                'from_name' => 'Nzukoor',
                 'greeting' => 'Hello',
-                'body' => 'I will be attending the event, **' . $request->title . '** on SkillsGuruh and I think you’d like it. Join me! ',
+                'body' => 'I will be attending the event, **' . $request->title . '** on Nzukoor and I think you’d like it. Join me! ',
                 'actionText' => 'Join here',
-                'url' => "https://skillsguruh.com/event/" . $request->id,
+                'url' => "https://nzukoor.com/event/" . $request->id,
 
             ];
 
@@ -272,9 +272,9 @@ class MailController extends Controller
             'from_email' => $user->email,
             'from_name' => $user->name,
             'greeting' => 'Hello',
-            'body' => 'I will be attending the event, **' . $request->title . '** on SkillsGuruh and I think you’d like it. Join me! ',
+            'body' => 'I will be attending the event, **' . $request->title . '** on Nzukoor and I think you’d like it. Join me! ',
             'actionText' => 'Join here',
-            'url' => "https://skillsguruh.com/event/" . $request->id,
+            'url' => "https://nzukoor.com/event/" . $request->id,
 
         ];
 

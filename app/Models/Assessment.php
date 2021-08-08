@@ -30,8 +30,8 @@ class Assessment extends Model
     {
         return $this->hasMany(AssessmentResponse::class)->with('user');
     }
-    public function learnerassessment()
+    public function memberassessment()
     {
-        return $this->belongsTo(LearnerAssessment::class);
+        return $this->belongsTo(MemberAssessment::class);
     }
 }

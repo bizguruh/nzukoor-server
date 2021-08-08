@@ -1,7 +1,7 @@
 @component('mail::message')
 # Hello,
 
-<p>You have been invited by {{$name}} to to join {{$organization}} on SkillsGuruh.
+<p>You have been invited by {{$name}} to to join {{$organization}} on Nzukoor.
   </p>
   <p> A Social Learning Place, we hope you like it here.</p>
 

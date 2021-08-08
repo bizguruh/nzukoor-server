@@ -64,7 +64,7 @@ class CourseCommunityLinkController extends Controller
         ]);
         $co = Course::find($request->course_id);
         $message = '<p>I enrolled for the course, ' . $co->title . ' course and I think you’d like it. Join me!</p> <p>' .  Str::limit($co->description, 50) . '...</p>';
-        $url = 'https://skillsguruh.com/learner/courses/?course_id=' . $request->course_id;
+        $url = 'https://nzukoor.com/member/courses/?course_id=' . $request->course_id;
         $data = $user->feeds()->create([
             'organization_id' => $user->organization_id,
             'media' => $co->cover,

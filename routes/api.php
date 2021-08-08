@@ -34,7 +34,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\InboxController;
-use App\Http\Controllers\LearnerAssessmentController;
+use App\Http\Controllers\MemberAssessmentController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\LoginHistoryController;
 use App\Http\Controllers\MailController;
@@ -284,8 +284,8 @@ Route::apiResource('revenue', RevenueController::class);
 Route::get('facilitator/revenue', [RevenueController::class, 'facilitatorIndex']);
 
 Route::apiResource('assessment/responses', AssessmentResponseController::class);
-Route::apiResource('learner/assessments', LearnerAssessmentController::class);
-Route::get('add/assessment', [LearnerAssessmentController::class, 'addassessment']);
+Route::apiResource('member/assessments', MemberAssessmentController::class);
+Route::get('add/assessment', [MemberAssessmentController::class, 'addassessment']);
 
 Route::apiResource('orders', OrderController::class);
 Route::get('course/view/{id}', [CourseViewCountController::class, 'store']);
@@ -321,7 +321,7 @@ Route::post('reset-password', [UserController::class, 'resetpassword']);
 Route::post('save-interests', [UserController::class, 'saveinterests']);
 
 
-Route::get('identical-learners', [ConnectionController::class, 'getlearnerswithinterests']);
+Route::get('identical-members', [ConnectionController::class, 'getmemberswithinterests']);
 Route::get('identical-facilitators', [ConnectionController::class, 'getfacilitatorswithinterests']);
 
 Route::get('similar/users', [ConnectionController::class, 'getotherswithinterests']);
@@ -365,13 +365,13 @@ Route::apiResource('add-community', CourseCommunityController::class);
 
 Route::apiResource('reviews', ReviewController::class);
 Route::get('mostenrolled', [CourseController::class, 'mostenrolled']);
-Route::get('learner/mostenrolled', [CourseController::class, 'usermostenrolled']);
+Route::get('member/mostenrolled', [CourseController::class, 'usermostenrolled']);
 Route::get('toprated', [CourseController::class, 'toprated']);
 
 
 // Guest
 Route::get('guest/mostenrolled', [CourseController::class, 'guestmostenrolled']);
-Route::get('guest/learners', [UserController::class, 'index']);
+Route::get('guest/members', [UserController::class, 'index']);
 Route::get('guest/facilitators', [FacilitatorController::class, 'guestindex']);
 Route::get('guest/courses', [CourseController::class, 'guestcourses']);
 Route::get('guest/discussions', [DiscussionController::class, 'guestdiscussions']);
@@ -401,11 +401,11 @@ Route::get('facilitator/info/{id}', [FacilitatorController::class, 'facilitatori
 Route::get('facilitator/events/{id}', [FacilitatorController::class, 'facilitatorevents']);
 Route::get('facilitator/courses/{id}', [FacilitatorController::class, 'facilitatorcourses']);
 
-Route::get('learner/feeds/{id}', [UserController::class, 'userfeeds']);
-Route::get('learner/connections/{id}', [UserController::class, 'userconnections']);
-Route::get('learner/discussions/{id}', [UserController::class, 'userdiscussions']);
-Route::get('learner/info/{id}', [UserController::class, 'userinfo']);
-Route::get('learner/events/{id}', [UserController::class, 'userevents']);
+Route::get('member/feeds/{id}', [UserController::class, 'userfeeds']);
+Route::get('member/connections/{id}', [UserController::class, 'userconnections']);
+Route::get('member/discussions/{id}', [UserController::class, 'userdiscussions']);
+Route::get('member/info/{id}', [UserController::class, 'userinfo']);
+Route::get('member/events/{id}', [UserController::class, 'userevents']);
 
 
 Route::get('get/feeds/tags', [FeedController::class, 'getFeedsByInterest']);

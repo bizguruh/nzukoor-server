@@ -30,7 +30,7 @@ class SingleInboxResource extends JsonResource
             'facilitator' => $this->facilitator,
             'receiver_id' => $this->receiver_id,
             'receiver' => $this->receiver,
-            'learner_info' => $this->when($this->receiver === 'user', User::find($this->receiver_id)),
+            'member_info' => $this->when($this->receiver === 'user', User::find($this->receiver_id)),
             'facilitator_info' => $this->when($this->receiver === 'facilitator', Facilitator::find($this->receiver_id)),
             'admin_info' => $this->when($this->receiver === 'admin', Admin::find($this->receiver_id)),
             'created_at' => $this->created_at,
