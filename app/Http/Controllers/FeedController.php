@@ -331,7 +331,7 @@ class FeedController extends Controller
      */
     public function show(Feed $feed)
     {
-        //
+        return  $feed->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars');
     }
 
     /**
