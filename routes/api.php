@@ -412,3 +412,4 @@ Route::get('get/feeds/tags', [FeedController::class, 'getFeedsByInterest']);
 
 
 Route::get('get/interests/{interest}', [GuestController::class, 'getInterestContent']);
+Route::get('get/members', [GuestController::class, 'getmembers']);
