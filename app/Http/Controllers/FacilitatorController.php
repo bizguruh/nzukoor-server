@@ -257,6 +257,7 @@ class FacilitatorController extends Controller
                     'state' => 'Lagos',
                     'verification' => false,
                     'voice' => 49,
+                    'username' => $request->username,
                     'facilitator_role' => 'creator',
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
@@ -321,6 +322,7 @@ class FacilitatorController extends Controller
                     'qualifications' => json_encode($request->qualifications),
                     'voice' => 49,
                     'state' => 'Lagos',
+                    'username' => $request->username,
                     'verification' => false,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
 
@@ -369,6 +371,7 @@ class FacilitatorController extends Controller
         $facilitator->account_number = $request->account_number;
         $facilitator->qualifications = json_encode($request->qualifications);
         $facilitator->voice = $request->voice;
+        $facilitator->username = $request->username;
         $facilitator->save();
         return $facilitator;
     }

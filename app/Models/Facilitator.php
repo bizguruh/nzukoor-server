@@ -32,6 +32,7 @@ class Facilitator extends Authenticatable
         'lga',
         'state',
         'country',
+        'username',
         'facilitator_role',
         'bank_name', 'account_number',
         "voice"
