@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ConnectionResource;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Admin;
 use App\Models\Course;
-use App\Models\CourseCommunity;
-use App\Models\CourseCommunityLink;
 use App\Models\Discussion;
 use App\Models\EnrollCount;
 use App\Models\Facilitator;
+use Illuminate\Support\Str;
 use App\Models\Organization;
-use App\Models\User;
-use App\Notifications\AddedToLibrary;
-use App\Notifications\PrivateDiscussionCreated;
-use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use App\Mail\PasswordResetMail;
+use App\Models\CourseCommunity;
 use Illuminate\Support\Facades\DB;
+use App\Models\CourseCommunityLink;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\AddedToLibrary;
+use Illuminate\Support\Facades\Cache;
+use App\Notifications\SendNotification;
+use App\Http\Resources\ConnectionResource;
+use App\Notifications\PrivateDiscussionCreated;
 
 class UserController extends Controller
 {
@@ -606,30 +610,94 @@ class UserController extends Controller
         }
     }
 
-    public function resetpassword(Request $request)
+
+
+    public function postEmail(Request $request)
     {
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
-            return ('Unauthorized');
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+
+
+        $token = Str::random(40);
+
+        DB::table('password_resets')->insert(
+            ['email' => $request->email, 'token' => $token, 'created_at' => Carbon::now()]
+        );
+
+
+        $credentials = $request->only(["email"]);
+        $user = User::where('email', $credentials['email'])->first();
+        if (!$user) {
+
+            $responseMessage = "email not found";
+
+            return response()->json([
+                "success" => false,
+                "message" => $responseMessage,
+                "error" => $responseMessage
+            ], 422);
         }
 
-        if ($request->role == 'organization') {
-            $user = auth('admin')->user();
-            $find = Organization::where('email', $user->email);
-        }
-        if ($request->role == 'admin') {
-            $user = auth('admin')->user();
-            $find = Admin::where('email', $user->email);
-        }
-        if ($request->role == 'facilitator') {
-            $user = auth('facilitator')->user();
-            $find = Facilitator::where('email', $user->email);
-        }
-        if ($request->role == 'user') {
-            $user = auth('api')->user();
-            $find = User::where('email', $user->email);
-        }
+
+        $maildata = [
+            'title' => 'Password Reset',
+            'url' => 'http://localhost:8080/reset-password/?token=' . $token . '&action=password_reset'
+        ];
+
+        Mail::to($credentials['email'])->send(new PasswordResetMail($maildata));
+        return response()->json([
+            "success" => true,
+            "message" => 'email sent',
+
+        ], 200);
     }
+    public function resetPassword(Request $request)
+    {
 
+
+        $request->validate([
+            // 'email' => 'required|email|exists:users',
+            'password' => 'required|string|min:6',
+            'confirmpassword' => 'required',
+
+        ]);
+
+        $updatePassword = DB::table('password_resets')
+            ->where(['token' => $request->token])
+            ->first();
+
+        if (!$updatePassword) {
+            return response()->json([
+                "success" => false,
+                "message" => 'Invalid request'
+
+            ], 200);
+        }
+
+        $oldpassword = User::where('email', $updatePassword->email)->first()->password;
+        $checkpassword = Hash::check($request->password, $oldpassword);
+        if ($checkpassword) {
+            return response()->json([
+                "success" => false,
+                "message" => 'identical password'
+
+            ], 200);
+        }
+
+        $user = User::where('email', $updatePassword->email)
+            ->update(['password' => Hash::make($request->password)]);
+
+
+        DB::table('password_resets')->where(['token' => $request->token])->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => 'Your password has been changed'
+
+        ], 200);
+    }
     public function destroy(User $user)
     {
         $user->delete();
