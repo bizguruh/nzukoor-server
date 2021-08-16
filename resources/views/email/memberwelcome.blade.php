@@ -214,7 +214,7 @@ small{
 </div>
 <div class="text-left"  style="margin-bottom: 16px;padding-top:10px" >
   <h1>Greetings {{$name}}, </h1>
-  <h2 class="text-green">Welcome to Nzukoor!, the Social Learning Place.</h2>
+  <h2 class="text-green" style="margin-bottom: .5rem">Welcome to Nzukoor!, the Social Learning Place.</h2>
 <p>Welcome to Nzùkóór, your meeting point for people, knowledge and opportunities. Connect with your tribe and be inspired to be your most authentic self.
 </p>
 

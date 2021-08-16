@@ -51,7 +51,7 @@ class EventController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        return Event::where('organization_id', $user->organization_id)->with('eventattendance', 'facilitator')->latest()->get();
+        return Event::with('eventattendance', 'facilitator')->latest()->get();
     }
 
     public function facilitatorgetevent($id)

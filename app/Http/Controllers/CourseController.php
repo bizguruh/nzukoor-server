@@ -52,7 +52,7 @@ class CourseController extends Controller
         }
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
-            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->id)->latest()->get();
+            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->latest()->get();
         }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
@@ -160,7 +160,7 @@ class CourseController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        $enrolled = EnrollCount::where('organization_id', $user->organization_id)->with('course')->get()->toArray();
+        $enrolled = EnrollCount::with('course')->get()->toArray();
 
 
 
@@ -204,7 +204,7 @@ class CourseController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        $enrolled = Course::where('organization_id', $user->organization_id)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get()->toArray();
+        $enrolled = Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get()->toArray();
 
 
 

@@ -117,7 +117,7 @@ class FeedController extends Controller
         }
 
         $tags = $user->interests ? json_decode($user->interests) : [];
-        $feeds = Feed::where('organization_id', $user->organization_id)->get()->toArray();
+        $feeds = Feed::get()->toArray();
         $allfeeds = [];
         if (count($feeds)) {
             if (count($tags)) {
@@ -268,8 +268,7 @@ class FeedController extends Controller
 
 
 
-        $feeds = Feed::where('organization_id', 99)
-            ->orWhereIn('facilitator_id', $facilitators)
+        $feeds = Feed::orWhereIn('facilitator_id', $facilitators)
             ->orWhereIn('user_id', $users)
             ->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')
             ->latest()

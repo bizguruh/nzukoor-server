@@ -31,7 +31,7 @@ class LibraryController extends Controller
             return ('Unauthorized');
         }
         $user  = auth('api')->user();
-        $enroll = EnrollCount::where('course_id', $request->course_id)->where('organization_id', $user->organization_id)->first();
+        $enroll = EnrollCount::where('course_id', $request->course_id)->first();
 
         if (is_null($enroll)) {
             EnrollCount::create([

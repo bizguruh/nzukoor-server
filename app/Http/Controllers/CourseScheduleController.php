@@ -36,7 +36,7 @@ class CourseScheduleController extends Controller
             $user = auth('api')->user();
         }
 
-        return CourseSchedule::where('organization_id', $user->organization_id)->with('course', 'facilitator')->latest()->get();
+        return CourseSchedule::with('course', 'facilitator')->latest()->get();
     }
 
     /**
