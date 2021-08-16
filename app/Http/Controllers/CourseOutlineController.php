@@ -64,7 +64,7 @@ class CourseOutlineController extends Controller
             'certification' =>  $request->input('certification'),
             'faqs' => json_encode($request->input('faqs')),
             'course_id' => $request->input('course_id'),
-            'organization_id' => $user->organization_id
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ]);
 
         return Course::find($request->input('course_id'))->load('courseoutline');

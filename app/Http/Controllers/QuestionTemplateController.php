@@ -65,7 +65,7 @@ class QuestionTemplateController extends Controller
         if (is_null($request->id)) {
             return $user->questiontemplates()->create([
 
-                'organization_id' => $user->organization_id,
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
                 'interest' => $request->interest,
                 'title' => $request->title,
                 'type' => $request->type,
@@ -103,7 +103,7 @@ class QuestionTemplateController extends Controller
 
         if (is_null($request->id)) {
             return $user->questiontemplates()->create([
-                'organization_id' => $user->organization_id,
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
                 'interest' => $request->interest,
                 'title' => $request->title,
                 'options' => json_encode($request->options),

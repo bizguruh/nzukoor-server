@@ -87,7 +87,7 @@ class CourseScheduleController extends Controller
                 'start_time' =>  $value['start_time'],
                 'end_time' =>  $value['end_time'],
                 'modules' => $course->courseoutline()->value('modules'),
-                'organization_id' => $user->organization_id
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
             ])->load('course', 'facilitator');
         }
         return $schedule;

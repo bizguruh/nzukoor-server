@@ -51,7 +51,7 @@ class FeedCommentController extends Controller
         }
 
         $data = $user->comments()->create([
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'feed_id' => $request->id,
             'comment' => $request->comment
         ]);

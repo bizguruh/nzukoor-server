@@ -66,7 +66,7 @@ class CourseCommunityLinkController extends Controller
         $message = '<p>I enrolled for the course, ' . $co->title . ' course and I think you’d like it. Join me!</p> <p>' .  Str::limit($co->description, 50) . '...</p>';
         $url = 'https://nzukoor.com/member/courses/?course_id=' . $request->course_id;
         $data = $user->feeds()->create([
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'media' => $co->cover,
             'url' => $url,
             'message' => $message

@@ -33,7 +33,7 @@ class CurriculumController extends Controller
         $user = auth('admin')->user();
 
         return Curriculum::create([
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'course_id' => $request->course_id,
             'content' => json_encode($request->content)
         ]);

@@ -105,7 +105,7 @@ class EventController extends Controller
             'end' => $request->end,
             'status' => 'pending',
             'resource' => $request->resource,
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'cover' => $request->cover,
 
         ]);

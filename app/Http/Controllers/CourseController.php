@@ -110,7 +110,7 @@ class CourseController extends Controller
                 'cover'  =>  $request->input('general.cover'),
                 'type' => $request->input('general.type'),
                 'amount' => $request->input('general.amount'),
-                'organization_id' => $user->organization_id,
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
             ]);
             $outline = $course->courseoutline()->create([
                 'overview' =>  $request->input('outline.overview'),
@@ -120,7 +120,7 @@ class CourseController extends Controller
                 'duration' =>  $request->input('outline.duration'),
                 'certification' =>  $request->input('outline.certification'),
                 'faqs' => json_encode($request->input('outline.faqs')),
-                'organization_id' => $user->organization_id,
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
 
 
             ]);
@@ -136,7 +136,7 @@ class CourseController extends Controller
                     'start_time' =>  $value['start_time'],
                     'end_time' =>  $value['end_time'],
                     'modules' => json_encode($value['modules']),
-                    'organization_id' => $user->organization_id,
+                    'organization_id' => $user->organization_id ? $user->organization_id : 1,
                 ]);
 
                 FacilitatorModule::create([
@@ -284,7 +284,7 @@ class CourseController extends Controller
                     'start_time' =>  $value['start_time'],
                     'end_time' =>  $value['end_time'],
                     'modules' => json_encode($value['modules']),
-                    'organization_id' => $user->organization_id,
+                    'organization_id' => $user->organization_id ? $user->organization_id : 1,
                 ]);
 
 

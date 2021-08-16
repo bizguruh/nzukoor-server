@@ -205,7 +205,7 @@ class FacilitatorController extends Controller
 
         //     $user = auth('facilitator')->user();
         //     return Facilitator::create([
-        //         'organization_id' => $user->organization_id,
+        //        'organization_id' => $user->organization_id ? $user->organization_id : 1,
         //         'name' => $request->name,
         //         'email' => $request->email,
         //         'password' => Hash::make($request->password),

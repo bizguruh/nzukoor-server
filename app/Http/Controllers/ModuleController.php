@@ -58,7 +58,7 @@ class ModuleController extends Controller
 
                 'modules' => json_encode($request->modules),
                 'course_id' => $request->course_id,
-                'organization_id' => $user->organization_id,
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
 
             ]);
 
@@ -69,7 +69,7 @@ class ModuleController extends Controller
             //         Questionnaire::create([
             //             'course_id' => $request->course_id,
             //             'module_id' =>  $resource->id,
-            //             'organization_id' => $user->organization_id,
+            //            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             //             'module' => $request->module,
             //             'title' => $value['title'],
             //             'type' => $request->type,

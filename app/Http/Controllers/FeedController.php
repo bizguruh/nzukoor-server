@@ -312,7 +312,7 @@ class FeedController extends Controller
 
 
         $data = $user->feeds()->create([
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'media' => $request->media,
             'url' => $request->url,
             'publicId' => $request->publicId,

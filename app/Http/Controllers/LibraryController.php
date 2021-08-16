@@ -36,7 +36,7 @@ class LibraryController extends Controller
         if (is_null($enroll)) {
             EnrollCount::create([
                 'course_id' => $request->course_id,
-                'organization_id' => $user->organization_id,
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
                 'count' => 1
             ]);
         } else {

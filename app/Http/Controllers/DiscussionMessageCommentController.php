@@ -70,7 +70,7 @@ class DiscussionMessageCommentController extends Controller
             'message' => $request->message,
             'discussion_id' => $request->discussion_id,
             'discussion_message_id' => $request->message_id,
-            'organization_id' => $user->organization_id
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ]);
 
 

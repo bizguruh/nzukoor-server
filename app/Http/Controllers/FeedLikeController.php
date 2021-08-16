@@ -49,7 +49,7 @@ class FeedLikeController extends Controller
         }
 
         $data = $user->likes()->firstOrNew([
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'feed_id' => $request->id,
         ]);
 

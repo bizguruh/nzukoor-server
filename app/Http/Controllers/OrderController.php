@@ -69,7 +69,7 @@ class OrderController extends Controller
                 'trxref' => $request->trxref,
                 'redirecturl' =>  $request->redirecturl,
                 'course_id' => $request->course_id,
-                'organization_id' => $user->organization_id
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
             ]);
 
             if ($request->status == 'success') {
@@ -82,7 +82,7 @@ class OrderController extends Controller
             if (is_null($enroll)) {
                 EnrollCount::create([
                     'course_id' => $request->course_id,
-                    'organization_id' => $user->organization_id,
+                    'organization_id' => $user->organization_id ? $user->organization_id : 1,
                     'count' => 1
                 ]);
             } else {
@@ -94,7 +94,7 @@ class OrderController extends Controller
 
             Revenue::create([
                 'course_id' => $request->course_id,
-                'organization_id' => $user->organization_id,
+                'organization_id' => $user->organization_id ? $user->organization_id : 1,
                 'revenue' => $course->amount
             ]);
 
@@ -103,7 +103,7 @@ class OrderController extends Controller
             if (is_null($highestearning)) {
                 HighestEarningCourse::create([
                     'course_id' => $request->course_id,
-                    'organization_id' => $user->organization_id,
+                    'organization_id' => $user->organization_id ? $user->organization_id : 1,
                     'revenue' => $course->amount
                 ]);
             } else {

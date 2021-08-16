@@ -63,7 +63,7 @@ class QuestionnaireController extends Controller
         return Questionnaire::create([
 
             'module_id' => $request->module_id,
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'module' => $request->module_name,
             'title' => $request->title,
             'content' => json_encode($request->sections)

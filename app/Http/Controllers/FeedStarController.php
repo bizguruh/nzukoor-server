@@ -49,7 +49,7 @@ class FeedStarController extends Controller
         }
 
         $data = $user->stars()->firstOrNew([
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'feed_id' => $request->id,
         ]);
 

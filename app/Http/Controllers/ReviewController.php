@@ -43,7 +43,7 @@ class ReviewController extends Controller
             'course_id' => $request->id,
             'score' => intval($request->score),
             'review' => $request->review,
-            'organization_id' => $user->organization_id
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ])->load('user');
     }
 

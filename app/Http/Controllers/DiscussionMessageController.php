@@ -70,7 +70,7 @@ class DiscussionMessageController extends Controller
             'attachment' => $request->attachment,
             'publicId' => $request->publicId,
             'discussion_id' => $request->discussion_id,
-            'organization_id' => $user->organization_id
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ]);
         $type = 'discussion';
         $contribution =   $user->contribution()->firstOrNew();
