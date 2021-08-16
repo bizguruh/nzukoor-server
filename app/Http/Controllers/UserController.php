@@ -21,7 +21,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Notifications\AddedToLibrary;
 use Illuminate\Support\Facades\Cache;
 use App\Notifications\SendNotification;
+use App\Http\Controllers\MailController;
 use App\Http\Resources\ConnectionResource;
+use App\Mail\memberwelcome;
 use App\Notifications\PrivateDiscussionCreated;
 
 class UserController extends Controller
@@ -154,6 +156,7 @@ class UserController extends Controller
 
     public function storeuser(Request $request)
     {
+
         $validated = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|unique:users',
@@ -358,6 +361,8 @@ class UserController extends Controller
 
 
             $newuser->notify(new SendNotification($details));
+            $mail = new MailController;
+            $mail->memberwelcome($newuser);
             return $newuser;
         });
 

@@ -196,6 +196,11 @@ class DiscussionController extends Controller
 
         return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
+
+    public function getguestdiscussion($id)
+    {
+        return Discussion::where('id', $id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->first();
+    }
     public function show(Discussion $discussion)
     {
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
@@ -229,7 +234,7 @@ class DiscussionController extends Controller
                 return count($interests);
             }
         });
-        $discussion->related = $related;
+        $discussion->related = $related->values()->all();
         return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
 

@@ -68,7 +68,19 @@ class MailController extends Controller
         ];
         Mail::send('email.facilitatorwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject(' A Home For You To Share');
-            $message->from('nzukoor@gmail.com', 'Nzukoor');
+            $message->from('nzukoor@gmail.com', 'Nzukoor Team');
+        });
+    }
+
+    public function memberwelcome($info)
+    {
+
+        $data = [
+            'name' => $info->name
+        ];
+        Mail::send('email.memberwelcome', $data, function ($message) use ($info) {
+            $message->to($info->email, $info->name)->subject(' A Home For You To Share');
+            $message->from('nzukoor@gmail.com', 'Nzukoor Team');
         });
     }
 
