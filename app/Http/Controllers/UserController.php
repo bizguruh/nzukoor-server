@@ -643,7 +643,7 @@ class UserController extends Controller
 
         $maildata = [
             'title' => 'Password Reset',
-            'url' => 'http://localhost:8080/reset-password/?token=' . $token . '&action=password_reset'
+            'url' => 'https://nzukoor.com/reset-password/?token=' . $token . '&action=password_reset&auth=' . $request->type
         ];
 
         Mail::to($credentials['email'])->send(new PasswordResetMail($maildata));
@@ -676,18 +676,63 @@ class UserController extends Controller
             ], 200);
         }
 
-        $oldpassword = User::where('email', $updatePassword->email)->first()->password;
-        $checkpassword = Hash::check($request->password, $oldpassword);
-        if ($checkpassword) {
-            return response()->json([
-                "success" => false,
-                "message" => 'identical password'
+        if ($request->type == 'user') {
+            $oldpassword = User::where('email', $updatePassword->email)->first()->password;
+            $checkpassword = Hash::check($request->password, $oldpassword);
+            if ($checkpassword) {
+                return response()->json([
+                    "success" => false,
+                    "message" => 'identical password'
 
-            ], 200);
+                ], 200);
+            }
+
+            $user = User::where('email', $updatePassword->email)
+                ->update(['password' => Hash::make($request->password)]);
+        }
+        if ($request->type == 'facilitator') {
+            $oldpassword = Facilitator::where('email', $updatePassword->email)->first()->password;
+            $checkpassword = Hash::check($request->password, $oldpassword);
+            if ($checkpassword) {
+                return response()->json([
+                    "success" => false,
+                    "message" => 'identical password'
+
+                ], 200);
+            }
+
+            $user = Facilitator::where('email', $updatePassword->email)
+                ->update(['password' => Hash::make($request->password)]);
+        }
+        if ($request->type == 'admin') {
+            $oldpassword = Admin::where('email', $updatePassword->email)->first()->password;
+            $checkpassword = Hash::check($request->password, $oldpassword);
+            if ($checkpassword) {
+                return response()->json([
+                    "success" => false,
+                    "message" => 'identical password'
+
+                ], 200);
+            }
+
+            $user = Admin::where('email', $updatePassword->email)
+                ->update(['password' => Hash::make($request->password)]);
         }
 
-        $user = User::where('email', $updatePassword->email)
-            ->update(['password' => Hash::make($request->password)]);
+        if ($request->type == 'organization') {
+            $oldpassword = Organization::where('email', $updatePassword->email)->first()->password;
+            $checkpassword = Hash::check($request->password, $oldpassword);
+            if ($checkpassword) {
+                return response()->json([
+                    "success" => false,
+                    "message" => 'identical password'
+
+                ], 200);
+            }
+
+            $user = Organization::where('email', $updatePassword->email)
+                ->update(['password' => Hash::make($request->password)]);
+        }
 
 
         DB::table('password_resets')->where(['token' => $request->token])->delete();
