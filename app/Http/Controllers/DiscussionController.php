@@ -151,7 +151,7 @@ class DiscussionController extends Controller
             'creator' => $sender,
             'description' => $request->description,
             'course_id' => $request->course_id,
-            'organization_id' => $user->organization_id,
+            'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ]);
 
 
