@@ -82,7 +82,8 @@ body {
 }
 .t_header{
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
+  color: #e76f51;
 
 }
 td{
@@ -106,6 +107,9 @@ td{
 }
 .text-green{
   color:#388087;
+}
+.text-secondary{
+  color:#e76f51;
 }
 .mb-0{
   margin-bottom: 0
@@ -160,7 +164,8 @@ small{
   font-size: 80%;
 }
 .image{
-  width: 100%
+  width: 50%;
+  margin: 0 auto
 }
 
   .footer {
@@ -182,7 +187,16 @@ small{
     color: #b0adc5;
     text-decoration: underline;
 }
+.mytable{
+  width: 80%;
+  margin: 0 auto;
+}
 @media(max-width:600px){
+.mytable{
+  width: 100%;
+}  .image{
+  width: 100%
+}
   .p-2{
   padding:.6rem;
 }
@@ -214,13 +228,16 @@ small{
 </div>
 <div class="text-left"  style="margin-bottom: 16px;padding-top:10px" >
   <h1>Greetings {{$name}}, </h1>
-  <h2 class="text-green" style="margin-bottom: .5rem">Welcome to Nzukoor!, the Social Learning Place.</h2>
+  <div style="line-height:1.5">
+    <h2 class="text-green" style="margin-bottom: .5rem">Welcome to Nzukoor!, the Social Learning Place.</h2>
 <p>Welcome to Nzùkóór, your meeting point for people, knowledge and opportunities. Connect with your tribe and be inspired to be your most authentic self.
 </p>
+  </div>
 
-<h4>Start with our 3E-I</h4>
+<h4 class="text-center">Start with our 3E-I</h4>
 
-<table >
+<div class="mytable">
+  <table >
   <tbody>
     <tr>
    <td class="p-2 text-center">
@@ -269,6 +286,7 @@ small{
   </tbody>
 </table>
 
+</div>
 <p>It is our sincere hope that you feel right at home being your most authentic self. Nnoo!</p>
 <div class="mb-2">
   <small>Sincerely, <br>
