@@ -159,6 +159,7 @@ h4 {
 p {
 
     font-size: .9rem;
+    margin:0;
 }
 small{
   font-size: 80%;
@@ -227,14 +228,14 @@ small{
 <img src="{{asset('welcome.png')}}" class="image" height="auto" alt="Welcome">
 </div>
 <div class="text-left"  style="margin-bottom: 16px;padding-top:10px" >
-  <h1>Greetings {{$name}}, </h1>
+  <h5>Greetings john, </h5>
   <div style="line-height:1.5">
-    <h2 class="text-green" style="margin-bottom: .5rem">Welcome to Nzukoor!, the Social Learning Place.</h2>
+    <h1 class="text-green" >Welcome to Nzukoor!, the Social Learning Place.</h1>
 <p>Welcome to Nzùkóór, your meeting point for people, knowledge and opportunities. Connect with your tribe and be inspired to be your most authentic self.
 </p>
   </div>
 
-<h4 class="text-center">Start with our 3E-I</h4>
+<h3 class="text-center">Start with our 3E-I</h3>
 
 <div class="mytable">
   <table >
@@ -295,7 +296,7 @@ The Team @ Nzukoor</small>
 </div>
 <hr>
 <div>
-  <h4>Join trending conversations . . .</h4>
+  <h4 class="mb-0">Join trending conversations . . .</h4>
   <p><a href="https://nzukoor.com/explore/discussion/45" target="_blank"> Does 30-min daily morning meditation really work? </a></p>
 </div>
 </div>
