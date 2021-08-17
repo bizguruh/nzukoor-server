@@ -81,8 +81,8 @@ class DiscussionMessageController extends Controller
         $contribution->save();
 
 
-        broadcast(new AddDiscussion($user, $data->load('admin', 'user', 'facilitator')))->toOthers();
-        return $data->load('admin', 'user', 'facilitator');
+        broadcast(new AddDiscussion($user, $data->load('admin', 'user', 'facilitator', 'discussionmessagecomment')))->toOthers();
+        return $data->load('admin', 'user', 'facilitator', 'discussionmessagecomment');
     }
 
 

@@ -19,6 +19,27 @@ class FeedController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function my_array_unique($array, $keep_key_assoc = false)
+    {
+        $duplicate_keys = array();
+        $tmp = array();
+
+        foreach ($array as $key => $val) {
+            // convert objects to arrays, in_array() does not support objects
+            if (is_object($val))
+                $val = (array)$val;
+
+            if (!in_array($val, $tmp))
+                $tmp[] = $val;
+            else
+                $duplicate_keys[] = $key;
+        }
+
+        foreach ($duplicate_keys as $key)
+            unset($array[$key]);
+
+        return $keep_key_assoc ? $array : array_values($array);
+    }
     public function guestfeeds()
     {
         return Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->paginate(15);
@@ -237,7 +258,9 @@ class FeedController extends Controller
         $mergedfeeds = collect(array_merge($feeds->toArray(), $myfeeds))->sortByDesc(function ($a) {
             return $a['created_at'];
         });
-        return (new Collection($mergedfeeds->values()->all()))->paginate(15);
+
+        $removeDuplicate = $this->my_array_unique($mergedfeeds->toArray());
+        return (new Collection($removeDuplicate))->paginate(15);
     }
 
     public function customFeeds()
@@ -281,7 +304,8 @@ class FeedController extends Controller
         $mergedfeeds = collect(array_merge($feeds, $myfeeds))->sortByDesc(function ($a) {
             return $a['created_at'];
         });
-        return (new Collection($mergedfeeds->values()->all()))->paginate(15);
+        $removeDuplicate = $this->my_array_unique($mergedfeeds->toArray());
+        return (new Collection($removeDuplicate))->paginate(15);
     }
     public function trendingFeedsByComments()
     {
