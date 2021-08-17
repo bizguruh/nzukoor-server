@@ -161,9 +161,7 @@ p {
     font-size: .9rem;
     margin:0;
 }
-small{
-  font-size: 80%;
-}
+
 .image{
   width: 50%;
   margin: 0 auto
@@ -192,6 +190,9 @@ small{
   width: 80%;
   margin: 0 auto;
 }
+.bannerImg{
+  width: 100%
+}
 @media(max-width:600px){
 .mytable{
   width: 100%;
@@ -214,10 +215,6 @@ small{
     line-height: 1.4em;
 
 }
-small{
-  font-size: .65rem;
-  line-height: normal;
-}
 }
   </style>
 </head>
@@ -225,17 +222,17 @@ small{
 
   <div class=" ">
 <div class="top_banner">
-<img src="{{asset('welcome.png')}}" class="image" height="auto" alt="Welcome">
+<img src="{{asset('welcome.png')}}" class="bannerImg" height="auto" alt="Welcome">
 </div>
 <div class="text-left"  style="margin-bottom: 16px;padding-top:10px" >
-  <h5>Greetings john, </h5>
+  <h4>Greetings {{$name}}, </h4>
   <div style="line-height:1.5">
     <h1 class="text-green" >Welcome to Nzukoor!, the Social Learning Place.</h1>
 <p>Welcome to Nzùkóór, your meeting point for people, knowledge and opportunities. Connect with your tribe and be inspired to be your most authentic self.
 </p>
   </div>
 
-<h3 class="text-center">Start with our 3E-I</h3>
+<h2 class="text-center">Start with our 3E-I</h2>
 
 <div class="mytable">
   <table >
