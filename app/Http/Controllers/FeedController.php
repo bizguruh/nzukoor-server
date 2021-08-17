@@ -233,7 +233,11 @@ class FeedController extends Controller
             $check = array_intersect($interests, $tags->toArray());
             return count($check);
         });
-        return (new Collection($feeds->values()->all()))->paginate(15);
+        $myfeeds = $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->toArray();
+        $mergedfeeds = collect(array_merge($feeds->toArray(), $myfeeds))->sortByDesc(function ($a) {
+            return $a['created_at'];
+        });
+        return (new Collection($mergedfeeds->values()->all()))->paginate(15);
     }
 
     public function customFeeds()
@@ -266,14 +270,18 @@ class FeedController extends Controller
             return $f->user_id;
         });
 
-
+        $myfeeds = $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->toArray();
 
         $feeds = Feed::orWhereIn('facilitator_id', $facilitators)
             ->orWhereIn('user_id', $users)
             ->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')
             ->latest()
-            ->get();
-        return (new Collection($feeds->values()->all()))->paginate(15);
+            ->get()->toArray();
+
+        $mergedfeeds = collect(array_merge($feeds, $myfeeds))->sortByDesc(function ($a) {
+            return $a['created_at'];
+        });
+        return (new Collection($mergedfeeds->values()->all()))->paginate(15);
     }
     public function trendingFeedsByComments()
     {

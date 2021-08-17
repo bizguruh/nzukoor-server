@@ -68,8 +68,7 @@ class DiscussionController extends Controller
         })->map(function ($f) {
             return $f->user_id;
         });
-        return Discussion::where('organization_id', 99)
-            ->orWhereIn('facilitator_id', $facilitators)
+        return Discussion::orWhereIn('facilitator_id', $facilitators)
             ->orWhereIn('user_id', $users)
             ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')
             ->latest()
