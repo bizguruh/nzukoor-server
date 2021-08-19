@@ -124,6 +124,13 @@ class DiscussionController extends Controller
 
     public function store(Request $request)
     {
+
+        $validated = $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'category' => 'required',
+            'tags' => ' required'
+        ]);
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
         }
