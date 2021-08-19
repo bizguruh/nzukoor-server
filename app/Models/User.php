@@ -220,7 +220,7 @@ class User extends Authenticatable
 
     public function save(array $options = array())
     {
-        if (empty($this->id)) {
+        if (empty($this->username)) {
             $this->username = mt_rand(0000000, 9999999);
         }
         return parent::save($options);
