@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Notifications\DiscussionReject;
 use App\Notifications\SendNotification;
 use App\Notifications\JoinDiscussion;
+use App\Notifications\NewConnection;
 use Illuminate\Http\Request;
 use Notification;
 
@@ -97,6 +98,41 @@ class NotificationController extends Controller
         broadcast(new NotificationSent());
         return 'Notification sent';
     }
+    public function newconnection(Request $request)
+    {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+            return ('Unauthorized');
+        }
+        if (auth('organization')->user()) {
+            $user = auth('organization')->user();
+        }
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        $receiver =  $request->type == 'user' ?  User::find($request->id) :  Facilitator::find($request->id);
+        $details = [
+            'from_name' => 'Nzukoor',
+            'from_email' => 'nzukoor@gmail.com',
+            'greeting' => 'Hello',
+            'body' => $user->name . " added you has a connection",
+            'thanks' => 'Thanks',
+            'actionText' => 'Click to view',
+            'url' => "https://nzukoor.com/member/connections",
+        ];
+
+        $receiver->notify(new NewConnection($details));
+        broadcast(new NotificationSent());
+        return 'Notification sent';
+    }
+
 
     public function joinDiscussionRequest(Request $request)
     {
@@ -132,7 +168,7 @@ class NotificationController extends Controller
         }
 
         $details = [
-            'from_name' => $user->name,
+            'from_name' => $user->username,
             'from_email' => $user->email,
             'greeting' => $discussion->name,
             'body' => $user->name . " has requested access to join your discussion, " . strtoupper($discussion->name),
@@ -182,8 +218,6 @@ class NotificationController extends Controller
             'actionText' => 'Click to view',
             'url' => "https://nzukoor.com/member/discussion/" . $request->discussion_id,
             'id' => $request->discussion_id
-
-
         ];
 
         $user->notify(new DiscussionReject($details));

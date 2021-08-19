@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Events\MessageSent;
 use App\Http\Resources\InboxResource;
 use App\Http\Resources\SingleInboxResource;
+use App\Models\Facilitator;
 use App\Models\Inbox;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Return_;
@@ -48,14 +50,18 @@ class InboxController extends Controller
             if (auth('facilitator')->user()) {
                 $user = auth('facilitator')->user();
                 $sender_type = 'facilitator';
+                $receiver = Facilitator::find($request->receiver_id);
             }
             if (auth('api')->user()) {
                 $user = auth('api')->user();
                 $sender_type = null;
+                $receiver = User::find($request->receiver_id);
             }
             if (auth('admin')->user()) {
                 $user = auth('admin')->user();
+
                 $sender_type = 'admin';
+                $receiver = Admin::find($request->receiver_id);
             }
 
 
@@ -69,7 +75,7 @@ class InboxController extends Controller
             ]);
 
             $data = $message->load('admin', 'user', 'facilitator');
-            broadcast(new MessageSent($user, new SingleInboxResource($data)))->toOthers();
+            broadcast(new MessageSent($receiver, new SingleInboxResource($data)))->toOthers();
             return $message->load('admin', 'user', 'facilitator');
         });
     }

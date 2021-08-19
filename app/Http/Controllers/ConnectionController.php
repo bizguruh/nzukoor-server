@@ -40,6 +40,32 @@ class ConnectionController extends Controller
 
         return ConnectionResource::collection($user->connections()->latest()->get());
     }
+    public function myconnections()
+    {
+
+
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
+            return ('Unauthorized');
+        }
+
+
+        if (auth('admin')->user()) {
+            $user = auth('admin')->user();
+            $type = 'admin';
+        }
+        if (auth('facilitator')->user()) {
+            $user = auth('facilitator')->user();
+            $type = 'facilitator';
+        }
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+            $type = 'user';
+        }
+
+        return Connection::where('follow_type', $type)->where('following_id', $user->id)->with('user', 'facilitator')->latest()->get()->map(function ($a) {
+            return  !is_null($a->user) ? $a->user : $a->facilitator;
+        })->values()->all();
+    }
 
 
     public function store(Request $request)

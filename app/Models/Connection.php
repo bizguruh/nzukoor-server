@@ -13,14 +13,14 @@ class Connection extends Model
 
     public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
     public function admin()
     {
-        return $this->hasMany(Admin::class);
+        return $this->belongsTo(Admin::class);
     }
     public function facilitator()
     {
-        return $this->hasMany(Facilitator::class);
+        return $this->belongsTo(Facilitator::class);
     }
 }

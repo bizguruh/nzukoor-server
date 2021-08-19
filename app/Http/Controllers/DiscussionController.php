@@ -198,7 +198,26 @@ class DiscussionController extends Controller
 
     public function getguestdiscussion($id)
     {
-        return Discussion::where('id', $id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->first();
+        function filtertag($arr)
+        {
+            return  array_map(function ($val) {
+                return $val->value;
+            }, $arr);
+        }
+
+
+        $alldiscussions =  Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->get();
+        $discussion = Discussion::where('id', $id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->first();
+        $related =  $alldiscussions->filter(function ($a) use ($discussion) {
+
+            if (!is_null($a['tags']) && count(json_decode($a['tags']))) {
+                $interests = array_intersect(filtertag(json_decode($discussion->tags)), filtertag(json_decode($a->tags)));
+
+                return count($interests);
+            }
+        });
+        $discussion->related = $related->values()->all();
+        return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
     public function show(Discussion $discussion)
     {
@@ -266,7 +285,7 @@ class DiscussionController extends Controller
         $discussion->creator = $request->creator;
         $discussion->course_id = $request->course_id;
         $discussion->save();
-        return $discussion;
+        return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
     }
 
     /**

@@ -111,6 +111,9 @@ td{
 .text-secondary{
   color:#e76f51;
 }
+.border-green{
+  border:2px solid #388087;
+}
 .mb-0{
   margin-bottom: 0
 }
@@ -190,6 +193,9 @@ p {
   width: 80%;
   margin: 0 auto;
 }
+ .p-3{
+  padding:1.2rem;
+}
 .bannerImg{
   width: 100%
 }
@@ -207,11 +213,11 @@ p {
   }
   .t_header{
   font-weight: 500;
- font-size: .75rem;
+ font-size: 1rem;
 }
   p {
 
-    font-size: .75rem;
+    font-size: 1rem;
     line-height: 1.4em;
 
 }
@@ -227,15 +233,15 @@ p {
 <div class="text-left"  style="margin-bottom: 16px;padding-top:10px" >
   <h4>Greetings {{$name}}, </h4>
   <div style="line-height:1.5">
-    <h1 class="text-green" >Welcome to Nzukoor!, the Social Learning Place.</h1>
+    <h1 class="text-green" style="line-height:1.4" >Welcome to Nzukoor!, the Social Learning Place.</h1>
 <p>Welcome to Nzùkóór, your meeting point for people, knowledge and opportunities. Connect with your tribe and be inspired to be your most authentic self.
 </p>
   </div>
 
 <h2 class="text-center">Start with our 3E-I</h2>
 
-<div class="mytable">
-  <table >
+<div class="mytable mb-2">
+  <table class="border-green p-3 rounded">
   <tbody>
     <tr>
    <td class="p-2 text-center">

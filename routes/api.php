@@ -50,6 +50,7 @@ use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\UserInformationController;
 use App\Models\DiscussionRequest;
 use App\Models\PrivateDiscussionMember;
 use Illuminate\Http\Request;
@@ -180,7 +181,7 @@ Route::middleware(['auth:facilitator'])->group(function () {
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     $login = new LoginHistoryController;
     $login->store();
-    return $request->user()->load('organization');
+    return $request->user()->load('organization', 'role');
 });
 
 
@@ -270,6 +271,8 @@ Route::get('read-notifications', [NotificationController::class, 'readnotificati
 
 Route::apiResource('connections', ConnectionController::class);
 
+Route::get('my/connections', [ConnectionController::class, 'myconnections']);
+
 Route::apiResource('libraries', LibraryController::class);
 Route::apiResource('answer-questionnaires', AnsweredQuestionnaireController::class);
 
@@ -355,6 +358,8 @@ Route::apiResource('referrals', ReferralController::class);
 
 // Notification request
 
+Route::post('new/connection', [NotificationController::class, 'newconnection']);
+
 Route::post('join-discussion', [NotificationController::class, 'joinDiscussionRequest']);
 
 // Apply course
@@ -417,3 +422,6 @@ Route::get('get/members', [GuestController::class, 'getmembers']);
 
 Route::post('forgot-password', [UserController::class, 'postEmail']);
 Route::post('reset-password', [UserController::class, 'resetpassword']);
+
+
+Route::post('update/information', [UserInformationController::class, 'update']);

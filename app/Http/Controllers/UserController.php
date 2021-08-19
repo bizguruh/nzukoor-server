@@ -40,12 +40,12 @@ class UserController extends Controller
     public $ttl = 60 * 60 * 24;
     public function index()
     {
-        return User::all();
+        return User::with('role')->get();
     }
 
     public function userinfo($id)
     {
-        return User::find($id);
+        return User::find($id)->load('role');
     }
 
     public function userfeeds($id)
@@ -156,6 +156,7 @@ class UserController extends Controller
 
     public function storeuser(Request $request)
     {
+
 
         $validated = $request->validate([
             'name' => 'required|max:255',
@@ -498,7 +499,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return $user;
+        return $user->load('role');
     }
 
 
@@ -518,6 +519,9 @@ class UserController extends Controller
         $user->lga = $request->lga;
         $user->voice = $request->voice;
         $user->username = $request->username;
+        $user->show_age = $request->show_age;
+        $user->show_name = $request->show_name;
+        $user->show_email = $request->show_email;
         $user->verification = $request->verification;
         $user->save();
         return $user;

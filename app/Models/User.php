@@ -18,6 +18,7 @@ class User extends Authenticatable
      *
      * @var array
      */
+
     protected $fillable = [
         'name',
         'email',
@@ -37,12 +38,19 @@ class User extends Authenticatable
         'state',
         'country',
         'voice',
-        'username'
+        'username',
+        'role_id',
+        'show_age', 'show_name', 'show_email'
     ];
 
     public function revenue()
     {
         return $this->hasOne(Revenue::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 
     public  function eventattendance()
@@ -194,6 +202,27 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
+        'show_age' => 'boolean',
+        'show_name' => 'boolean',
+        'show_email' => 'boolean',
+        'verification' => 'boolean',
         'email_verified_at' => 'datetime',
     ];
+
+    public function findForPassport($username)
+    {
+        if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
+            return $this->where('email', $username)->first();
+        } else {
+            return $this->where('username', $username)->first();
+        }
+    }
+
+    public function save(array $options = array())
+    {
+        if (empty($this->id)) {
+            $this->username = mt_rand(0000000, 9999999);
+        }
+        return parent::save($options);
+    }
 }
