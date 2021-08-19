@@ -143,7 +143,7 @@ class EventController extends Controller
                 'greeting' => 'Hello',
                 'body' => 'The event, **' . $value['title'] . '** will be starting in few hours. Don\'t forget to Join! ',
                 'actionText' => 'Join here',
-                'url' => "https://nzukoor.com/member/event/" . $value['id'],
+                'url' => "https://nzukoor.com/explore/event/" . $value['id'],
 
             ];
             $emails =  $value->eventattendance()->get()->map(function ($user) {
