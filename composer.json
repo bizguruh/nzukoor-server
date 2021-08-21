@@ -19,7 +19,8 @@
         "laravel/socialite": "^5.2",
         "laravel/telescope": "^4.6",
         "laravel/tinker": "^2.5",
-        "pusher/pusher-php-server": "^7.0"
+        "pusher/pusher-php-server": "^7.0",
+        "ext-gmp": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
