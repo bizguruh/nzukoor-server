@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Inbox;
 use App\Events\MessageSent;
+use App\Models\Facilitator;
+use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Return_;
+use App\Notifications\NewMessage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\InboxResource;
 use App\Http\Resources\SingleInboxResource;
-use App\Models\Facilitator;
-use App\Models\Inbox;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\Return_;
 
 class InboxController extends Controller
 {
@@ -72,10 +74,21 @@ class InboxController extends Controller
                 'receiver' => $request->receiver,
                 'receiver_id' => $request->receiver_id,
                 'status' => false,
+
             ]);
+            $title = $user->username . ' sent you a message - Nzukoor';
+            $detail = [
+                'title' => $title,
+                'message' => $request->message,
+                'image' => $user->profile
+            ];
+
 
             $data = $message->load('admin', 'user', 'facilitator');
             broadcast(new MessageSent($receiver, new SingleInboxResource($data)))->toOthers();
+
+
+            $receiver->notify(new NewMessage($detail));
             return $message->load('admin', 'user', 'facilitator');
         });
     }

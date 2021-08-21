@@ -1,61 +1,62 @@
 <?php
 
-use App\Http\Controllers\SocialLoginController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\FacilitatorController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AnsweredQuestionnaireController;
-use App\Http\Controllers\AssessmentController;
-use App\Http\Controllers\AssessmentResponseController;
-use App\Http\Controllers\ConnectionController;
-use App\Http\Controllers\CourseCommunityController;
-use App\Http\Controllers\CourseCommunityLinkController;
-use App\Http\Controllers\ContributorController;
+use Illuminate\Http\Request;
+use App\Models\DiscussionRequest;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TagController;
+use App\Models\PrivateDiscussionMember;
 use App\Http\Controllers\FeedController;
-use App\Http\Controllers\FeedCommentController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\TodoController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\GuestController;
+use App\Http\Controllers\InboxController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ReviewController;
+use Illuminate\Notifications\Notification;
+use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\RevenueController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FeedLikeController;
 use App\Http\Controllers\FeedStarController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\CourseOutlineController;
-use App\Http\Controllers\CourseScheduleController;
-use App\Http\Controllers\CourseViewCountController;
+use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DiscussionController;
-use App\Http\Controllers\DiscussionMessageCommentController;
-use App\Http\Controllers\DiscussionMessageController;
-use App\Http\Controllers\DiscussionRequestController;
-use App\Http\Controllers\DiscussionVoteController;
-use App\Http\Controllers\DiscussionViewController;
-use App\Http\Controllers\EventAttendanceController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\FacilitatorModuleController;
-use App\Http\Controllers\FeedbackController;
-use App\Http\Controllers\GuestController;
-use App\Http\Controllers\HighestEarningCourseController;
-use App\Http\Controllers\InboxController;
-use App\Http\Controllers\MemberAssessmentController;
-use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\ContributorController;
+use App\Http\Controllers\FacilitatorController;
+use App\Http\Controllers\FeedCommentController;
+use App\Http\Controllers\SocialLoginController;
 use App\Http\Controllers\LoginHistoryController;
-use App\Http\Controllers\MailController;
-use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PrivateDiscussionMemberController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\CourseOutlineController;
 use App\Http\Controllers\QuestionnaireController;
+use App\Http\Controllers\CourseScheduleController;
+use App\Http\Controllers\DiscussionViewController;
+use App\Http\Controllers\DiscussionVoteController;
+use App\Http\Controllers\CourseCommunityController;
+use App\Http\Controllers\CourseViewCountController;
+use App\Http\Controllers\EventAttendanceController;
+use App\Http\Controllers\UserInformationController;
+use App\Http\Controllers\MemberAssessmentController;
 use App\Http\Controllers\QuestionResponseController;
 use App\Http\Controllers\QuestionTemplateController;
-use App\Http\Controllers\ReferralController;
-use App\Http\Controllers\RevenueController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\TagController;
-use App\Http\Controllers\TodoController;
-use App\Http\Controllers\UserInformationController;
-use App\Models\DiscussionRequest;
-use App\Models\PrivateDiscussionMember;
-use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DiscussionMessageController;
+use App\Http\Controllers\DiscussionRequestController;
+use App\Http\Controllers\FacilitatorModuleController;
+use App\Http\Controllers\AssessmentResponseController;
+use App\Http\Controllers\CourseCommunityLinkController;
+use App\Http\Controllers\HighestEarningCourseController;
+use App\Http\Controllers\AnsweredQuestionnaireController;
+use App\Http\Controllers\PrivateDiscussionMemberController;
+use App\Http\Controllers\DiscussionMessageCommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -425,3 +426,10 @@ Route::post('reset-password', [UserController::class, 'resetpassword']);
 
 
 Route::post('update/information', [UserInformationController::class, 'update']);
+
+// create or update a subscription for a user
+Route::post('subscription', [SubscriptionController::class, 'store']);
+
+// delete a subscription for a user
+Route::post('subscription/delete', [SubscriptionController::class, 'destroy']);
+Route::post('notify', [NotificationController::class, 'notify']);

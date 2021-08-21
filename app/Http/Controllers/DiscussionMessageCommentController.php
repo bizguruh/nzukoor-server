@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Discussion;
 use App\Models\DiscussionMessageComment;
+use App\Notifications\NewDiscussionReply;
 use Illuminate\Http\Request;
 
 class DiscussionMessageCommentController extends Controller
@@ -73,9 +75,8 @@ class DiscussionMessageCommentController extends Controller
             'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ]);
 
+        //  broadcast(new AddDiscussion($user, $data->load('admin', 'user', 'facilitator')))->toOthers();
 
-
-        // broadcast(new AddDiscussion($user, $data->load('admin', 'user', 'facilitator')))->toOthers();
         return response($data->load('admin', 'user', 'facilitator'), 201);
     }
 

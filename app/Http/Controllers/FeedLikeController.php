@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feed;
+use App\Models\User;
 use App\Models\FeedLike;
 use Illuminate\Http\Request;
+use App\Notifications\FeedInteraction;
 
 class FeedLikeController extends Controller
 {
@@ -56,6 +59,19 @@ class FeedLikeController extends Controller
 
         $data->like = !$data->like;
         $data->save();
+
+
+        $title = $user->username . ' liked your post - Nzukoor';
+        $detail = [
+            'title' => $title,
+            'message' => Feed::find($request->id)->message,
+            'image' => Feed::find($request->id)->media,
+            'url' => "https://nzukoor.com/member/feed/" . $request->id
+
+        ];
+
+        $creator = User::find(Feed::find($request->id)->user_id);
+        $creator->notify(new FeedInteraction($detail));
         return $data->load('admin', 'user', 'facilitator', 'feed');
     }
 

@@ -2,22 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NotificationSent;
+use Notification;
+use App\Models\User;
 use App\Models\Admin;
 use App\Models\Discussion;
-use App\Models\DiscussionRequest;
 use App\Models\Facilitator;
+use Illuminate\Http\Request;
+use App\Notifications\NotifyMe;
+use App\Events\NotificationSent;
+use App\Models\DiscussionRequest;
+use Illuminate\Support\Facades\Log;
 use App\Models\NotificationResponse;
-use App\Models\User;
+use App\Notifications\NewConnection;
+use App\Notifications\JoinDiscussion;
 use App\Notifications\DiscussionReject;
 use App\Notifications\SendNotification;
-use App\Notifications\JoinDiscussion;
-use App\Notifications\NewConnection;
-use Illuminate\Http\Request;
-use Notification;
 
 class NotificationController extends Controller
 {
+    public function notify(Request $request)
+    {
+
+        // Find user to notify
+        if ($request->has('username') && !is_null($request->username)) {
+            $user = User::where('username', $request->username)->first();
+
+            // get message or set to default
+            $msg = $request->message ?? 'OH NO! You forgot to add a message to the notification.';
+
+            Log::info('notify user ' . $user->id . ' with message ' . $msg);
+            $user->notify(new NotifyMe($request->message));
+
+            return response('Notification created, sending based on service worker setup and production run in frontend.', 200);
+        }
+        return response('No user found in request, can not create push notification', 422);
+    }
 
     public function getnotificationresponse()
     {

@@ -138,12 +138,14 @@ class EventController extends Controller
         foreach ($filtered as $key => $value) {
             $details = [
 
+                'image' => $value['cover'],
+                'title' => 'Event is starting soon - Nzukoor',
                 'from_email' => 'nzukoor@gmail.com',
                 'from_name' => 'Nzukoor',
                 'greeting' => 'Hello',
                 'body' => 'The event, **' . $value['title'] . '** will be starting in few hours. Don\'t forget to Join! ',
                 'actionText' => 'Join here',
-                'url' => "https://nzukoor.com/explore/event/" . $value['id'],
+                'url' => "https://nzukoor.com/member/event/" . $value['id'],
 
             ];
             $emails =  $value->eventattendance()->get()->map(function ($user) {
