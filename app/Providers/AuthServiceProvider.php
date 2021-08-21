@@ -25,7 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
+        Schema::defaultStringLength(191);
         //
         if (!$this->app->routesAreCached()) {
 
