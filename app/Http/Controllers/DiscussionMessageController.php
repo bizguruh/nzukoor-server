@@ -96,8 +96,10 @@ class DiscussionMessageController extends Controller
 
             ];
 
-            $creator = User::find(Discussion::find($request->discussion_id)->user_id);
-            $creator->notify(new NewDiscussionReply($detail));
+            if ($user->id !== Discussion::find($request->discussion_id)->user_id) {
+                $creator = User::find(Discussion::find($request->discussion_id)->user_id);
+                $creator->notify(new NewDiscussionReply($detail));
+            }
 
             return $data->load('admin', 'user', 'facilitator', 'discussionmessagecomment');
         });
