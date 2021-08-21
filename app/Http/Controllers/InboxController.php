@@ -85,9 +85,8 @@ class InboxController extends Controller
 
 
             $data = $message->load('admin', 'user', 'facilitator');
+            $data->receiver = $receiver;
             broadcast(new MessageSent($receiver, new SingleInboxResource($data)))->toOthers();
-
-
             $receiver->notify(new NewMessage($detail));
             return $message->load('admin', 'user', 'facilitator');
         });
