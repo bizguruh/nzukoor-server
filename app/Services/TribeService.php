@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Tribe;
 use App\Support\Collection;
 
-class  Tribeservice
+class  TribeService
 {
 
   public function create($user, $request)

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tribe;
-use App\Services\Tribeservice;
+use App\Services\TribeService;
 use Illuminate\Http\Request;
 
 class TribeController extends Controller
@@ -12,7 +12,7 @@ class TribeController extends Controller
     public $user;
     public $tribeservice;
 
-    public function __construct(Tribeservice $tribeservice)
+    public function __construct(TribeService $tribeservice)
     {
         $this->user = auth('api')->user();
         $this->tribeservice = $tribeservice;
