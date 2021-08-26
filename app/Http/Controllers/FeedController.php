@@ -42,7 +42,7 @@ class FeedController extends Controller
     }
     public function guestfeeds()
     {
-        return Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->paginate(15);
+        return Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->paginate(15);
     }
     public function index()
     {
@@ -138,7 +138,7 @@ class FeedController extends Controller
         }
 
         $tags = $user->interests ? json_decode($user->interests) : [];
-        $feeds = Feed::get()->toArray();
+        $feeds = Feed::where('tribe_id', null)->get()->toArray();
         $allfeeds = [];
         if (count($feeds)) {
             if (count($tags)) {
@@ -163,7 +163,7 @@ class FeedController extends Controller
     }
     public function getTrendingFeedInterest()
     {
-        $interests = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) {
+        $interests = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) {
             return json_decode($i->tags);
         })->filter(function ($tag) {
             return $tag;
@@ -171,7 +171,7 @@ class FeedController extends Controller
             return $a->text;
         })->unique();
 
-        $feeds  = Feed::get()->map(function ($i) {
+        $feeds  = Feed::where('tribe_id', null)->get()->map(function ($i) {
             if (!is_null($i->tags) && count(json_decode($i->tags)))
                 $i->tags = collect(json_decode($i->tags))->map(function ($v) {
                     return $v->text;
@@ -207,7 +207,7 @@ class FeedController extends Controller
 
     public function getSpecificFeed($interest)
     {
-        $feeds = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) use ($interest) {
+        $feeds = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) use ($interest) {
             if (!is_null($i->tags) && count(json_decode($i->tags)))
                 $i->tags = collect(json_decode($i->tags))->map(function ($v) {
                     return $v->text;
@@ -245,7 +245,7 @@ class FeedController extends Controller
 
         if (is_null($user->interests)) return;
         $interests = json_decode($user->interests);
-        $feeds = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->filter(function ($f)
+        $feeds = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->filter(function ($f)
         use ($interests) {
             $tags = collect(json_decode($f->tags))->map(function ($t) {
                 return $t->value;
@@ -295,7 +295,7 @@ class FeedController extends Controller
 
         $myfeeds = $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->toArray();
 
-        $feeds = Feed::orWhereIn('facilitator_id', $facilitators)
+        $feeds = Feed::where('tribe_id', null)->orWhereIn('facilitator_id', $facilitators)
             ->orWhereIn('user_id', $users)
             ->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')
             ->latest()
@@ -309,7 +309,7 @@ class FeedController extends Controller
     }
     public function trendingFeedsByComments()
     {
-        $sorted = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->sortByDesc(function ($f) {
+        $sorted = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->sortByDesc(function ($f) {
             return count($f['comments']);
         });
 
@@ -348,6 +348,7 @@ class FeedController extends Controller
             'url' => $request->url,
             'publicId' => $request->publicId,
             'message' => $request->message,
+            'tribe_id' => $request->tribe_id,
             'tags' => json_encode($request->tags)
         ]);
         broadcast(new AddFeed($user, $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')))->toOthers();

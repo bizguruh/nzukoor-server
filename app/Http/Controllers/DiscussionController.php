@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tribe;
 use App\Models\Discussion;
 use Illuminate\Http\Request;
 
@@ -29,14 +30,13 @@ class DiscussionController extends Controller
             $user = auth('api')->user();
         }
 
-        return Discussion::where('organization_id', $user->organization_id)
-            ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        return Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
     }
 
 
     public function guestdiscussions()
     {
-        return Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->latest()->get();
+        return Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->latest()->get();
     }
 
     public function customdiscussions()
@@ -68,7 +68,7 @@ class DiscussionController extends Controller
         })->map(function ($f) {
             return $f->user_id;
         });
-        return Discussion::orWhereIn('facilitator_id', $facilitators)
+        return Discussion::where('tribe_id', null)->orWhereIn('facilitator_id', $facilitators)
             ->orWhereIn('user_id', $users)
             ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')
             ->latest()
@@ -76,10 +76,20 @@ class DiscussionController extends Controller
     }
 
 
+
     public function trenddiscussions()
     {
 
-        $discussion = Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->get();
+        $discussion = Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->get();
+        $sorted = $discussion->sortByDesc(function ($a) {
+            return count($a['discussionmessage']);
+        });
+        return $sorted->values()->all();
+    }
+    public function tribetrenddiscussions(Tribe $tribe)
+    {
+
+        $discussion = $tribe->load('discussions')->discussions;
         $sorted = $discussion->sortByDesc(function ($a) {
             return count($a['discussionmessage']);
         });
@@ -103,7 +113,7 @@ class DiscussionController extends Controller
 
         if (is_null($user->interests)) return;
         $interests = json_decode($user->interests);
-        $discussion = Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $discussion = Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
         $result =   $discussion->filter(function ($a) use ($interests) {
             $tags = collect(json_decode($a->tags))->map(function ($t) {
                 return $t->value;
@@ -129,7 +139,8 @@ class DiscussionController extends Controller
             'name' => 'required',
             'description' => 'required',
             'category' => 'required',
-            'tags' => ' required'
+            'tags' => ' required',
+
         ]);
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
@@ -157,6 +168,7 @@ class DiscussionController extends Controller
             'creator' => $sender,
             'description' => $request->description,
             'course_id' => $request->course_id,
+            'tribe_id' => $request->tribe_id,
             'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ]);
 
@@ -186,9 +198,9 @@ class DiscussionController extends Controller
         }
 
 
-        $alldiscussions =  Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $alldiscussions =  Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
 
-        $discussion = Discussion::find($id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->first();
+        $discussion = Discussion::where('tribe_id', null)->find($id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->first();
 
         $newdis = [];
         foreach ($alldiscussions as $key => $value) {
@@ -213,7 +225,7 @@ class DiscussionController extends Controller
         }
 
 
-        $alldiscussions =  Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->get();
+        $alldiscussions =  Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->get();
         $discussion = Discussion::where('id', $id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions')->first();
         $related =  $alldiscussions->filter(function ($a) use ($discussion) {
 
@@ -248,7 +260,7 @@ class DiscussionController extends Controller
         }
 
 
-        $alldiscussions =  Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $alldiscussions =  Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
 
         $related =  $alldiscussions->filter(function ($a) use ($discussion) {
 

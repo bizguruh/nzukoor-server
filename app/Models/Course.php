@@ -11,6 +11,7 @@ class Course extends Model
 
     protected $fillable = [
         'title',
+        'tribe_id',
         'description',
         'course_code',
         'cover',
@@ -22,6 +23,11 @@ class Course extends Model
         'total_modules'
 
     ];
+
+    public function tribe()
+    {
+        return $this->belongsTo(Tribe::class);
+    }
 
     public function facilitatormodules()
     {

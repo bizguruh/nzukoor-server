@@ -10,9 +10,13 @@ class Discussion extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['type', 'name', 'description', 'category', 'tags', 'creator', 'course_id', 'organization_id', 'user_id', 'facilitator_id', 'admin_id',];
+    protected $fillable = ['type', 'name', 'description', 'category', 'tags', 'creator', 'course_id', 'tribe_id', 'organization_id', 'user_id', 'facilitator_id', 'admin_id',];
 
 
+    public function tribe()
+    {
+        return $this->belongsTo(Tribe::class);
+    }
     public function contributions()
     {
         return $this->hasMany(Contributor::class);

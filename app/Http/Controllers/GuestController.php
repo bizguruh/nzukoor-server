@@ -29,9 +29,9 @@ class GuestController extends Controller
 
 
 
-        $feeds = Feed::with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->get()->toArray();
-        $courses = Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get()->toArray();
-        $discussions = Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get()->toArray();
+        $feeds = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->get()->toArray();
+        $courses = Course::where('tribe_id', null)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get()->toArray();
+        $discussions = Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get()->toArray();
 
 
 

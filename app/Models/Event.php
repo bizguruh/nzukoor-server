@@ -10,8 +10,12 @@ class Event extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['type', 'venue', 'title', 'description', 'schedule', 'facilitators', 'resource', 'url', 'cover', 'organization_id', 'start', 'end', 'status', 'facilitator_id', 'admin_id'];
+    protected $fillable = ['type', 'venue', 'title', 'description', 'schedule', 'facilitators', 'tribe_id', 'resource', 'url', 'cover', 'organization_id', 'start', 'end', 'status', 'facilitator_id', 'admin_id'];
 
+    public function tribe()
+    {
+        return $this->belongsTo(Tribe::class);
+    }
 
     public  function eventattendance()
     {

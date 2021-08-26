@@ -107,6 +107,7 @@ class EventController extends Controller
             'resource' => $request->resource,
             'organization_id' => $user->organization_id ? $user->organization_id : 1,
             'cover' => $request->cover,
+            'tribe_id' => $request->tribe_id
 
         ]);
         return response($event->load('eventattendance', 'facilitator'), 201);

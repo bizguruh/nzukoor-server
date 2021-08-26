@@ -28,7 +28,7 @@ class CourseController extends Controller
 
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
-            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->id)->latest()->get();
+            return Course::where('tribe_id', null)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->where('organization_id', $user->id)->latest()->get();
         }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
@@ -42,7 +42,7 @@ class CourseController extends Controller
 
 
 
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('organization_id', $user->organization_id)->latest()->get();
+        return Course::where('tribe_id', null)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('organization_id', $user->organization_id)->latest()->get();
     }
 
     public function show($id)
@@ -52,7 +52,7 @@ class CourseController extends Controller
         }
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
-            return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->latest()->get();
+            return Course::where('tribe_id', null)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire')->latest()->get();
         }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
@@ -65,13 +65,13 @@ class CourseController extends Controller
         }
 
 
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('id', $id)->latest()->first();
+        return Course::where('tribe_id', null)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->where('id', $id)->latest()->first();
     }
     public function guestcourses()
     {
 
 
-        return Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get();
+        return Course::where('tribe_id', null)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest()->get();
     }
 
 
@@ -110,6 +110,7 @@ class CourseController extends Controller
                 'cover'  =>  $request->input('general.cover'),
                 'type' => $request->input('general.type'),
                 'amount' => $request->input('general.amount'),
+                'tribe_id' => $request->tribe_id,
                 'organization_id' => $user->organization_id ? $user->organization_id : 1,
             ]);
             $outline = $course->courseoutline()->create([
@@ -204,7 +205,7 @@ class CourseController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        $enrolled = Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get()->toArray();
+        $enrolled = Course::where('tribe_id', null)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get()->toArray();
 
 
 

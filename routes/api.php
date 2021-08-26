@@ -57,6 +57,7 @@ use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\DiscussionMessageCommentController;
+use App\Http\Controllers\TribeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -433,3 +434,17 @@ Route::post('subscription', [SubscriptionController::class, 'store']);
 // delete a subscription for a user
 Route::post('subscription/delete', [SubscriptionController::class, 'destroy']);
 Route::post('notify', [NotificationController::class, 'notify']);
+
+
+// Tribe routes
+Route::apiResource('tribes', TribeController::class);
+Route::get('user/tribes', [TribeController::class, 'getusertribe']);
+Route::get('check/tribe/{tribe}', [TribeController::class, 'checktribe']);
+Route::get('join/tribe/{tribe}', [TribeController::class, 'addusertotribe']);
+Route::get('leave/tribe/{tribe}', [TribeController::class, 'leavetribe']);
+Route::get('get/tribe/feeds/{tribe}', [TribeController::class, 'tribefeeds']);
+Route::get('get/tribe/courses/{tribe}', [TribeController::class, 'tribecourses']);
+Route::get('get/tribe/events/{tribe}', [TribeController::class, 'tribeevents']);
+Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscussions']);
+Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
+Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);
