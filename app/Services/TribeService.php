@@ -88,17 +88,26 @@ class  TribeService
   public function checktribe($tribe, $user)
   {
 
-    $tribeusers = $tribe->users()->get()->filter(function ($a) use ($user) {
-      return $a->id == $user->id;
-    });
+    $users = $tribe->users()->get();
 
-    return count($tribeusers) ? response()->json([
-      'success' => true,
-      'message' => 'found'
-    ]) : response()->json([
-      'success' => true,
-      'message' => 'not found'
-    ]);
+    if (count($users)) {
+      $tribeusers = $users->filter(function ($a) use ($user) {
+        return $a->id == $user->id;
+      });
+
+      return count($tribeusers) ? response()->json([
+        'success' => true,
+        'message' => 'found'
+      ]) : response()->json([
+        'success' => true,
+        'message' => 'not found'
+      ]);
+    } else {
+      return response()->json([
+        'success' => true,
+        'message' => 'not found'
+      ]);
+    }
   }
   public function gettribefeeds($tribe)
   {
