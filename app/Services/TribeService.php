@@ -91,6 +91,7 @@ class  TribeService
     $tribeusers = $tribe->users()->get()->filter(function ($a) use ($user) {
       return $a->id == $user->id;
     });
+
     return count($tribeusers) ? response()->json([
       'success' => true,
       'message' => 'found'

@@ -237,7 +237,7 @@ class MailController extends Controller
 
         Mail::to($request->users)->send(new DiscussionInvite($details));
 
-        $url = "https://nzukoor.com/explore/discussion/" . $request->id;
+        $url = "https://nzukoor.com/member/discussion/" . $request->id;
         $body = 'I just started a discussion, <b>' . $request->title . '</b> on Nzukoor and I’d like to hear your thoughts. <br> <a href=' . $url . '>' . $url . '</a>';
 
 
