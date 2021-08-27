@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Tribe;
 use App\Models\Discussion;
 use Illuminate\Http\Request;
+use App\Models\DiscussionMessage;
+use App\Models\DiscussionMessageComment;
 
 class DiscussionController extends Controller
 {
@@ -31,6 +34,24 @@ class DiscussionController extends Controller
         }
 
         return Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+    }
+    public function discussionmembers($id)
+    {
+        $discussion = Discussion::where('id', $id)->first();
+
+        $usersmessage = DiscussionMessage::where('discussion_id', $id)->get()->pluck('user_id');
+        $userscomment = DiscussionMessageComment::where('discussion_id', $id)->get()->pluck('user_id');
+        $mergedusers = array_merge($usersmessage->values()->all(), $userscomment->values()->all());
+        array_push($mergedusers, $discussion->user_id);
+
+        $uniquearray = array_unique($mergedusers);
+        return   collect($uniquearray)->map(function ($d) {
+
+            return [
+                'username' => User::find($d)->value('username'),
+                'id' => $d
+            ];
+        });
     }
 
 
@@ -80,7 +101,7 @@ class DiscussionController extends Controller
     public function trenddiscussions()
     {
 
-        $discussion = Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->get();
+        $discussion = Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
         $sorted = $discussion->sortByDesc(function ($a) {
             return count($a['discussionmessage']);
         });

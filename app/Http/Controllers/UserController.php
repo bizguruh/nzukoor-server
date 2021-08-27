@@ -42,6 +42,18 @@ class UserController extends Controller
     {
         return User::with('role')->get();
     }
+    public function getuserbyusername($username)
+    {
+        $user = User::where('username', $username)->first();
+        return  is_null($user) ? response()->json([
+            'message' => 'not found'
+
+        ])
+            : response()->json([
+                'message' => 'found',
+                'data' => $user
+            ]);
+    }
 
     public function userinfo($id)
     {
@@ -51,19 +63,19 @@ class UserController extends Controller
     public function userfeeds($id)
     {
         $user = User::find($id);
-        return   $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get();
+        return   $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->get();
     }
 
     public function userdiscussions($id)
     {
         $user =  User::find($id);
-        return $user->discussions()->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->get();
+        return $user->discussions()->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
     }
 
     public function userevents($id)
     {
         $user =  User::find($id);
-        return $user->event()->with('eventattendance')->get();
+        return $user->event()->with('eventattendance')->latest()->get();
     }
 
     public function userconnections($id)
@@ -166,7 +178,7 @@ class UserController extends Controller
         ]);
 
         $result =  DB::transaction(function () use ($request) {
-            $user = auth('api')->user();
+
             $referral_code =  $this->generateCode(2);
             $check = User::where('referral_code', $referral_code)->first();
             while (!is_null($check)) {
@@ -178,9 +190,6 @@ class UserController extends Controller
             if ($request->referral) {
                 if (CourseCommunityLink::where('code', $request->referral)->first()) {
                     $referral_type = 'group_course';
-                } else if (Organization::where('referral_code', $request->referral)->first()) {
-                    $referral_type = 'organization';
-                    $ref = 'organization';
                 } else {
                     $referral_type = 'normal';
                 }
@@ -190,21 +199,10 @@ class UserController extends Controller
                     if (User::where('referral_code', $request->referral)->with('organization')->first()) {
                         $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
                         $ref = 'member';
-                    } else if (Admin::where('referral_code', $request->referral)->with('organization')->first()) {
-                        $olduser = Admin::where('referral_code', $request->referral)->with('organization')->first();
-                        $ref = 'admin';
-                    } else {
-                        $olduser = Facilitator::where('referral_code', $request->referral)->with('organization')->first();
-                        $ref = 'facilitator';
                     }
                     $organization_id = $olduser->organization_id;
                 }
 
-                if ($referral_type == 'organization') {
-
-                    $olduser = Organization::where('referral_code', $request->referral)->first();
-                    $organization_id = $olduser->id;
-                }
                 if ($referral_type == 'group_course') {
                     $link = CourseCommunityLink::where('code', $request->referral)->first();
                     $olduser = User::find($link->user_id)->first();
@@ -213,7 +211,7 @@ class UserController extends Controller
                 }
 
                 $newuser = User::create([
-                    'organization_id' => $organization_id,
+                    'organization_id' => $organization_id ? $organization_id : 1,
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -358,6 +356,11 @@ class UserController extends Controller
                     'to' => 'user',
                     'id' => $newuser->id
                 ];
+            }
+
+            if ($request->tribe_id) {
+                $tribe = Tribe::find($request->tribe_id);
+                $tribe->users()->attach($newuser->id);
             }
 
 

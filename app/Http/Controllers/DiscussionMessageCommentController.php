@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Discussion;
+use Illuminate\Http\Request;
+use App\Notifications\CommentReply;
 use App\Models\DiscussionMessageComment;
 use App\Notifications\NewDiscussionReply;
-use Illuminate\Http\Request;
 
 class DiscussionMessageCommentController extends Controller
 {
@@ -75,7 +77,20 @@ class DiscussionMessageCommentController extends Controller
             'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ]);
 
-        //  broadcast(new AddDiscussion($user, $data->load('admin', 'user', 'facilitator')))->toOthers();
+        $discussion = Discussion::find($request->discussion_id)->value('name');
+        $body = $user->username . ' replied your comment - ' . $discussion;
+        $owner = User::find(DiscussionMessageComment::where('discussion_message_id', $request->message_id)->value('user_id'));
+        $details = [
+            'from_email' => 'nzukoor@gmail.com',
+            'from_name' => 'Nzukoor',
+            'greeting' => 'Hello ' . $owner->username,
+            'body' => $body,
+            'actionText' => 'Click to view',
+            'url' => "https://nzukoor.com/explore/discussion/" . $request->discussion_id,
+
+        ];
+
+        $owner->notify(new CommentReply($details));
 
         return response($data->load('admin', 'user', 'facilitator'), 201);
     }

@@ -25,11 +25,17 @@ class  TribeService
       'data' => $tribe->load('users')
     ], 201);
   }
+  public function getmembers($tribe, $user)
+  {
+    return $tribe->users()->get()->filter(function ($a) use ($user) {
+      return $a->id != $user->id;
+    });
+  }
 
   public function suggestedtribe($user)
   {
     $mytribe = $user->tribes()->get()->pluck('id');
-    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users')->get();
+    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users', 'users', 'courses', 'discussions', 'feeds', 'events')->get();
     $interests = json_decode($user->interests);
 
     $result =  $tribe->filter(function ($a) use ($interests) {
@@ -46,7 +52,7 @@ class  TribeService
   public function usertribe($user)
   {
 
-    return  $user->tribes()->with('users')->latest()->paginate(10);
+    return  $user->tribes()->with('users', 'users', 'courses', 'discussions', 'feeds', 'events')->latest()->paginate(10);
   }
   public function gettribe($tribe)
   {

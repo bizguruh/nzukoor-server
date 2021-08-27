@@ -204,6 +204,8 @@ Route::middleware(['auth:api'])->group(function () {
 
 Route::post('user-register', [UserController::class, 'storeuser']);
 
+Route::get('get/userprofile/{username}', [UserController::class, 'getuserbyusername']);
+
 // User api routes ends here
 
 
@@ -232,6 +234,7 @@ Route::get('trending/discussions', [DiscussionController::class, 'trenddiscussio
 Route::get('interest/discussions', [DiscussionController::class, 'interestdiscussions']);
 
 Route::apiResource('discussion-messages', DiscussionMessageController::class);
+Route::get('get/discussion/members/{id}', [DiscussionController::class, 'discussionmembers']);
 Route::apiResource('discussion/message/replies', DiscussionMessageCommentController::class);
 
 Route::apiResource('views', DiscussionViewController::class);
@@ -439,6 +442,7 @@ Route::post('notify', [NotificationController::class, 'notify']);
 // Tribe routes
 Route::apiResource('tribes', TribeController::class);
 Route::get('user/tribes', [TribeController::class, 'getusertribe']);
+Route::get('tribe/members/{tribe}', [TribeController::class, 'tribemembers']);
 Route::get('check/tribe/{tribe}', [TribeController::class, 'checktribe']);
 Route::get('join/tribe/{tribe}', [TribeController::class, 'addusertotribe']);
 Route::get('leave/tribe/{tribe}', [TribeController::class, 'leavetribe']);
@@ -448,3 +452,4 @@ Route::get('get/tribe/events/{tribe}', [TribeController::class, 'tribeevents']);
 Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscussions']);
 Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
 Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);
+Route::post('tribe/invite', [MailController::class, 'sendtribeinvite']);

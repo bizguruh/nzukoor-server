@@ -22,7 +22,12 @@ class TribeController extends Controller
     public function index()
     {
 
-        return Tribe::with('users')->paginate(15);
+        return Tribe::with('users', 'courses', 'discussions', 'feeds', 'events')->paginate(15);
+    }
+
+    public function tribemembers(Tribe $tribe)
+    {
+        return $this->tribeservice->getmembers($tribe, $this->user);
     }
 
     public function suggestedtribe()

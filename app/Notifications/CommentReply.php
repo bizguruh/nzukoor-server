@@ -3,18 +3,14 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use NotificationChannels\WebPush\WebPushChannel;
-use NotificationChannels\WebPush\WebPushMessage;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class FeedInteraction extends Notification
+class CommentReply extends Notification
 {
     use Queueable;
 
-    public $details;
     /**
      * Create a new notification instance.
      *
@@ -33,20 +29,7 @@ class FeedInteraction extends Notification
      */
     public function via($notifiable)
     {
-        return [WebPushChannel::class, 'database'];
-    }
-
-    public function toWebPush($notifiable, $notification)
-    {
-
-        Log::info('*** toWebPush ***');
-        Log::info('*** new message: ' . $this->details['title']);
-
-        return (new WebPushMessage)
-            ->title($this->details['title'])
-            ->body($this->details['message'])
-            ->image($this->details['image'])
-            ->data($this->details['url']);
+        return ['database', 'mail'];
     }
 
     /**
@@ -58,9 +41,10 @@ class FeedInteraction extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->greeting($this->details['greeting'])
+            ->line($this->details['body'])
+            ->action($this->details['actionText'], $this->details['url'])
+            ->line('Thanks');
     }
 
     /**
@@ -69,10 +53,17 @@ class FeedInteraction extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
+    public function toArray($notifiable)
+    {
+        return [
+            //
+        ];
+    }
     public function toDatabase($notifiable)
     {
         return [
-            'notification' => $this->details['body']
+            'notification' => $this->details['body'],
+            'url' => $this->details['url']
 
         ];
     }

@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NotificationSent;
+use App\Models\User;
+use App\Models\Tribe;
 use App\Mail\ContactMail;
-use App\Mail\DiscussionInvite;
 use App\Mail\EventInvite;
-use App\Mail\GroupCourseInvite;
+use App\Mail\TribeInvite;
 use App\Mail\ReferralInvite;
 use App\Models\Organization;
-use App\Notifications\GroupInvite;
-use App\Notifications\RoleInvite;
 use Illuminate\Http\Request;
+use App\Mail\DiscussionInvite;
+use App\Mail\GroupCourseInvite;
+use App\Events\NotificationSent;
+use App\Notifications\RoleInvite;
+use App\Notifications\GroupInvite;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
@@ -22,9 +25,8 @@ class MailController extends Controller
 
 
         $userorg = auth('organization')->user();
-        $name = trim($user->name);
-        $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
-        $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
+        $name = trim($user->username);
+
         if ($user->role == 'admin') {
             $body = 'You have been invited by ' . $organization . ' to be an ' . $user->role . ' on Nzukoor';
         } else {
@@ -33,8 +35,8 @@ class MailController extends Controller
 
         $details = [
             'from_email' => 'nzukoor@gmail.com',
-            'from_name' => 'Nzukoor',
-            'greeting' => 'Hello ' . $first_name,
+            'from_name' => 'Nzukoor Team',
+            'greeting' => 'Hello ' . $name,
             'body' => $body,
             'actionText' => 'Click to login',
             'url' => "https://nzukoor.com/login",
@@ -56,7 +58,7 @@ class MailController extends Controller
         ];
         Mail::send('email.organizationwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject('Here’s Your Passport To Be More ');
-            $message->from('nzukoor@gmail.com', 'Nzukoor');
+            $message->from('nzukoor@gmail.com', 'Nzukoor Team');
         });
     }
 
@@ -98,7 +100,7 @@ class MailController extends Controller
         $organization = Organization::find($user->organization_id);
         $data = [
             'code' => $request->code,
-            'name' => $user->name,
+            'name' => $user->username,
             'organization' => $organization->name,
             'from' => $user->email,
             'url' => 'https://nzukoor.com/register/?referral_code=' . $request->code
@@ -107,29 +109,20 @@ class MailController extends Controller
     }
 
 
-    public function sendcourseinvite(Request $request)
+    public function sendtribeinvite(Request $request)
     {
 
-
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $body = 'I created a course titled, **' . $request->title . '** on Nzukoor.';
-            $title = ' I think You’d Want To See This!';
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $body = 'I created a course titled, **' . $request->title .  '** on Nzukoor.';
-            $title = ' I think You’d Want To See This!';
-        }
+        $tribe  = Tribe::find($request->id);
         if (auth('api')->user()) {
             $user = auth('api')->user();
-            $body = 'Lets enroll for the course titled, **' . $request->title .  '** on Nzukoor.';
-            $title = ' Let’s Unlock A New Skill';
+            $body = 'You have been invited to join my tribe, **' . $tribe->name .  '** on Nzukoor.';
+            $title = 'Come Join My Tribe!';
         }
-        $name = trim($user->name);
+        $name = trim($user->username);
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
 
+        $url = 'https://nzukoor.com/register?tribe_id=' . $request->id;
 
 
 
@@ -137,19 +130,21 @@ class MailController extends Controller
 
             'title' => $title,
             'from_email' => 'nzukoor@gmail.com',
-            'from_name' => 'Nzukoor',
-            'greeting' => 'Hello ',
+            'from_name' => 'Nzukoor Team',
+            'greeting' => 'Hello Friend',
             'body' => $body,
-            'actionText' => 'Check it out here',
-            'url' => $request->url,
-            'sender' => $user->name,
-            'code' => $request->code
+            'actionText' => 'Click to ',
+            'url' => $url,
+            'sender' => $user->username,
+
 
         ];
 
-        Mail::to($request->users)->send(new GroupCourseInvite($details));
+        Mail::to($request->emails)->send(new TribeInvite($details));
         return response($details, 200);
     }
+
+
     public function guestsendcourseinvite(Request $request)
     {
 
@@ -197,7 +192,7 @@ class MailController extends Controller
     public function senddiscussioninvite(Request $request)
     {
 
-        if (!auth('admin')->user() && !auth('admin')->user() && !auth('admin')->user()) {
+        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
             $details = [
 
                 'from_email' => 'nzukoor@gmail.com',
@@ -205,7 +200,7 @@ class MailController extends Controller
                 'greeting' => 'Hello',
                 'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
                 'actionText' => 'Join here',
-                'url' => "https://nzukoor.com/discussion/" . $request->id,
+                'url' => "https://nzukoor.com/explore/discussion/" . $request->id,
 
             ];
 
@@ -236,11 +231,32 @@ class MailController extends Controller
             'greeting' => 'Hello',
             'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
             'actionText' => 'Join here',
-            'url' => "https://nzukoor.com/discussion/" . $request->id,
+            'url' => "https://nzukoor.com/explore/discussion/" . $request->id,
 
         ];
 
         Mail::to($request->users)->send(new DiscussionInvite($details));
+
+        $url = "https://nzukoor.com/explore/discussion/" . $request->id;
+        $body = 'I just started a discussion, <b>' . $request->title . '</b> on Nzukoor and I’d like to hear your thoughts. <br> <a href=' . $url . '>' . $url . '</a>';
+
+
+        foreach ($request->users as $key => $value) {
+
+            $user_id = User::where('email', $value['email'])->value('id');
+
+            if (!is_null($user_id)) {
+                $user->inbox()->create([
+                    'message' => $body,
+                    'attachment' => '',
+                    'receiver' => 'user',
+                    'receiver_id' => $user_id,
+                    'status' => false,
+
+                ]);
+            }
+        }
+
         return response($details, 200);
     }
 
@@ -256,7 +272,7 @@ class MailController extends Controller
                 'greeting' => 'Hello',
                 'body' => 'I will be attending the event, **' . $request->title . '** on Nzukoor and I think you’d like it. Join me! ',
                 'actionText' => 'Join here',
-                'url' => "https://nzukoor.com/event/" . $request->id,
+                'url' => "https://nzukoor.com/explore/event/" . $request->id,
 
             ];
 
