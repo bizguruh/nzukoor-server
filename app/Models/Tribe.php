@@ -21,18 +21,18 @@ class Tribe extends Model
 
     public function events()
     {
-        return $this->hasMany(Event::class)->with('eventattendance', 'facilitator');
+        return $this->hasMany(Event::class)->with('eventattendance', 'facilitator')->latest();
     }
     public function courses()
     {
-        return $this->hasMany(Course::class)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount');
+        return $this->hasMany(Course::class)->with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->latest();
     }
     public function discussions()
     {
-        return $this->hasMany(Discussion::class)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview');
+        return $this->hasMany(Discussion::class)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest();
     }
     public function feeds()
     {
-        return $this->hasMany(Feed::class)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars');
+        return $this->hasMany(Feed::class)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest();
     }
 }
