@@ -56,7 +56,8 @@ class JoinDiscussion extends Notification
             'id' => $this->details['id'],
             'sender_id' => $this->details['sender_id'],
             'sender' => $this->details['sender'],
-            'type' => 'discussion request'
+            'type' => 'discussion request',
+            'url' => $this->details['url']
 
         ];
     }

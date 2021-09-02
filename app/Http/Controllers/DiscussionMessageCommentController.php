@@ -90,7 +90,9 @@ class DiscussionMessageCommentController extends Controller
 
         ];
 
-        $owner->notify(new CommentReply($details));
+        if (!$owner->username !== $user->username) {
+            $owner->notify(new CommentReply($details));
+        }
 
         return response($data->load('admin', 'user', 'facilitator'), 201);
     }
