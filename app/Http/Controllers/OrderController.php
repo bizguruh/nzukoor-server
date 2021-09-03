@@ -8,6 +8,7 @@ use App\Models\EnrollCount;
 use App\Models\HighestEarningCourse;
 use App\Models\Order;
 use App\Models\Revenue;
+use App\Models\Tribe;
 use App\Notifications\CoursePurchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,7 @@ class OrderController extends Controller
             return ('Unauthorized');
         }
 
+
         $result = DB::transaction(function () use ($request) {
             if (auth('admin')->user()) {
                 $user = auth('admin')->user();
@@ -68,57 +70,64 @@ class OrderController extends Controller
                 'transaction' => $request->transaction,
                 'trxref' => $request->trxref,
                 'redirecturl' =>  $request->redirecturl,
-                'course_id' => $request->course_id,
+                'item_id' => $request->item_id,
+                'type' => $request->type,
                 'organization_id' => $user->organization_id ? $user->organization_id : 1,
             ]);
 
             if ($request->status == 'success') {
-                $user->library()->create([
-                    'course_id' => $request->course_id
-                ]);
+                if ($request->type == 'tribe') {
+                    $tribe = Tribe::find($request->item_id);
+                    $tribe->users()->attach($user->id);
+                }
+                // $user->library()->create([
+                //     'course_id' => $request->course_id
+                // ]);
+
+
             }
-            $enroll = EnrollCount::where('course_id', $request->course_id)->where('organization_id', $user->organization_id)->first();
+            // $enroll = EnrollCount::where('course_id', $request->course_id)->where('organization_id', $user->organization_id)->first();
 
-            if (is_null($enroll)) {
-                EnrollCount::create([
-                    'course_id' => $request->course_id,
-                    'organization_id' => $user->organization_id ? $user->organization_id : 1,
-                    'count' => 1
-                ]);
-            } else {
-                $enroll->count = $enroll->count + 1;
-                $enroll->save();
-            }
+            // if (is_null($enroll)) {
+            //     EnrollCount::create([
+            //         'course_id' => $request->course_id,
+            //         'organization_id' => $user->organization_id ? $user->organization_id : 1,
+            //         'count' => 1
+            //     ]);
+            // } else {
+            //     $enroll->count = $enroll->count + 1;
+            //     $enroll->save();
+            // }
 
-            $course = Course::find($request->course_id);
+            // $course = Course::find($request->course_id);
 
-            Revenue::create([
-                'course_id' => $request->course_id,
-                'organization_id' => $user->organization_id ? $user->organization_id : 1,
-                'revenue' => $course->amount
-            ]);
-
-
-            $highestearning  = HighestEarningCourse::where('course_id', $request->course_id)->first();
-            if (is_null($highestearning)) {
-                HighestEarningCourse::create([
-                    'course_id' => $request->course_id,
-                    'organization_id' => $user->organization_id ? $user->organization_id : 1,
-                    'revenue' => $course->amount
-                ]);
-            } else {
-                $highestearning->revenue = $highestearning->revenue + $course->amount;
-                $highestearning->save();
-            }
+            // Revenue::create([
+            //     'course_id' => $request->course_id,
+            //     'organization_id' => $user->organization_id ? $user->organization_id : 1,
+            //     'revenue' => $course->amount
+            // ]);
 
 
-            $body = "Thanks for your purchase of the course, " . strtoupper(Course::find($request->course_id)->title) . ", it has been added to your library ";
+            // $highestearning  = HighestEarningCourse::where('course_id', $request->course_id)->first();
+            // if (is_null($highestearning)) {
+            //     HighestEarningCourse::create([
+            //         'course_id' => $request->course_id,
+            //         'organization_id' => $user->organization_id ? $user->organization_id : 1,
+            //         'revenue' => $course->amount
+            //     ]);
+            // } else {
+            //     $highestearning->revenue = $highestearning->revenue + $course->amount;
+            //     $highestearning->save();
+            // }
+
+
+            $body = "Your payment for the tribe, " . strtoupper($tribe->name) . ", was successful ";
             $details = [
                 'body' => $body,
-                'id' => $request->course_id,
+                'id' => $request->item_id,
             ];
-            $user->notify(new CoursePurchase($details));
-            broadcast(new NotificationSent());
+            //$user->notify(new CoursePurchase($details));
+            //broadcast(new NotificationSent());
             return $result;
         });
 

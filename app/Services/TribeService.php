@@ -14,6 +14,7 @@ class  TribeService
     $tribe = Tribe::create([
       'name' => $request->name,
       'cover' => $request->cover,
+      'type' => $request->type,
       'description' => $request->description,
       'category' => json_encode($request->category),
       'tags' => json_encode($request->tags)

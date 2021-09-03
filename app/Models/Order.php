@@ -20,7 +20,8 @@ class Order extends Model
         'user_id',
         'facilitator_id',
         'admin_id',
-        'organization_id'
+        'organization_id',
+        'item_id', 'type'
     ];
     public function user()
     {
