@@ -89,7 +89,7 @@ class TribeController extends Controller
 
     public function update(Request $request, Tribe $tribe)
     {
-        return $this->tribeservice($this->user, $request, $tribe);
+        return $this->tribeservice->update($this->user, $request, $tribe);
     }
 
 

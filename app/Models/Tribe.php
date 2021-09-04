@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tribe extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'name', 'description', 'cover', 'category', 'tags', 'type'];
+    protected $fillable = ['user_id', 'name', 'description', 'cover', 'category', 'tags', 'type', 'amount'];
 
     public function users()
     {

@@ -15,6 +15,7 @@ class  TribeService
       'name' => $request->name,
       'cover' => $request->cover,
       'type' => $request->type,
+      'amount' => $request->amount,
       'description' => $request->description,
       'category' => json_encode($request->category),
       'tags' => json_encode($request->tags)
@@ -23,7 +24,7 @@ class  TribeService
     return response([
       'success' => true,
       'message' => 'creation successful',
-      'data' => $tribe->load('users')
+      'data' => $tribe->load('users', 'courses', 'discussions', 'feeds', 'events')
     ], 201);
   }
   public function getmembers($tribe, $user)
@@ -53,7 +54,7 @@ class  TribeService
   public function usertribe($user)
   {
 
-    return  $user->tribes()->with('users', 'users', 'courses', 'discussions', 'feeds', 'events')->latest()->paginate(10);
+    return  $user->tribes()->with('users', 'courses', 'discussions', 'feeds', 'events')->latest()->paginate(10);
   }
   public function gettribe($tribe)
   {
@@ -67,6 +68,8 @@ class  TribeService
   public function update($user, $request, $tribe)
   {
     $tribe->name = $request->name;
+    $tribe->type = $request->type;
+    $tribe->amount = $request->amount;
     $tribe->cover = $request->cover;
     $tribe->description = $request->description;
     $tribe->save();

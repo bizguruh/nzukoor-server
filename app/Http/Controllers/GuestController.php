@@ -15,10 +15,8 @@ class GuestController extends Controller
     public function getmembers()
     {
         $users = User::get()->toArray();
-        $facilitators = Facilitator::get()->toArray();
-        $members = array_merge($users, $facilitators);
 
-        $sorted = collect($members)->sortBy(function ($a) {
+        $sorted = collect($users)->sortBy(function ($a) {
             return $a['created_at'];
         });
         return $sorted->values()->all();

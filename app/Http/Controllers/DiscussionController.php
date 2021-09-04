@@ -48,7 +48,7 @@ class DiscussionController extends Controller
         return   collect($uniquearray)->map(function ($d) {
 
             return [
-                'username' => User::find($d)->value('username'),
+                'username' => User::find($d)->username,
                 'id' => $d
             ];
         });
