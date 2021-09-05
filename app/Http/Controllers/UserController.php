@@ -44,7 +44,7 @@ class UserController extends Controller
     }
     public function getuserbyusername($username)
     {
-        $user = User::where('username', $username)->first();
+        $user = User::where(strtolower('username'), strtolower($username))->first();
         return  is_null($user) ? response()->json([
             'message' => 'not found'
 
