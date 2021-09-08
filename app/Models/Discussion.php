@@ -15,7 +15,7 @@ class Discussion extends Model
 
     public function tribe()
     {
-        return $this->belongsTo(Tribe::class);
+        return $this->belongsTo(Tribe::class)->with('discussions', 'users');
     }
     public function contributions()
     {

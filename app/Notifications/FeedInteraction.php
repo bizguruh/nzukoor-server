@@ -72,7 +72,7 @@ class FeedInteraction extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'notification' => $this->details['message'],
+            'notification' => $this->details['title'] . ' - ' . $this->details['message'],
             'url' => $this->details['url']
 
         ];

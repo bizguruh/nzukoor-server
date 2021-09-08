@@ -141,7 +141,7 @@ class NotificationController extends Controller
             'from_name' => 'Nzukoor',
             'from_email' => 'nzukoor@gmail.com',
             'greeting' => 'Hello',
-            'body' => $user->name . " added you has a connection",
+            'body' => $user->name . " added you as a connection",
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
             'url' => "https://nzukoor.com/member/connections",
