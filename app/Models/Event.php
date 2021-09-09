@@ -10,7 +10,7 @@ class Event extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['type', 'venue', 'title', 'description', 'schedule', 'facilitators', 'tribe_id', 'resource', 'url', 'cover', 'organization_id', 'start', 'end', 'status', 'facilitator_id', 'admin_id'];
+    protected $fillable = ['type', 'venue', 'title', 'description', 'schedule', 'facilitators', 'tribe_id', 'resource', 'url', 'cover', 'organization_id', 'start', 'end', 'status', 'facilitator_id', 'admin_id', 'user_id'];
 
     public function tribe()
     {
@@ -24,6 +24,10 @@ class Event extends Model
     public  function organization()
     {
         return $this->belongsTo(Organization::class);
+    }
+    public  function user()
+    {
+        return $this->belongsTo(User::class);
     }
     public  function admin()
     {

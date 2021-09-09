@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\Event;
-use App\Models\User;
-use App\Notifications\EventReminder;
+use App\Events\NotificationSent;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Event;
+use App\Models\Tribe;
 use Illuminate\Http\Request;
+use App\Notifications\EventReminder;
+use App\Notifications\NewTribeEvent;
 use Illuminate\Support\Facades\Notification;
 
 
@@ -110,6 +112,22 @@ class EventController extends Controller
             'tribe_id' => $request->tribe_id
 
         ]);
+        $tribe = Tribe::find($request->tribe_id);
+        $tribemembers = $tribe->users()->get();
+        $details = [
+            'from_email' => 'nzukoor@gmail.com',
+            'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
+            'greeting' => 'Hello ',
+            'body' => 'New Tribe Event Alert! ' . $user->username . " just created a new event in" . $tribe->name . 'Tribe',
+            'thanks' => 'Thanks',
+            'actionText' => 'Click to view',
+            'url' => 'https://nzukoor.com/member/tribes',
+
+        ];
+
+
+        Notification::send($tribemembers, new NewTribeEvent($details));
+        broadcast(new NotificationSent());
         return response($event->load('eventattendance', 'facilitator'), 201);
     }
 

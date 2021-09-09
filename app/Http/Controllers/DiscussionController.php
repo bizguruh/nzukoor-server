@@ -8,6 +8,8 @@ use App\Models\Discussion;
 use Illuminate\Http\Request;
 use App\Models\DiscussionMessage;
 use App\Models\DiscussionMessageComment;
+use App\Notifications\NewTribeDiscussion;
+use Illuminate\Support\Facades\Notification;
 
 class DiscussionController extends Controller
 {
@@ -200,6 +202,23 @@ class DiscussionController extends Controller
                 'type' => $sender
             ]);
         }
+
+        $tribe = Tribe::find($request->tribe_id);
+        $tribemembers = $tribe->users()->get();
+        $details = [
+            'from_email' => 'nzukoor@gmail.com',
+            'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
+            'greeting' => 'Hello ',
+            'body' => 'New Tribe Discussion Alert! ' . $user->username . " just created a new discussion in" . $tribe->name . 'Tribe',
+            'thanks' => 'Thanks',
+            'actionText' => 'Click to view',
+            'url' => 'https://nzukoor.com/member/tribes',
+
+        ];
+
+
+        Notification::send($tribemembers, new NewTribeDiscussion($details));
+        broadcast(new NotificationSent());
         return $data->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
     }
 

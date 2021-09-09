@@ -113,7 +113,7 @@ class UserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|unique:users',
             'password' => 'required',
-            'phone' => ' required|unique:users'
+
         ]);
 
         $user = auth('organization')->user();
@@ -174,7 +174,7 @@ class UserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|unique:users',
             'password' => 'required',
-            'phone' => ' required|unique:users'
+
         ]);
 
         $result =  DB::transaction(function () use ($request) {

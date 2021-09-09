@@ -24,7 +24,7 @@ class CreateEventsTable extends Migration
             $table->text('resource')->nullable();
             $table->string('cover');
             $table->timestamps();
-
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('organization_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
         });
     }
