@@ -180,11 +180,11 @@ class DiscussionController extends Controller
         }
 
 
-
+        $tribe = Tribe::find($request->tribe_id);
         $data = $user->discussions()->create([
             'type' => $request->type,
             'name' => $request->name,
-            'category' => json_encode($request->category),
+            'category' => $tribe->category,
             'tags' => json_encode($request->tags),
             'creator' => $sender,
             'description' => $request->description,
