@@ -14,6 +14,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TribeController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ReviewController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\FacilitatorController;
 use App\Http\Controllers\FeedCommentController;
 use App\Http\Controllers\SocialLoginController;
+use App\Http\Controllers\TribeSearchController;
 use App\Http\Controllers\LoginHistoryController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationController;
@@ -57,7 +59,6 @@ use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\DiscussionMessageCommentController;
-use App\Http\Controllers\TribeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -453,3 +454,7 @@ Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscu
 Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
 Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);
 Route::post('tribe/invite', [MailController::class, 'sendtribeinvite']);
+
+
+Route::get('search', [TribeSearchController::class, 'search']);
+Route::get('all/tribes', [TribeSearchController::class, 'get']);

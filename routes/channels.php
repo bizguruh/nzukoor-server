@@ -29,3 +29,7 @@ Broadcast::channel('addcomment', function ($user) {
 Broadcast::channel('adddiscussion', function ($user) {
     return Auth::check();
 });
+
+Broadcast::channel('search', function () {
+    return true;
+});
