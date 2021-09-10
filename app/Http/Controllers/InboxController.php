@@ -73,6 +73,7 @@ class InboxController extends Controller
                 'attachment' => $request->attachment,
                 'receiver' => $request->receiver,
                 'receiver_id' => $request->receiver_id,
+                'voicenote' => $request->voicenote,
                 'status' => false,
 
             ]);
