@@ -35,17 +35,17 @@ class EventController extends Controller
             $user = auth('api')->user();
         }
 
-        return Event::with('eventattendance', 'facilitator')->latest()->get();
+        return Event::with('eventattendance', 'facilitator', 'tribe')->latest()->get();
     }
     public function guestindex()
     {
 
-        return Event::with('eventattendance', 'facilitator')->latest()->get();
+        return Event::with('eventattendance', 'facilitator', 'tribe')->latest()->get();
     }
     public function guestevent($id)
     {
 
-        return Event::find($id)->with('eventattendance', 'facilitator')->first();
+        return Event::find($id)->load('eventattendance', 'facilitator', 'tribe');
     }
     public function facilitatorgetevents()
     {
@@ -53,12 +53,12 @@ class EventController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        return Event::with('eventattendance', 'facilitator')->latest()->get();
+        return Event::with('eventattendance', 'facilitator', 'tribe')->latest()->get();
     }
 
     public function facilitatorgetevent($id)
     {
-        return Event::where('id', $id)->with('eventattendance', 'facilitator')->first();
+        return Event::where('id', $id)->with('eventattendance', 'facilitator', 'tribe')->first();
     }
     public function checkEvents()
     {
@@ -128,7 +128,7 @@ class EventController extends Controller
 
         Notification::send($tribemembers, new NewTribeEvent($details));
         broadcast(new NotificationSent());
-        return response($event->load('eventattendance', 'facilitator'), 201);
+        return response($event->load('eventattendance', 'facilitator', 'tribe'), 201);
     }
 
     /**
@@ -139,7 +139,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return $event->load('eventattendance', 'facilitator');
+        return $event->load('eventattendance', 'facilitator', 'tribe');
     }
 
     public function eventReminder()
