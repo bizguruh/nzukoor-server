@@ -13,7 +13,7 @@ class TribeSearchController extends Controller
     {
         $query = $request->query('query');
         $tribes = Tribe::where('name', 'like', '%' . $query . '%')
-            ->orWhere('description', 'like', '%' . $query . '%')
+            ->orWhere('description', 'like', '%' . $query . '%')->with('users')
             ->get();
 
         //broadcast search results with Pusher channels
