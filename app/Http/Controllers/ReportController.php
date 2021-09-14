@@ -33,12 +33,16 @@ class ReportController extends Controller
                 # code...
                 break;
         }
-
-        return  $user->reports()->create([
-            'type' => $type,
-            'type_report_id' => $request->type_report_id,
-            'message' => $request->message,
-            'status' => 'in review'
-        ]);
+        $check = $user->reports()->where('type', $type)->where('type_report_id', $request->type_report_id)->first();
+        if (is_null($check)) {
+            return  $user->reports()->create([
+                'type' => $type,
+                'type_report_id' => $request->type_report_id,
+                'message' => $request->message,
+                'status' => 'in review'
+            ]);
+        } else {
+            return response()->json('reported');
+        }
     }
 }
