@@ -11,6 +11,10 @@ class FeedComment extends Model
 
     protected $fillable = ['feed_id', 'comment', 'admin_id', 'user_id', 'facilitator_id', 'organization_id'];
 
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
     public function feed()
     {
         return $this->belongsTo(Feed::class)->with('admin', 'user', 'facilitator');

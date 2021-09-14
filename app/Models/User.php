@@ -44,6 +44,11 @@ class User extends Authenticatable
         'show_age', 'show_name', 'show_email'
     ];
 
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+
     public function tribes()
     {
         return $this->belongsToMany(Tribe::class)->withPivot('is_owner');

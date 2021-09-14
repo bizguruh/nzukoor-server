@@ -13,6 +13,11 @@ class Discussion extends Model
     protected $fillable = ['type', 'name', 'description', 'category', 'tags', 'creator', 'course_id', 'tribe_id', 'organization_id', 'user_id', 'facilitator_id', 'admin_id',];
 
 
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+
     public function tribe()
     {
         return $this->belongsTo(Tribe::class)->with('discussions', 'users');

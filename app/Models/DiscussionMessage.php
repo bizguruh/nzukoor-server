@@ -13,6 +13,10 @@ class DiscussionMessage extends Model
     protected $table = 'discussion_messages';
     protected $fillable = ['facilitator_id', 'user_id', 'admin_id', 'message', 'attachment', 'publicId', 'discussion_id', 'organization_id'];
 
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
     public function discussion()
     {
         return $this->belongsTo(Discussion::class);

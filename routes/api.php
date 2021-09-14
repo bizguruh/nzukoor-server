@@ -17,6 +17,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TribeController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Notifications\Notification;
 use App\Http\Controllers\LibraryController;
@@ -47,6 +48,7 @@ use App\Http\Controllers\CourseCommunityController;
 use App\Http\Controllers\CourseViewCountController;
 use App\Http\Controllers\EventAttendanceController;
 use App\Http\Controllers\UserInformationController;
+use App\Http\Controllers\FeedCommentReplyController;
 use App\Http\Controllers\MemberAssessmentController;
 use App\Http\Controllers\QuestionResponseController;
 use App\Http\Controllers\QuestionTemplateController;
@@ -59,7 +61,6 @@ use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\DiscussionMessageCommentController;
-use App\Http\Controllers\FeedCommentReplyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -246,6 +247,7 @@ Route::get('add-view/{id}', [DiscussionViewController::class, 'addview']);
 Route::apiResource('votes', DiscussionVoteController::class);
 Route::apiResource('tags', TagController::class);
 Route::apiResource('feeds', FeedController::class);
+Route::apiResource('reports', ReportController::class);
 Route::apiResource('feed/comment/reply', FeedCommentReplyController::class);
 Route::post('feed/comment/reply/like', [FeedCommentReplyController::class, 'replylike']);
 Route::get('trending/feeds', [FeedController::class, 'trendingFeedsByComments']);
