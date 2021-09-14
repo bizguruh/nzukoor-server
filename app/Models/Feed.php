@@ -34,7 +34,7 @@ class Feed extends Model
 
     public function comments()
     {
-        return $this->hasMany(FeedComment::class)->with('admin', 'user', 'facilitator')->latest();
+        return $this->hasMany(FeedComment::class)->with('admin', 'user', 'facilitator', 'feedcommentreplies', 'feedcommentlikes')->latest();
     }
     public function likes()
     {

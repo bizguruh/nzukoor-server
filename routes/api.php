@@ -59,6 +59,7 @@ use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\DiscussionMessageCommentController;
+use App\Http\Controllers\FeedCommentReplyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -245,10 +246,13 @@ Route::get('add-view/{id}', [DiscussionViewController::class, 'addview']);
 Route::apiResource('votes', DiscussionVoteController::class);
 Route::apiResource('tags', TagController::class);
 Route::apiResource('feeds', FeedController::class);
+Route::apiResource('feed/comment/reply', FeedCommentReplyController::class);
+Route::post('feed/comment/reply/like', [FeedCommentReplyController::class, 'replylike']);
 Route::get('trending/feeds', [FeedController::class, 'trendingFeedsByComments']);
 Route::get('custom/feeds', [FeedController::class, 'customFeeds']);
 Route::get('recent/feeds', [FeedController::class, 'recentFeedsByInterest']);
 Route::apiResource('feed-comments', FeedCommentController::class);
+Route::post('feed/comment/like', [FeedCommentController::class, 'commentlike']);
 Route::apiResource('feed-likes', FeedLikeController::class);
 Route::apiResource('feed-stars', FeedStarController::class);
 Route::apiResource('login-history', LoginHistoryController::class);
@@ -450,6 +454,7 @@ Route::get('leave/tribe/{tribe}', [TribeController::class, 'leavetribe']);
 Route::get('get/tribe/feeds/{tribe}', [TribeController::class, 'tribefeeds']);
 Route::get('get/tribe/courses/{tribe}', [TribeController::class, 'tribecourses']);
 Route::get('get/tribe/events/{tribe}', [TribeController::class, 'tribeevents']);
+Route::get('get/tribe/myevents/{tribe}', [TribeController::class, 'mytribeevents']);
 Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscussions']);
 Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
 Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);

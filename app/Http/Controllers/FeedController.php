@@ -278,13 +278,7 @@ class FeedController extends Controller
 
         $connections = $user->connections()->get();
 
-        $facilitators = $connections->filter(function ($a) {
-            if ($a->follow_type == 'facilitator') {
-                return $a;
-            }
-        })->map(function ($f) {
-            return $f->facilitator_id;
-        });
+
         $users = $connections->filter(function ($a) {
             if ($a->follow_type == 'user') {
                 return $a;
@@ -295,8 +289,7 @@ class FeedController extends Controller
 
         $myfeeds = $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->toArray();
 
-        $feeds = Feed::where('tribe_id', null)->orWhereIn('facilitator_id', $facilitators)
-            ->orWhereIn('user_id', $users)
+        $feeds = Feed::orWhereIn('user_id', $users)
             ->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')
             ->latest()
             ->get()->toArray();
@@ -386,7 +379,10 @@ class FeedController extends Controller
      */
     public function update(Request $request, Feed $feed)
     {
-        //
+
+        $feed->message = $request->message;
+        $feed->save();
+        return $feed;
     }
 
     /**

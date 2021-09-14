@@ -126,6 +126,18 @@ class  TribeService
   {
     return   $tribe->load('events')->events;
   }
+  public function getmytribeevents($tribe, $user)
+  {
+    $userevents = $user->eventattendance()->with('event')->get();
+    $events =  $userevents->map(function ($a) {
+      return $a->event;
+    })->filter(function ($b) use ($tribe) {
+      return $b->tribe_id == $tribe->id;
+    });
+    return $events->values()->all();
+  }
+
+
   public function gettribediscussions($tribe)
   {
 

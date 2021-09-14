@@ -50,6 +50,10 @@ class TribeController extends Controller
     {
         return $this->tribeservice->gettribeevents($tribe);
     }
+    public function mytribeevents(Tribe $tribe)
+    {
+        return $this->tribeservice->getmytribeevents($tribe, $this->user);
+    }
 
     public function tribediscussions(Tribe $tribe)
     {

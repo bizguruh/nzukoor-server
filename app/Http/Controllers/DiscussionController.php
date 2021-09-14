@@ -76,13 +76,6 @@ class DiscussionController extends Controller
         }
 
         $connections = $user->connections()->get();
-        $facilitators = $connections->filter(function ($a) {
-            if ($a->follow_type == 'facilitator') {
-                return $a;
-            }
-        })->map(function ($f) {
-            return $f->facilitator_id;
-        });
 
         $users = $connections->filter(function ($a) {
             if ($a->follow_type == 'user') {
@@ -91,8 +84,7 @@ class DiscussionController extends Controller
         })->map(function ($f) {
             return $f->user_id;
         });
-        return Discussion::where('tribe_id', null)->orWhereIn('facilitator_id', $facilitators)
-            ->orWhereIn('user_id', $users)
+        return Discussion::orWhereIn('user_id', $users)
             ->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')
             ->latest()
             ->get();

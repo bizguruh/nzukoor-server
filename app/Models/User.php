@@ -138,6 +138,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(Feed::class);
     }
+    public function feedcommentreplies()
+    {
+        return $this->hasMany(FeedCommentReply::class);
+    }
+    public function feedcommentlikes()
+    {
+        return $this->hasMany(FeedCommentLike::class);
+    }
+    public function feedcommentreplylikes()
+    {
+        return $this->hasMany(FeedCommentReplyLike::class);
+    }
     public function comments()
     {
         return $this->hasMany(FeedComment::class);

@@ -23,9 +23,20 @@ class FeedCommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function commentlike(Request $request)
     {
-        //
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+        $check = $user->feedcommentlikes()->where('feed_comment_id', $request->feed_comment_id)->first();
+        if (is_null($check)) {
+            return   $user->feedcommentlikes()->create([
+                'feed_comment_id' => $request->feed_comment_id
+            ]);
+        } else {
+            $check->delete();
+            return response()->json('deleted');
+        }
     }
 
     /**

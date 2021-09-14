@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EventAttendance extends Model
+class FeedCommentLike extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'event_id'];
-
+    protected $table = 'comment_likes';
+    protected $fillable = ['feed_comment_id', 'user_id'];
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function event()
+    public function feedcomment()
     {
-        return $this->belongsTo(Event::class)->with('eventattendance', 'facilitator', 'tribe');
+        return $this->belongsTo(FeedComment::class);
     }
 }
