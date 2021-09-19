@@ -16,6 +16,8 @@ class NewConnection extends Notification
      *
      * @return void
      */
+    public $details;
+
     public function __construct($details)
     {
         $this->details = $details;

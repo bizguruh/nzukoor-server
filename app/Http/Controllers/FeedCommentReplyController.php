@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Feed;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Events\NotificationSent;
 use App\Models\FeedCommentReply;
+use App\Notifications\LikeComment;
 
 class FeedCommentReplyController extends Controller
 {
@@ -53,12 +55,25 @@ class FeedCommentReplyController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
+        $feed = FeedCommentReply::find($request->feed_comment_reply_id);
+        $creator = User::find($feed->user_id);
+        $message = $user->username . ' liked your reply';
+        $url = 'https://nzukoor.com/member/feed/view/' . $feed->feed_id;
+        $details = [
+            'message' => $message,
+            'url' => $url
+        ];
 
         $check = $user->feedcommentreplylikes()->where('feed_comment_reply_id', $request->feed_comment_reply_id)->first();
         if (is_null($check)) {
-            return   $user->feedcommentreplylikes()->create([
+            $value =   $user->feedcommentreplylikes()->create([
                 'feed_comment_reply_id' => $request->feed_comment_reply_id
             ]);
+            if ($creator->id !== $user->id) {
+                $creator->notify(new LikeComment($details));
+                broadcast(new NotificationSent());
+            }
+            return $value;
         } else {
             $check->delete();
             return response()->json('deleted');

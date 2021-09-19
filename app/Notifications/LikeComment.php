@@ -3,14 +3,11 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use NotificationChannels\WebPush\WebPushChannel;
-use NotificationChannels\WebPush\WebPushMessage;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class NewMessage extends Notification
+class LikeComment extends Notification
 {
     use Queueable;
 
@@ -20,7 +17,7 @@ class NewMessage extends Notification
      *
      * @return void
      */
-    public function __construct($details)
+   public function __construct($details)
     {
         $this->details = $details;
     }
@@ -33,16 +30,7 @@ class NewMessage extends Notification
      */
     public function via($notifiable)
     {
-        return [WebPushChannel::class];
-    }
-
-    public function toWebPush($notifiable, $notification)
-    {
-
-
-        return (new WebPushMessage)
-            ->title($this->details['title'])
-            ->body($this->details['message']);
+        return ['database'];
     }
 
     /**
@@ -54,9 +42,9 @@ class NewMessage extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -69,6 +57,15 @@ class NewMessage extends Notification
     {
         return [
             //
+        ];
+    }
+
+      public function toDatabase($notifiable)
+    {
+        return [
+            'notification' => $this->details['message'],
+            'url' => $this->details['url']
+
         ];
     }
 }
