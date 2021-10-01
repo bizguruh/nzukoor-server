@@ -6,6 +6,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -44,6 +45,18 @@ class User extends Authenticatable
         'show_age', 'show_name', 'show_email'
     ];
 
+    public function accountdetail()
+    {
+        return $this->hasOne(AccountDetail::class);
+    }
+
+
+
+    public function otp()
+    {
+        return $this->hasOne(Otp::class);
+    }
+
     public function reports()
     {
         return $this->hasMany(Report::class);
@@ -74,7 +87,7 @@ class User extends Authenticatable
     }
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->hasMany(Order::class);
     }
 
     public function memberassessment()

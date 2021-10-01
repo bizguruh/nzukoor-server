@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Otp;
 use App\Models\User;
 use App\Models\Admin;
+use App\Mail\OtpReset;
 use App\Models\Course;
 use App\Models\Discussion;
+use App\Mail\memberwelcome;
 use App\Models\EnrollCount;
 use App\Models\Facilitator;
 use Illuminate\Support\Str;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use App\Models\AccountDetail;
 use App\Mail\PasswordResetMail;
 use App\Models\CourseCommunity;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +27,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Notifications\SendNotification;
 use App\Http\Controllers\MailController;
 use App\Http\Resources\ConnectionResource;
-use App\Mail\memberwelcome;
+use App\Http\Controllers\BankDetailController;
 use App\Notifications\PrivateDiscussionCreated;
 
 class UserController extends Controller
@@ -502,12 +506,32 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return $user->load('role');
+        return $user->load('role', 'accountdetail');
     }
 
 
     public function update(Request $request,    User $user)
     {
+
+        if ($request->account_no && $request->bank_name && $request->bank_code) {
+
+            $verify  = new BankDetailController();
+            $accountverification =  $verify->verifyaccountnumber($request->account_no, $request->bank_code);
+            if (!$accountverification) {
+                return response([
+                    'status' => false,
+                    'message' => 'Cannot verify account details'
+                ], 500);
+            }
+            AccountDetail::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'account_no' => $request->account_no,
+                    'bank_code' => $request->bank_code,
+                    'bank_name' => $request->bank_name,
+                ]
+            );
+        }
 
         $user->name = $request->name;
         $user->email = $request->email;
@@ -527,6 +551,11 @@ class UserController extends Controller
         $user->show_email = $request->show_email;
         $user->verification = $request->verification;
         $user->save();
+
+
+
+
+
         return $user;
     }
 
@@ -685,7 +714,7 @@ class UserController extends Controller
                 "success" => false,
                 "message" => 'Invalid request'
 
-            ], 200);
+            ], 500);
         }
 
         if ($request->type == 'user') {
@@ -755,6 +784,73 @@ class UserController extends Controller
 
         ], 200);
     }
+
+    public function createotp(Request $request)
+    {
+
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user =  User::where('email', $request->email)->first();
+
+        if (is_null($user)) {
+
+            return response([
+                'status' => false,
+                'message' => 'Email not found'
+            ], 500);
+        }
+        $code = mt_rand(100000, 999999);
+
+        $otp = Otp::updateOrCreate(
+            ['user_id' => $user->id],
+            ['code' => $code]
+        );
+        $otp->save();
+        $maildata = [
+            'code' => $code
+        ];
+
+        return new OtpReset($maildata);
+    }
+
+    public function changePasswordByOtp(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|min:6|max:6',
+            'password' => 'required|string|min:6',
+            'confirmpassword' => 'required',
+        ]);
+        $user_id  = Otp::where('code', $request->code)->value('user_id');
+
+        if (!$user_id) {
+            return response()->json([
+                "success" => false,
+                "message" => 'Invalid code'
+
+            ], 200);
+        }
+
+        $user = User::find($user_id);
+        $oldpassword = $user->password;
+        $checkpassword = Hash::check($request->password, $oldpassword);
+        if ($checkpassword) {
+            return response()->json([
+                "success" => false,
+                "message" => 'identical password'
+
+            ], 200);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        Otp::where('code', $request->code)->first()->delete();
+
+        return response()->json('Password changed');
+    }
+
     public function destroy(User $user)
     {
         $user->delete();

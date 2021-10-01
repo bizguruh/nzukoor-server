@@ -59,6 +59,7 @@ use App\Http\Controllers\AssessmentResponseController;
 use App\Http\Controllers\CourseCommunityLinkController;
 use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
+use App\Http\Controllers\BankDetailController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\DiscussionMessageCommentController;
 
@@ -465,3 +466,19 @@ Route::post('tribe/invite', [MailController::class, 'sendtribeinvite']);
 
 Route::get('search', [TribeSearchController::class, 'search']);
 Route::get('all/tribes', [TribeSearchController::class, 'get']);
+
+
+// Mobile Password
+Route::post('generate/otp', [UserController::class, 'createotp']);
+Route::post('password/reset', [UserController::class, 'changePasswordByOtp']);
+
+
+//Bank Details
+
+Route::get('get/banks', [BankDetailController::class, 'getbanks']);
+Route::get('get/bank/detail', [BankDetailController::class, 'getbankdetail']);
+Route::apiResource('bank/details', BankDetailController::class);
+Route::post('transaction/initiate', [BankDetailController::class, 'makepayment']);
+
+Route::get('transaction/verify/{reference}', [BankDetailController::class, 'verifytransaction']);
+Route::post('transaction/verify', [BankDetailController::class, 'transactionevent']);

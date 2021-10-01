@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Tribe;
 use App\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\BankDetailController;
 
 class  TribeService
 {
@@ -11,21 +13,30 @@ class  TribeService
   public function create($user, $request)
   {
 
-    $tribe = Tribe::create([
-      'name' => $request->name,
-      'cover' => $request->cover,
-      'type' => $request->type,
-      'amount' => $request->amount,
-      'description' => $request->description,
-      'category' => json_encode($request->category),
-      'tags' => json_encode($request->tags)
-    ]);
-    $user->tribes()->attach($tribe->id, ['is_owner' => true]);
-    return response([
-      'success' => true,
-      'message' => 'creation successful',
-      'data' => $tribe->load('users', 'courses', 'discussions', 'feeds', 'events')
-    ], 201);
+    return  DB::transaction(function () use ($user, $request) {
+      $tribe = Tribe::create([
+        'name' => $request->name,
+        'cover' => $request->cover,
+        'type' => $request->type,
+        'amount' => $request->amount,
+        'description' => $request->description,
+        'category' => json_encode($request->category),
+        'tags' => json_encode($request->tags)
+      ]);
+      $user->tribes()->attach($tribe->id, ['is_owner' => true]);
+
+      if ($request->type == 'paid') {
+        $banking = new BankDetailController();
+        $bank_info = $banking->store($request);
+      }
+
+      return response([
+        'success' => true,
+        'message' => 'creation successful',
+        'data' => $tribe->load('users', 'courses', 'discussions', 'feeds', 'events'),
+        'bank_info' => $bank_info
+      ], 201);
+    });
   }
   public function getmembers($tribe, $user)
   {
@@ -62,9 +73,11 @@ class  TribeService
     return response()->json([
       'success' => true,
       'message' => 'successful',
-      'data' => $tribe->load('users')
+      'data' => $tribe->load('users'),
+      'owner' => $tribe->getTribeOwnerAttribute()
     ]);
   }
+
   public function update($user, $request, $tribe)
   {
     $tribe->name = $request->name;

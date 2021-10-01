@@ -71,7 +71,7 @@ class InboxController extends Controller
             $message = $user->inbox()->create([
                 'message' => $request->message,
                 'attachment' => $request->attachment,
-                'receiver' => $request->receiver,
+                'receiver' => 'user',
                 'receiver_id' => $request->receiver_id,
                 'voicenote' => $request->voicenote,
                 'status' => false,

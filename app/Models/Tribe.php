@@ -35,4 +35,15 @@ class Tribe extends Model
     {
         return $this->hasMany(Feed::class)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest();
     }
+
+    public function getTribeOwnerAttribute()
+    {
+
+        $user = $this->users()->with('accountdetail')->where('is_owner', 1)->first();
+
+        return [
+            'name' => $user->name,
+            'split_code' => $user->accountdetail->group_split_code
+        ];
+    }
 }

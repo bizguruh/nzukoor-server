@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('notifications', function ($user) {
     return Auth::check();
 });
+Broadcast::channel('transaction', function ($user) {
+    return Auth::check();
+});
 Broadcast::channel('inbox.{toUserId}', function ($user, $toUserId) {
     return $user->id == $toUserId;
 });

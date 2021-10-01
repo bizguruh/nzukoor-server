@@ -59,5 +59,9 @@ return [
         'client_id' => env('PASSPORT_CLIENT_ID', 2),
         'client_secret' => env('PASSPORT_CLIENT_SECRET', 'secret'),
     ],
+    'paystack' => [
+        'sk' => env('PAYSTACK_SK', null),
+        'pk' => env('PAYSTACK_PK', null)
+    ]
 
 ];

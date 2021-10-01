@@ -21,11 +21,13 @@ class Order extends Model
         'facilitator_id',
         'admin_id',
         'organization_id',
-        'item_id', 'type'
+        'item_id',
+        'type',
+        'amount'
     ];
     public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
     public function admin()
     {
