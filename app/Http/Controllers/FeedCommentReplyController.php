@@ -73,7 +73,7 @@ class FeedCommentReplyController extends Controller
                 $creator->notify(new LikeComment($details));
                 broadcast(new NotificationSent());
             }
-            return $value;
+            return response()->json('success');
         } else {
             $check->delete();
             return response()->json('deleted');

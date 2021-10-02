@@ -370,7 +370,7 @@ class UserController extends Controller
 
             $newuser->notify(new SendNotification($details));
             $mail = new MailController;
-            $mail->memberwelcome($newuser);
+            // $mail->memberwelcome($newuser);
             return $newuser;
         });
 
@@ -812,7 +812,13 @@ class UserController extends Controller
             'code' => $code
         ];
 
-        return new OtpReset($maildata);
+
+        Mail::to($user)->send(new OtpReset($maildata));
+        return response()->json([
+            "success" => true,
+            "message" => 'otp sent to email'
+
+        ], 200);
     }
 
     public function changePasswordByOtp(Request $request)

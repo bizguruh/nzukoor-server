@@ -51,10 +51,10 @@ class FeedCommentController extends Controller
                 broadcast(new NotificationSent());
             }
 
-            return $value;
+            return response()->json('success');
         } else {
             $check->delete();
-            return response()->json('deleted');
+            return response()->json('removed');
         }
     }
 

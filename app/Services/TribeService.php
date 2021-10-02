@@ -25,6 +25,7 @@ class  TribeService
       ]);
       $user->tribes()->attach($tribe->id, ['is_owner' => true]);
 
+      $bank_info = null;
       if ($request->type == 'paid') {
         $banking = new BankDetailController();
         $bank_info = $banking->store($request);

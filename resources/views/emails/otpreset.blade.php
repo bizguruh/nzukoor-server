@@ -1,13 +1,9 @@
 @component('mail::message')
-    # Password reset
 
     You have requested a password change, use the OTP code below
 
-    <h3>{{ $code }}</h3>
+    # {{ $code }}
 
-    @component('mail::button', ['url' => ''])
-        Button Text
-    @endcomponent
 
     Thanks,<br>
     {{ config('app.name') }}
