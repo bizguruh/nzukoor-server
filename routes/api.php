@@ -469,7 +469,7 @@ Route::get('all/tribes', [TribeSearchController::class, 'get']);
 
 
 // Mobile Password
-Route::post('generate/otp', [UserController::class, 'createotp']);
+Route::post('generate/otp', [UserController::class, 'createotp']);p
 Route::post('password/reset', [UserController::class, 'changePasswordByOtp']);
 
 
