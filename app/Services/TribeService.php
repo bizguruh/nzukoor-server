@@ -81,11 +81,22 @@ class  TribeService
 
   public function update($user, $request, $tribe)
   {
-    $tribe->name = $request->name;
-    $tribe->type = $request->type;
-    $tribe->amount = $request->amount;
-    $tribe->cover = $request->cover;
-    $tribe->description = $request->description;
+    if ($request->has('name') && $request->has('name') && !empty($request->input('name'))) {
+      $tribe->name = $request->name;
+    }
+    if ($request->has('type') && $request->has('type') && !empty($request->input('type'))) {
+      $tribe->type = $request->type;
+
+      $tribe->description = $request->description;
+    }
+    if ($request->has('amount') && $request->has('amount') && !empty($request->input('amount'))) {
+      $tribe->amount = $request->amount;
+    }
+    if ($request->has('cover') && $request->has('cover') && !empty($request->input('cover'))) {
+      $tribe->cover = $request->cover;
+    }
+
+
     $tribe->save();
     return response()->json([
       'success' => true,

@@ -329,12 +329,28 @@ class DiscussionController extends Controller
 
     public function update(Request $request, Discussion $discussion)
     {
-        $discussion->type = $request->type;
-        $discussion->name = $request->name;
-        $discussion->category = json_encode($request->category);
-        $discussion->tags = json_encode($request->tags);
-        $discussion->creator = $request->creator;
-        $discussion->course_id = $request->course_id;
+        if ($request->has('type') && $request->has('type') && !empty($request->input('type'))) {
+            $discussion->type = $request->type;
+        }
+        if ($request->has('name') && $request->has('name') && !empty($request->input('name'))) {
+            $discussion->name = $request->name;
+        }
+        if ($request->has('category') && $request->has('category') && !empty($request->input('category'))) {
+            $discussion->category = json_encode($request->category);
+        }
+        if ($request->has('tags') && $request->has('tags') && !empty($request->input('tags'))) {
+            $discussion->tags = json_encode($request->tags);
+        }
+        if ($request->has('creator') && $request->has('creator') && !empty($request->input('creator'))) {
+            $discussion->creator = $request->creator;
+        }
+        if ($request->has('course_id') && $request->has('course_id') && !empty($request->input('course_id'))) {
+            $discussion->course_id = $request->course_id;
+        }
+
+
+
+
         $discussion->save();
         return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
     }

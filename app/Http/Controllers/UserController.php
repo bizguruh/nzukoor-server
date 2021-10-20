@@ -204,14 +204,14 @@ class UserController extends Controller
                         $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
                         $ref = 'member';
                     }
-                    $organization_id = $olduser->organization_id;
+                    $organization_id = 1;
                 }
 
                 if ($referral_type == 'group_course') {
                     $link = CourseCommunityLink::where('code', $request->referral)->first();
                     $olduser = User::find($link->user_id)->first();
                     $co = Course::find($link->course_id);
-                    $organization_id = $olduser->organization_id;
+                    $organization_id = 1;
                 }
 
                 $newuser = User::create([
@@ -284,7 +284,7 @@ class UserController extends Controller
                             'creator' => 'user',
                             'description' => $course->description,
                             'course_id' => $course->id,
-                            'organization_id' => $olduser->organization_id,
+                            'organization_id' => 1,
                         ]);
 
                         foreach ($link_users as $key => $value) {
@@ -533,23 +533,68 @@ class UserController extends Controller
             );
         }
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->address = $request->address;
-        $user->phone = $request->phone;
-        $user->bio = $request->bio;
-        $user->profile = $request->profile;
-        $user->state = $request->state;
-        $user->country = $request->country;
-        $user->age = $request->age;
-        $user->gender = $request->gender;
-        $user->lga = $request->lga;
-        $user->voice = $request->voice;
-        $user->username = $request->username;
-        $user->show_age = $request->show_age;
-        $user->show_name = $request->show_name;
-        $user->show_email = $request->show_email;
-        $user->verification = $request->verification;
+
+        if ($request->has('name') && $request->has('name') && !empty($request->input('name'))) {
+            $user->name = $request->name;
+        }
+        if ($request->has('email') && $request->has('email') && !empty($request->input('email'))) {
+            $user->email = $request->email;
+        }
+        if ($request->has('address') && $request->has('address') && !empty($request->input('address'))) {
+            $user->address = $request->address;
+        }
+        if ($request->has('phone') && $request->has('phone') && !empty($request->input('phone'))) {
+            $user->phone = $request->phone;
+        }
+        if ($request->has('bio') && $request->has('bio') && !empty($request->input('bio'))) {
+            $user->bio = $request->bio;
+        }
+        if ($request->has('profile') && $request->has('profile') && !empty($request->input('profile'))) {
+            $user->profile = $request->profile;
+        }
+
+        if ($request->has('state') && $request->has('state') && !empty($request->input('state'))) {
+            $user->state = $request->state;
+        }
+        if ($request->has('country') && $request->has('country') && !empty($request->input('country'))) {
+            $user->country = $request->country;
+        }
+        if ($request->has('age') && $request->has('age') && !empty($request->input('age'))) {
+            $user->age = $request->age;
+        }
+        if ($request->has('gender') && $request->has('gender') && !empty($request->input('gender'))) {
+            $user->gender = $request->gender;
+        }
+        if ($request->has('lga') && $request->has('lga') && !empty($request->input('lga'))) {
+            $user->lga = $request->lga;
+        }
+        if ($request->has('voice') && $request->has('voice') && !empty($request->input('voice'))) {
+            $user->voice = $request->voice;
+            l;
+        }
+        if ($request->has('profile') && $request->has('profile') && !empty($request->input('profile'))) {
+            $user->username = $request->username;
+        }
+        if ($request->has('show_age') && $request->has('show_age') && !empty($request->input('show_age'))) {
+            $user->show_age = $request->show_age;
+        }
+        if ($request->has('show_name') && $request->has('show_name') && !empty($request->input('show_name'))) {
+            $user->show_name = $request->show_name;
+        }
+        if ($request->has('show_email') && $request->has('show_email') && !empty($request->input('show_email'))) {
+            $user->show_email = $request->show_email;
+        }
+
+
+
+
+
+
+
+
+
+
+
         $user->save();
 
 

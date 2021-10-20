@@ -183,19 +183,46 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
-        return $request->all();
-        $event->type = $request->type;
-        $event->title = $request->title;
-        $event->venue = $request->venue;
-        $event->description  = $request->description;
-        $event->schedule = $request->duration;
-        $event->facilitators  = json_encode($request->facilitators);
-        $event->url = $request->url;
-        $event->start = $request->start;
-        $event->end = $request->end;
-        $event->status = $request->status;
-        $event->resource  = $request->resource;
-        $event->cover = $request->cover;
+        if ($request->has('title') && $request->has('title') && !empty($request->input('title'))) {
+            $event->title = $request->title;
+        }
+        if ($request->has('venue') && $request->has('venue') && !empty($request->input('venue'))) {
+            $event->venue = $request->venue;
+        }
+        if ($request->has('description') && $request->has('description') && !empty($request->input('description'))) {
+            $event->description  = $request->description;
+        }
+        if ($request->has('duration') && $request->has('duration') && !empty($request->input('duration'))) {
+            $event->schedule = $request->duration;
+        }
+        if ($request->has('facilitators') && $request->has('facilitators') && !empty($request->input('facilitators'))) {
+            $event->facilitators  = json_encode($request->facilitators);
+        }
+        if ($request->has('url') && $request->has('url') && !empty($request->input('url'))) {
+            $event->url = $request->url;
+        }
+        if ($request->has('start') && $request->has('start') && !empty($request->input('start'))) {
+            $event->start = $request->start;
+        }
+        if ($request->has('type') && $request->has('type') && !empty($request->input('type'))) {
+            $event->end = $request->end;
+
+            if ($request->has('status') && $request->has('status') && !empty($request->input('status'))) {
+                $event->status = $request->status;
+            }
+        }
+        if ($request->has('resource') && $request->has('resource') && !empty($request->input('resource'))) {
+            $event->resource  = $request->resource;
+        }
+
+        if ($request->has('cover') && $request->has('cover') && !empty($request->input('cover'))) {
+            $event->cover = $request->cover;
+        }
+
+
+
+
+
         $event->save();
         return $event;
     }
