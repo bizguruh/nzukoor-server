@@ -183,39 +183,39 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
-        if ($request->has('title') && $request->has('title') && !empty($request->input('title'))) {
+        if ($request->has('title') && $request->filled('title') && !empty($request->input('title'))) {
             $event->title = $request->title;
         }
-        if ($request->has('venue') && $request->has('venue') && !empty($request->input('venue'))) {
+        if ($request->has('venue') && $request->filled('venue') && !empty($request->input('venue'))) {
             $event->venue = $request->venue;
         }
-        if ($request->has('description') && $request->has('description') && !empty($request->input('description'))) {
+        if ($request->has('description') && $request->filled('description') && !empty($request->input('description'))) {
             $event->description  = $request->description;
         }
-        if ($request->has('duration') && $request->has('duration') && !empty($request->input('duration'))) {
+        if ($request->has('duration') && $request->filled('duration') && !empty($request->input('duration'))) {
             $event->schedule = $request->duration;
         }
-        if ($request->has('facilitators') && $request->has('facilitators') && !empty($request->input('facilitators'))) {
+        if ($request->has('facilitators') && $request->filled('facilitators') && !empty($request->input('facilitators'))) {
             $event->facilitators  = json_encode($request->facilitators);
         }
-        if ($request->has('url') && $request->has('url') && !empty($request->input('url'))) {
+        if ($request->has('url') && $request->filled('url') && !empty($request->input('url'))) {
             $event->url = $request->url;
         }
-        if ($request->has('start') && $request->has('start') && !empty($request->input('start'))) {
+        if ($request->has('start') && $request->filled('start') && !empty($request->input('start'))) {
             $event->start = $request->start;
         }
-        if ($request->has('type') && $request->has('type') && !empty($request->input('type'))) {
+        if ($request->has('type') && $request->filled('type') && !empty($request->input('type'))) {
             $event->end = $request->end;
 
-            if ($request->has('status') && $request->has('status') && !empty($request->input('status'))) {
+            if ($request->has('status') && $request->filled('status') && !empty($request->input('status'))) {
                 $event->status = $request->status;
             }
         }
-        if ($request->has('resource') && $request->has('resource') && !empty($request->input('resource'))) {
+        if ($request->has('resource') && $request->filled('resource') && !empty($request->input('resource'))) {
             $event->resource  = $request->resource;
         }
 
-        if ($request->has('cover') && $request->has('cover') && !empty($request->input('cover'))) {
+        if ($request->has('cover') && $request->filled('cover') && !empty($request->input('cover'))) {
             $event->cover = $request->cover;
         }
 

@@ -534,54 +534,56 @@ class UserController extends Controller
         }
 
 
-        if ($request->has('name') && $request->has('name') && !empty($request->input('name'))) {
+        if ($request->has('name') && $request->filled('name') && !empty($request->input('name'))) {
+
             $user->name = $request->name;
         }
-        if ($request->has('email') && $request->has('email') && !empty($request->input('email'))) {
+
+
+        if ($request->has('email') && $request->filled('email') && !empty($request->input('email'))) {
             $user->email = $request->email;
         }
-        if ($request->has('address') && $request->has('address') && !empty($request->input('address'))) {
+        if ($request->has('address') && $request->filled('address') && !empty($request->input('address'))) {
             $user->address = $request->address;
         }
-        if ($request->has('phone') && $request->has('phone') && !empty($request->input('phone'))) {
+        if ($request->has('phone') && $request->filled('phone') && !empty($request->input('phone'))) {
             $user->phone = $request->phone;
         }
-        if ($request->has('bio') && $request->has('bio') && !empty($request->input('bio'))) {
+        if ($request->has('bio') && $request->filled('bio') && !empty($request->input('bio'))) {
             $user->bio = $request->bio;
         }
-        if ($request->has('profile') && $request->has('profile') && !empty($request->input('profile'))) {
+        if ($request->has('profile') && $request->filled('profile') && !empty($request->input('profile'))) {
             $user->profile = $request->profile;
         }
 
-        if ($request->has('state') && $request->has('state') && !empty($request->input('state'))) {
+        if ($request->has('state') && $request->filled('state') && !empty($request->input('state'))) {
             $user->state = $request->state;
         }
-        if ($request->has('country') && $request->has('country') && !empty($request->input('country'))) {
+        if ($request->has('country') && $request->filled('country') && !empty($request->input('country'))) {
             $user->country = $request->country;
         }
-        if ($request->has('age') && $request->has('age') && !empty($request->input('age'))) {
+        if ($request->has('age') && $request->filled('age') && !empty($request->input('age'))) {
             $user->age = $request->age;
         }
-        if ($request->has('gender') && $request->has('gender') && !empty($request->input('gender'))) {
+        if ($request->has('gender') && $request->filled('gender') && !empty($request->input('gender'))) {
             $user->gender = $request->gender;
         }
-        if ($request->has('lga') && $request->has('lga') && !empty($request->input('lga'))) {
+        if ($request->has('lga') && $request->filled('lga') && !empty($request->input('lga'))) {
             $user->lga = $request->lga;
         }
-        if ($request->has('voice') && $request->has('voice') && !empty($request->input('voice'))) {
+        if ($request->has('voice') && $request->filled('voice') && !empty($request->input('voice'))) {
             $user->voice = $request->voice;
-            l;
         }
-        if ($request->has('profile') && $request->has('profile') && !empty($request->input('profile'))) {
+        if ($request->has('profile') && $request->filled('profile') && !empty($request->input('profile'))) {
             $user->username = $request->username;
         }
-        if ($request->has('show_age') && $request->has('show_age') && !empty($request->input('show_age'))) {
+        if ($request->has('show_age') && $request->filled('show_age') && !empty($request->input('show_age'))) {
             $user->show_age = $request->show_age;
         }
-        if ($request->has('show_name') && $request->has('show_name') && !empty($request->input('show_name'))) {
+        if ($request->has('show_name') && $request->filled('show_name') && !empty($request->input('show_name'))) {
             $user->show_name = $request->show_name;
         }
-        if ($request->has('show_email') && $request->has('show_email') && !empty($request->input('show_email'))) {
+        if ($request->has('show_email') && $request->filled('show_email') && !empty($request->input('show_email'))) {
             $user->show_email = $request->show_email;
         }
 

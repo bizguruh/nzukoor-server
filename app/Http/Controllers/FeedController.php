@@ -379,17 +379,17 @@ class FeedController extends Controller
      */
     public function update(Request $request, Feed $feed)
     {
-        if ($request->has('message') && $request->has('message') && !empty($request->input('message'))) {
+        if ($request->has('message') && $request->filled('message') && !empty($request->input('message'))) {
             $feed->message = $request->message;
         }
-        if ($request->has('media') && $request->has('media') && !empty($request->input('media'))) {
+        if ($request->has('media') && $request->filled('media') && !empty($request->input('media'))) {
             $feed->media = $request->media;
         }
 
-        if ($request->has('tags') && $request->has('tags') && !empty($request->input('tags'))) {
+        if ($request->has('tags') && $request->filled('tags') && !empty($request->input('tags'))) {
             $feed->tags = json_encode($request->tags);
         }
-        if ($request->has('publicId') && $request->has('publicId') && !empty($request->input('publicId'))) {
+        if ($request->has('publicId') && $request->filled('publicId') && !empty($request->input('publicId'))) {
             $feed->publicId = $request->publicId;
         }
 

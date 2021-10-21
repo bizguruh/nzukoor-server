@@ -81,18 +81,18 @@ class  TribeService
 
   public function update($user, $request, $tribe)
   {
-    if ($request->has('name') && $request->has('name') && !empty($request->input('name'))) {
+    if ($request->has('name') && $request->filled('name') && !empty($request->input('name'))) {
       $tribe->name = $request->name;
     }
-    if ($request->has('type') && $request->has('type') && !empty($request->input('type'))) {
+    if ($request->has('type') && $request->filled('type') && !empty($request->input('type'))) {
       $tribe->type = $request->type;
 
       $tribe->description = $request->description;
     }
-    if ($request->has('amount') && $request->has('amount') && !empty($request->input('amount'))) {
+    if ($request->has('amount') && $request->filled('amount') && !empty($request->input('amount'))) {
       $tribe->amount = $request->amount;
     }
-    if ($request->has('cover') && $request->has('cover') && !empty($request->input('cover'))) {
+    if ($request->has('cover') && $request->filled('cover') && !empty($request->input('cover'))) {
       $tribe->cover = $request->cover;
     }
 

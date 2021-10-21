@@ -329,22 +329,22 @@ class DiscussionController extends Controller
 
     public function update(Request $request, Discussion $discussion)
     {
-        if ($request->has('type') && $request->has('type') && !empty($request->input('type'))) {
+        if ($request->has('type') && $request->filled('type') && !empty($request->input('type'))) {
             $discussion->type = $request->type;
         }
-        if ($request->has('name') && $request->has('name') && !empty($request->input('name'))) {
+        if ($request->has('name') && $request->filled('name') && !empty($request->input('name'))) {
             $discussion->name = $request->name;
         }
-        if ($request->has('category') && $request->has('category') && !empty($request->input('category'))) {
+        if ($request->has('category') && $request->filled('category') && !empty($request->input('category'))) {
             $discussion->category = json_encode($request->category);
         }
-        if ($request->has('tags') && $request->has('tags') && !empty($request->input('tags'))) {
+        if ($request->has('tags') && $request->filled('tags') && !empty($request->input('tags'))) {
             $discussion->tags = json_encode($request->tags);
         }
-        if ($request->has('creator') && $request->has('creator') && !empty($request->input('creator'))) {
+        if ($request->has('creator') && $request->filled('creator') && !empty($request->input('creator'))) {
             $discussion->creator = $request->creator;
         }
-        if ($request->has('course_id') && $request->has('course_id') && !empty($request->input('course_id'))) {
+        if ($request->has('course_id') && $request->filled('course_id') && !empty($request->input('course_id'))) {
             $discussion->course_id = $request->course_id;
         }
 
