@@ -48,10 +48,15 @@ class  TribeService
 
   public function suggestedtribe($user)
   {
+
     $mytribe = $user->tribes()->get()->pluck('id');
     $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users', 'users', 'courses', 'discussions', 'feeds', 'events')->get();
-    $interests = json_decode($user->interests);
 
+    $interests = json_decode($user->interests);
+    if (is_null($interests)) {
+
+      return $tribe;
+    }
     $result =  $tribe->filter(function ($a) use ($interests) {
       $tribeinterests =  collect(json_decode($a->tags))->map(function ($b) {
         return $b->value;

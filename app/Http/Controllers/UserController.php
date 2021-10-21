@@ -513,6 +513,7 @@ class UserController extends Controller
     public function update(Request $request,    User $user)
     {
 
+
         if ($request->account_no && $request->bank_name && $request->bank_code) {
 
             $verify  = new BankDetailController();
@@ -577,6 +578,9 @@ class UserController extends Controller
         if ($request->has('profile') && $request->filled('profile') && !empty($request->input('profile'))) {
             $user->username = $request->username;
         }
+        if ($request->has('interests') && $request->filled('interests') && !empty($request->input('interests'))) {
+            $user->interests = json_encode($request->interests);
+        }
         if ($request->has('show_age') && $request->filled('show_age') && !empty($request->input('show_age'))) {
             $user->show_age = $request->show_age;
         }
@@ -587,21 +591,7 @@ class UserController extends Controller
             $user->show_email = $request->show_email;
         }
 
-
-
-
-
-
-
-
-
-
-
         $user->save();
-
-
-
-
 
         return $user;
     }

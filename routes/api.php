@@ -449,20 +449,23 @@ Route::post('notify', [NotificationController::class, 'notify']);
 
 // Tribe routes
 Route::apiResource('tribes', TribeController::class);
-Route::get('user/tribes', [TribeController::class, 'getusertribe']);
-Route::get('tribe/members/{tribe}', [TribeController::class, 'tribemembers']);
-Route::get('check/tribe/{tribe}', [TribeController::class, 'checktribe']);
-Route::get('join/tribe/{tribe}', [TribeController::class, 'addusertotribe']);
-Route::get('leave/tribe/{tribe}', [TribeController::class, 'leavetribe']);
-Route::get('get/tribe/feeds/{tribe}', [TribeController::class, 'tribefeeds']);
-Route::get('get/tribe/courses/{tribe}', [TribeController::class, 'tribecourses']);
-Route::get('get/tribe/events/{tribe}', [TribeController::class, 'tribeevents']);
-Route::get('get/tribe/myevents/{tribe}', [TribeController::class, 'mytribeevents']);
-Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscussions']);
-Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
-Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);
-Route::post('tribe/invite', [MailController::class, 'sendtribeinvite']);
 
+
+Route::middleware(['auth:api'])->group(function () {
+    Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);
+    Route::post('tribe/invite', [MailController::class, 'sendtribeinvite']);
+    Route::get('user/tribes', [TribeController::class, 'getusertribe']);
+    Route::get('tribe/members/{tribe}', [TribeController::class, 'tribemembers']);
+    Route::get('check/tribe/{tribe}', [TribeController::class, 'checktribe']);
+    Route::get('join/tribe/{tribe}', [TribeController::class, 'addusertotribe']);
+    Route::get('leave/tribe/{tribe}', [TribeController::class, 'leavetribe']);
+    Route::get('get/tribe/feeds/{tribe}', [TribeController::class, 'tribefeeds']);
+    Route::get('get/tribe/courses/{tribe}', [TribeController::class, 'tribecourses']);
+    Route::get('get/tribe/events/{tribe}', [TribeController::class, 'tribeevents']);
+    Route::get('get/tribe/myevents/{tribe}', [TribeController::class, 'mytribeevents']);
+    Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscussions']);
+    Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
+});
 
 Route::get('search', [TribeSearchController::class, 'search']);
 Route::get('all/tribes', [TribeSearchController::class, 'get']);
