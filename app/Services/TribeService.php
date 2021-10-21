@@ -53,7 +53,7 @@ class  TribeService
     $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users', 'users', 'courses', 'discussions', 'feeds', 'events')->get();
 
     $interests = json_decode($user->interests);
-    if (is_null($interests) || !count($interests)) {
+    if (is_null($interests) || gettype($interests) !== 'array') {
       return $tribe;
     }
     $result =  $tribe->filter(function ($a) use ($interests) {
