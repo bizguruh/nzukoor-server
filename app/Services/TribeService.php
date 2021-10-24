@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Models\Tribe;
 use App\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\TribeResource;
 use App\Http\Controllers\BankDetailController;
+use App\Http\Resources\Tribe as ResourcesTribe;
 
 class  TribeService
 {
@@ -70,7 +72,9 @@ class  TribeService
   public function usertribe($user)
   {
 
-    return  $user->tribes()->with('users', 'courses', 'discussions', 'feeds', 'events')->latest()->paginate(10);
+    $data =  $user->tribes()->with('users')->latest()->paginate(10);
+
+    return TribeResource::collection($data)->response()->getData(true);
   }
   public function gettribe($tribe)
   {

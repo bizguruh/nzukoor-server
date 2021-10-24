@@ -449,6 +449,7 @@ Route::post('notify', [NotificationController::class, 'notify']);
 
 // Tribe routes
 Route::apiResource('tribes', TribeController::class);
+Route::get('guest/tribes', [TribeController::class, 'guesttribes']);
 
 
 Route::middleware(['auth:api'])->group(function () {

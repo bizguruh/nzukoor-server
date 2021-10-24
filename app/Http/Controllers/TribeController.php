@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TribeResource;
 use App\Models\Tribe;
 use App\Services\TribeService;
 use Illuminate\Http\Request;
@@ -21,8 +22,14 @@ class TribeController extends Controller
 
     public function index()
     {
+        $data = Tribe::with('users')->paginate(15);
 
-        return Tribe::with('users', 'courses', 'discussions', 'feeds', 'events')->paginate(15);
+        return TribeResource::collection($data)->response()->getData(true);
+    }
+    public function guesttribes()
+    {
+        $data = Tribe::with('users')->get();
+        return TribeResource::collection($data);
     }
 
     public function tribemembers(Tribe $tribe)
