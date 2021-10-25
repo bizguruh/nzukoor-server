@@ -6,6 +6,7 @@ use App\Models\Tribe;
 use Illuminate\Http\Request;
 use App\Services\TribeService;
 use App\Http\Resources\TribeResource;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\TribeDiscussionResource;
 
 class TribeController extends Controller
@@ -13,6 +14,7 @@ class TribeController extends Controller
 
     public $user;
     public $tribeservice;
+
 
     public function __construct(TribeService $tribeservice)
     {
@@ -23,19 +25,28 @@ class TribeController extends Controller
 
     public function index()
     {
+        $currentPage = request()->get('page', 1);
         $data = Tribe::with('users')->paginate(15);
-
-        return TribeResource::collection($data)->response()->getData(true);
+        $tribes = TribeResource::collection($data)->response()->getData(true);
+        return Cache::remember('tribes' . $currentPage, 60, function () use ($tribes) {
+            return $tribes;
+        });
     }
     public function guesttribes()
     {
         $data = Tribe::with('users')->get();
-        return TribeResource::collection($data);
+        $tribes = TribeResource::collection($data);
+        return Cache::remember('guesttribes', 60, function () use ($tribes) {
+            return $tribes;
+        });
     }
 
     public function tribemembers(Tribe $tribe)
     {
-        return $this->tribeservice->getmembers($tribe, $this->user);
+        $tribemembers = $this->tribeservice->getmembers($tribe, $this->user);
+        return Cache::remember('tribemembers' . $tribe->id, 60, function () use ($tribemembers) {
+            return $tribemembers;
+        });
     }
 
     public function suggestedtribe()
@@ -66,10 +77,11 @@ class TribeController extends Controller
     public function tribediscussions(Tribe $tribe)
     {
 
-        return  TribeDiscussionResource::collection($this->tribeservice->gettribediscussions($tribe))->response()->getData(true);
+        $tribediscsussions =  TribeDiscussionResource::collection($this->tribeservice->gettribediscussions($tribe))->response()->getData(true);
+        return Cache::remember('tribediscussions' . $tribe->id, 60, function () use ($tribediscsussions) {
+            return $tribediscsussions;
+        });
     }
-
-
     public function addusertotribe(Tribe $tribe)
     {
         return $this->tribeservice->addusertotribe($tribe, $this->user);
@@ -82,7 +94,11 @@ class TribeController extends Controller
     }
     public function getusertribe()
     {
-        return  $this->tribeservice->usertribe($this->user);
+        $currentPage = request()->get('page', 1);
+        $usertribes =  $this->tribeservice->usertribe($this->user);
+        return Cache::remember($this->user->id . 'usertribes' . $currentPage, 60, function () use ($usertribes) {
+            return $usertribes;
+        });
     }
 
     public function store(Request $request)
@@ -92,7 +108,10 @@ class TribeController extends Controller
 
     public function show(Tribe $tribe)
     {
-        return $this->tribeservice->gettribe($tribe);
+        $showtribe = $this->tribeservice->gettribe($tribe);
+        return Cache::remember('showtribe' . $tribe->id, 60, function () use ($showtribe) {
+            return $showtribe;
+        });
     }
     public function checktribe(Tribe $tribe)
     {
