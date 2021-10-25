@@ -29,7 +29,7 @@ class Tribe extends Model
     }
     public function discussions()
     {
-        return $this->hasMany(Discussion::class)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest();
+        return $this->hasMany(Discussion::class)->with('user', 'discussionmessage', 'discussionvote', 'discussionview')->latest();
     }
     public function feeds()
     {

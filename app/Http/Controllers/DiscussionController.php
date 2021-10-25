@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Tribe;
 use App\Models\Discussion;
+use App\Support\Collection;
 use Illuminate\Http\Request;
 use App\Models\DiscussionMessage;
 use App\Models\DiscussionMessageComment;
 use App\Notifications\NewTribeDiscussion;
 use Illuminate\Support\Facades\Notification;
+use App\Http\Resources\TribeDiscussionResource;
 
 class DiscussionController extends Controller
 {
@@ -108,7 +110,7 @@ class DiscussionController extends Controller
         $sorted = $discussion->sortByDesc(function ($a) {
             return count($a['discussionmessage']);
         });
-        return $sorted->values()->all();
+        return TribeDiscussionResource::collection((new Collection($sorted))->paginate(15))->response()->getData(true);
     }
 
     public function interestdiscussions()
@@ -292,7 +294,7 @@ class DiscussionController extends Controller
         }
 
 
-        $alldiscussions =  Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
+        $alldiscussions =  Discussion::where('tribe_id', null)->with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
 
         $related =  $alldiscussions->filter(function ($a) use ($discussion) {
 
@@ -304,7 +306,7 @@ class DiscussionController extends Controller
             }
         });
         $discussion->related = $related->values()->all();
-        return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
+        return $discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
     }
 
     public function getdiscussion($id)

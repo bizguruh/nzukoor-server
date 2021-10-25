@@ -9,6 +9,7 @@ use App\Http\Resources\TribeResource;
 use App\Http\Controllers\BankDetailController;
 use App\Http\Resources\Tribe as ResourcesTribe;
 
+
 class  TribeService
 {
 
@@ -174,7 +175,7 @@ class  TribeService
   public function gettribediscussions($tribe)
   {
 
-    return  $tribe->load('discussions')->discussions;
+    return (new Collection($tribe->discussions))->paginate(15);
   }
   public function leavetribe($tribe, $user)
   {

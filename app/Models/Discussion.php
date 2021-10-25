@@ -42,7 +42,7 @@ class Discussion extends Model
 
     public function discussionmessage()
     {
-        return $this->hasMany(DiscussionMessage::class)->with('user', 'admin', 'facilitator', 'discussionmessagecomment')->orderBy('id', 'DESC');
+        return $this->hasMany(DiscussionMessage::class)->with('user',  'discussionmessagecomment')->orderBy('id', 'DESC');
     }
     public function discussionvote()
     {
@@ -56,4 +56,10 @@ class Discussion extends Model
     {
         return $this->hasMany(Tag::class);
     }
+
+    protected $hidden = [
+        'admin_id',
+        'facilitator_id',
+        'course_id'
+    ];
 }

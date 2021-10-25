@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DiscussionVote extends Model
 {
     use HasFactory;
-    protected $fillable = ['vote', 'discussion_id', 'user_id', 'facilitator_id', 'admin_id'];
+    protected $fillable = ['vote', 'discussion_id', 'user_id'];
 
     public function discussion()
     {
@@ -18,12 +18,17 @@ class DiscussionVote extends Model
     {
         $this->belongsTo(User::class);
     }
-    public function admin()
-    {
-        $this->belongsTo(Admin::class);
-    }
-    public function facilitator()
-    {
-        $this->belongsTo(Facilitator::class);
-    }
+    // public function admin()
+    // {
+    //     $this->belongsTo(Admin::class);
+    // }
+    // public function facilitator()
+    // {
+    //     $this->belongsTo(Facilitator::class);
+    // }
+
+    protected $hidden = [
+        'admin_id',
+        'facilitator_id'
+    ];
 }

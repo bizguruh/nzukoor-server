@@ -40,7 +40,7 @@ class TribeResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
-            "cover" => $this->description,
+            "cover" => $this->cover,
             "description" => $this->description,
             "type" => $this->type,
             "amount" => $this->amount,

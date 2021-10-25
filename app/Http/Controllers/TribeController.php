@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TribeResource;
 use App\Models\Tribe;
-use App\Services\TribeService;
 use Illuminate\Http\Request;
+use App\Services\TribeService;
+use App\Http\Resources\TribeResource;
+use App\Http\Resources\TribeDiscussionResource;
 
 class TribeController extends Controller
 {
@@ -64,7 +65,8 @@ class TribeController extends Controller
 
     public function tribediscussions(Tribe $tribe)
     {
-        return $this->tribeservice->gettribediscussions($tribe);
+
+        return  TribeDiscussionResource::collection($this->tribeservice->gettribediscussions($tribe))->response()->getData(true);
     }
 
 
