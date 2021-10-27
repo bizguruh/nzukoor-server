@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TribeDiscussionResource extends JsonResource
+class DiscussionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

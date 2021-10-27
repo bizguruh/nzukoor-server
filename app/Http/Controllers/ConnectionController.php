@@ -119,12 +119,12 @@ class ConnectionController extends Controller
             }
         });
 
-        $interests = $user->interests ? json_decode($user->interests) : [];
+        $interests = $user->interests;
         $allusers = [];
         if (count($interests)) {
             foreach ($users as $key => $value) {
                 if (!is_null($value->interests)) {
-                    $check =  array_intersect($interests, json_decode($value->interests));
+                    $check =  array_intersect($interests, $value->interests);
                     if (count($check)) {
                         $value->similar = count($check);
                         array_push($allusers, $value);
@@ -154,12 +154,12 @@ class ConnectionController extends Controller
                 return $a;
             }
         });
-        $interests = $user->interests ? json_decode($user->interests) : [];
+        $interests = $user->interests ? $user->interests : [];
         $allusers = [];
         if (count($interests)) {
             foreach ($users as $key => $value) {
                 if (!is_null($value->interests)) {
-                    $check =  array_intersect($interests, json_decode($value->interests));
+                    $check =  array_intersect($interests, $value->interests);
                     if (count($check)) {
                         $value->similar = count($check);
                         array_push($allusers, $value);
@@ -218,28 +218,28 @@ class ConnectionController extends Controller
             $allfacilitators = Facilitator::whereNotIn('id',  $connectedfacilitators->toArray())->get();
         }
         if (is_null($user->interests)) return;
-        $interests = json_decode($user->interests);
+        $interests = $user->interests;
         $similarUsers = $allusers->filter(function ($f)
         use ($interests) {
-            $userinterests = json_decode($f->interests) ? json_decode($f->interests) : [];
+            $userinterests = $f->interests ? $f->interests : [];
             $check = array_intersect($interests, $userinterests);
             return count($check);
         });
         $similarFacilitators = $allfacilitators->filter(function ($f)
         use ($interests) {
-            $userinterests = json_decode($f->interests) ? json_decode($f->interests) : [];
+            $userinterests = $f->interests ? $f->interests : [];
             $check = array_intersect($interests, $userinterests);
             return count($check);
         });
 
         $mapsimilarusers = $similarUsers->map(function ($a) use ($interests) {
 
-            $a->similar = count(array_intersect($interests, json_decode($a->interests)));
+            $a->similar = count(array_intersect($interests, $a->interests));
             return $a;
         });
         $mapsimilarfacilitators = $similarFacilitators->map(function ($a) use ($interests) {
 
-            $a->similar = count(array_intersect($interests, json_decode($a->interests)));
+            $a->similar = count(array_intersect($interests, $a->interests));
             return $a;
         });
 
@@ -251,23 +251,23 @@ class ConnectionController extends Controller
 
 
         $allusers = User::get()->filter(function ($a) {
-            return $a->interests && count(json_decode($a->interests));
+            return $a->interests && count($a->interests);
         });
         $allfacilitators = Facilitator::get()->filter(function ($a) {
-            return $a->interests && count(json_decode($a->interests));
+            return $a->interests && count($a->interests);
         });
 
 
 
         $similarUsers = $allusers->filter(function ($a) use ($interest) {
-            $userinterests = json_decode($a->interests) ? json_decode($a->interests) : [];
+            $userinterests = $a->interests ? $a->interests : [];
             $mappedusers = collect($userinterests)->map(function ($f) {
                 return strtolower($f);
             });
             return  in_array(strtolower($interest), $mappedusers->toArray());
         });
         $similarFacilitators = $allfacilitators->filter(function ($a) use ($interest) {
-            $userinterests = json_decode($a->interests) ? json_decode($a->interests) : [];
+            $userinterests = $a->interests ? $a->interests : [];
             $mappedusers = collect($userinterests)->map(function ($f) {
                 return strtolower($f);
             });
@@ -298,7 +298,7 @@ class ConnectionController extends Controller
         }
 
         if (is_null($user->interests)) return;
-        $interests = json_decode($user->interests);
+        $interests = $user->interests;
         $discussion = Discussion::where('organization_id', $user->organization_id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
         $result =   $discussion->filter(function ($a) use ($interests) {
             $tags = collect(json_decode($a->tags))->map(function ($t) {
@@ -329,7 +329,7 @@ class ConnectionController extends Controller
             $user = auth('api')->user();
         }
         $courses = Course::with('courseoutline', 'courseschedule', 'modules', 'questionnaire', 'review', 'enroll', 'viewcount')->get();
-        $interests = $user->interests ? json_decode($user->interests) : [];
+        $interests = $user->interests ? $user->interests : [];
         $allusers = [];
 
         if (count($interests)) {

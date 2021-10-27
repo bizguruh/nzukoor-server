@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use App\Models\Admin;
 use App\Models\Facilitator;
-use App\Models\User;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class InboxResource extends JsonResource
@@ -22,17 +23,11 @@ class InboxResource extends JsonResource
             'message' => $this->message,
             'attachment' => $this->attachment,
             'status' => $this->status,
-            'admin_id' => $this->admin_id,
-            'admin' => $this->admin,
             'user_id' => $this->user_id,
-            'user' => $this->user,
-            'facilitator_id' => $this->facilitator_id,
-            'facilitator' => $this->facilitator,
+            'user' => new UserResource($this->user),
             'receiver_id' => $this->receiver_id,
             'receiver' => $this->receiver,
-            'member_info' => $this->when($this->receiver === 'user', User::find($this->receiver_id)),
-            'facilitator_info' => $this->when($this->receiver === 'facilitator', Facilitator::find($this->receiver_id)),
-            'admin_info' => $this->when($this->receiver === 'admin', Admin::find($this->receiver_id)),
+            'receiver_info' =>  new UserResource(User::find($this->receiver_id)),
             'created_at' => $this->created_at,
         ];
     }

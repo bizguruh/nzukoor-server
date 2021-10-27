@@ -280,7 +280,7 @@ class UserController extends Controller
                         $discussion = $olduser->discussions()->create([
                             'type' => 'private',
                             'name' => $request->referral,
-                            'tags' => json_encode([]),
+                            'tags' => [],
                             'creator' => 'user',
                             'description' => $course->description,
                             'course_id' => $course->id,
@@ -498,7 +498,7 @@ class UserController extends Controller
             $user = auth('api')->user();
         }
 
-        $user->interests = json_encode($request->interest);
+        $user->interests = $request->interest;
         $user->save();
         return $user;
     }
@@ -579,7 +579,7 @@ class UserController extends Controller
             $user->username = $request->username;
         }
         if ($request->has('interests') && $request->filled('interests') && !empty($request->input('interests'))) {
-            $user->interests = json_encode($request->interests);
+            $user->interests = $request->interests;
         }
         if ($request->has('show_age') && $request->filled('show_age') && !empty($request->input('show_age'))) {
             $user->show_age = $request->show_age;

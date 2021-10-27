@@ -23,8 +23,8 @@ class  TribeService
         'type' => $request->type,
         'amount' => $request->amount,
         'description' => $request->description,
-        'category' => json_encode($request->category),
-        'tags' => json_encode($request->tags)
+        'category' => $request->category,
+        'tags' => $request->tags
       ]);
       $user->tribes()->attach($tribe->id, ['is_owner' => true]);
 
@@ -55,12 +55,12 @@ class  TribeService
     $mytribe = $user->tribes()->get()->pluck('id');
     $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users', 'users', 'courses', 'discussions', 'feeds', 'events')->get();
 
-    $interests = json_decode($user->interests);
+    $interests = $user->interests;
     if (is_null($interests) || gettype($interests) !== 'array') {
       return $tribe;
     }
     $result =  $tribe->filter(function ($a) use ($interests) {
-      $tribeinterests =  collect(json_decode($a->tags))->map(function ($b) {
+      $tribeinterests =  collect($a->tags)->map(function ($b) {
         return $b->value;
       })->toArray();
       $identical = array_intersect($interests, $tribeinterests);

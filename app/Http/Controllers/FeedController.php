@@ -137,7 +137,7 @@ class FeedController extends Controller
             $user = auth('api')->user();
         }
 
-        $tags = $user->interests ? json_decode($user->interests) : [];
+        $tags = $user->interests ? $user->interests : [];
         $feeds = Feed::where('tribe_id', null)->get()->toArray();
         $allfeeds = [];
         if (count($feeds)) {
@@ -145,10 +145,10 @@ class FeedController extends Controller
                 foreach ($feeds as $key => $value) {
                     if (!is_null($value['tags'])) {
 
-                        if (!is_null(json_decode($value['tags'])) && is_array(json_decode($value['tags'])) && count(json_decode($value['tags']))) {
+                        if (!is_null($value['tags']) && is_array($value['tags']) && count($value['tags'])) {
                             $check =  array_intersect($tags, array_map(function ($a) {
                                 return $a->value;
-                            }, json_decode($value['tags'])));
+                            }, $value['tags']));
 
                             if (count($check)) {
                                 array_push($allfeeds, $value);
@@ -164,7 +164,7 @@ class FeedController extends Controller
     public function getTrendingFeedInterest()
     {
         $interests = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) {
-            return json_decode($i->tags);
+            return $i->tags;
         })->filter(function ($tag) {
             return $tag;
         })->flatten(1)->map(function ($a) {
@@ -172,8 +172,8 @@ class FeedController extends Controller
         })->unique();
 
         $feeds  = Feed::where('tribe_id', null)->get()->map(function ($i) {
-            if (!is_null($i->tags) && count(json_decode($i->tags)))
-                $i->tags = collect(json_decode($i->tags))->map(function ($v) {
+            if (!is_null($i->tags) && count($i->tags))
+                $i->tags = collect($i->tags)->map(function ($v) {
                     return $v->text;
                 });
             else {
@@ -208,8 +208,8 @@ class FeedController extends Controller
     public function getSpecificFeed($interest)
     {
         $feeds = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) use ($interest) {
-            if (!is_null($i->tags) && count(json_decode($i->tags)))
-                $i->tags = collect(json_decode($i->tags))->map(function ($v) {
+            if (!is_null($i->tags) && count($i->tags))
+                $i->tags = collect($i->tags)->map(function ($v) {
                     return $v->text;
                 });
             else {
@@ -244,10 +244,10 @@ class FeedController extends Controller
         }
 
         if (is_null($user->interests)) return;
-        $interests = json_decode($user->interests);
+        $interests = $user->interests;
         $feeds = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->filter(function ($f)
         use ($interests) {
-            $tags = collect(json_decode($f->tags))->map(function ($t) {
+            $tags = collect($f->tags)->map(function ($t) {
                 return $t->value;
             });
 
@@ -342,7 +342,7 @@ class FeedController extends Controller
             'publicId' => $request->publicId,
             'message' => $request->message,
             'tribe_id' => $request->tribe_id,
-            'tags' => json_encode($request->tags)
+            'tags' => $request->tags
         ]);
         broadcast(new AddFeed($user, $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')))->toOthers();
         return $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars');
@@ -387,7 +387,7 @@ class FeedController extends Controller
         }
 
         if ($request->has('tags') && $request->filled('tags') && !empty($request->input('tags'))) {
-            $feed->tags = json_encode($request->tags);
+            $feed->tags = $request->tags;
         }
         if ($request->has('publicId') && $request->filled('publicId') && !empty($request->input('publicId'))) {
             $feed->publicId = $request->publicId;

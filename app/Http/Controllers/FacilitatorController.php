@@ -301,7 +301,7 @@ class FacilitatorController extends Controller
                     'contact_name' => $request->contact_name,
                     'contact_address' => $request->contact_address,
                     'contact_phone' => $request->contact_phone,
-                    'interest' => json_encode($request->interest),
+                    'interest' => $request->interest,
                     'bio' => $request->bio,
                     'logo' => $request->profile,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,

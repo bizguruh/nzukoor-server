@@ -247,6 +247,7 @@ class User extends Authenticatable
         'show_email' => 'boolean',
         'verification' => 'boolean',
         'email_verified_at' => 'datetime',
+        'interests' => 'array'
     ];
 
     public function findForPassport($username)

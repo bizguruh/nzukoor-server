@@ -62,7 +62,7 @@ class OrganizationController extends Controller
                 'contact_name' => $request->contact_name,
                 'contact_address' => $request->contact_address,
                 'contact_phone' => $request->contact_phone,
-                'interest' => json_encode($request->interest),
+                'interest' => $request->interest,
                 'bio' => $request->bio,
                 'logo' => $request->profile,
                 'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
@@ -126,7 +126,7 @@ class OrganizationController extends Controller
         $organization->email = $request->email;
         $organization->address = $request->address;
         $organization->phone = $request->phone;
-        $organization->interest = json_encode($request->interest);
+        $organization->interest = $request->interest;
         $organization->bio = $request->bio;
         $organization->logo = $request->logo;
         $organization->verification = $request->verification;

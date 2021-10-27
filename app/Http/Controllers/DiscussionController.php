@@ -8,8 +8,10 @@ use App\Models\Discussion;
 use App\Support\Collection;
 use Illuminate\Http\Request;
 use App\Models\DiscussionMessage;
+use Illuminate\Support\Facades\Cache;
 use App\Models\DiscussionMessageComment;
 use App\Notifications\NewTribeDiscussion;
+use App\Http\Resources\DiscussionResource;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\TribeDiscussionResource;
 
@@ -37,7 +39,12 @@ class DiscussionController extends Controller
             $user = auth('api')->user();
         }
 
-        return Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
+
+        $discussions = Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
+
+        return Cache::remember('discussions', 60, function () use ($discussions) {
+            return $discussions;
+        });
     }
     public function discussionmembers($id)
     {
@@ -129,10 +136,10 @@ class DiscussionController extends Controller
         }
 
         if (is_null($user->interests)) return;
-        $interests = json_decode($user->interests);
+        $interests = $user->interests;
         $discussion = Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
         $result =   $discussion->filter(function ($a) use ($interests) {
-            $tags = collect(json_decode($a->tags))->map(function ($t) {
+            $tags = collect($a->tags)->map(function ($t) {
                 return $t->value;
             });
 
@@ -181,7 +188,7 @@ class DiscussionController extends Controller
             'type' => $request->type,
             'name' => $request->name,
             'category' => $tribe->category,
-            'tags' => json_encode($request->tags),
+            'tags' => $request->tags,
             'creator' => $sender,
             'description' => $request->description,
             'course_id' => $request->course_id,
@@ -238,7 +245,7 @@ class DiscussionController extends Controller
 
         $newdis = [];
         foreach ($alldiscussions as $key => $value) {
-            $intersect =   array_intersect(sorttag(json_decode($value->tags)), sorttag(json_decode($discussion->tags)));
+            $intersect =   array_intersect(sorttag($value->tags), sorttag($discussion->tags));
             if (count($intersect) > 0) {
                 array_push($newdis, $value);
             }
@@ -263,8 +270,8 @@ class DiscussionController extends Controller
         $discussion = Discussion::where('id', $id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->first();
         $related =  $alldiscussions->filter(function ($a) use ($discussion) {
 
-            if (!is_null($a['tags']) && count(json_decode($a['tags']))) {
-                $interests = array_intersect(filtertag(json_decode($discussion->tags)), filtertag(json_decode($a->tags)));
+            if (!is_null($a['tags']) && count($a['tags'])) {
+                $interests = array_intersect(filtertag($discussion->tags), filtertag($a->tags));
 
                 return count($interests);
             }
@@ -299,14 +306,18 @@ class DiscussionController extends Controller
         $related =  $alldiscussions->filter(function ($a) use ($discussion) {
 
 
-            if (!is_null($a['tags']) && count(json_decode($a['tags']))) {
-                $interests = array_intersect(sorttags(json_decode($discussion->tags)), sorttags(json_decode($a->tags)));
+            if (!is_null($a['tags']) && count($a['tags'])) {
+                $interests = array_intersect(sorttags($discussion->tags), sorttags($a->tags));
 
                 return count($interests);
             }
         });
         $discussion->related = $related->values()->all();
-        return $discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
+        $data =  new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
+
+        return Cache::remember('discussion', 60, function () use ($data) {
+            return $data;
+        });
     }
 
     public function getdiscussion($id)
@@ -338,10 +349,10 @@ class DiscussionController extends Controller
             $discussion->name = $request->name;
         }
         if ($request->has('category') && $request->filled('category') && !empty($request->input('category'))) {
-            $discussion->category = json_encode($request->category);
+            $discussion->category = $request->category;
         }
         if ($request->has('tags') && $request->filled('tags') && !empty($request->input('tags'))) {
-            $discussion->tags = json_encode($request->tags);
+            $discussion->tags = $request->tags;
         }
         if ($request->has('creator') && $request->filled('creator') && !empty($request->input('creator'))) {
             $discussion->creator = $request->creator;

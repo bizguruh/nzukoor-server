@@ -13,10 +13,10 @@ class AddUserIdToEventsTable extends Migration
      */
     public function up()
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->unsignedBigInteger("user_id")->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->nullable();
-        });
+        // Schema::table('events', function (Blueprint $table) {
+        //     $table->unsignedBigInteger("user_id")->nullable();
+        //     $table->foreign('user_id')->references('id')->on('users')->nullable();
+        // });
     }
 
     /**

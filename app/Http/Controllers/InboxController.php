@@ -26,18 +26,12 @@ class InboxController extends Controller
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
         }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $data = Inbox::where([['receiver', '=', 'facilitator'], ['receiver_id', '=', $user->id]])->orWhere('facilitator_id', $user->id)->get();
-        }
+
         if (auth('api')->user()) {
             $user = auth('api')->user();
             $data = Inbox::where([['receiver', '=', 'user'], ['receiver_id', '=', $user->id]])->orWhere('user_id', $user->id)->get();
         }
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $data = Inbox::where([['receiver', '=', 'admin'], ['receiver_id', '=', $user->id]])->orWhere('admin_id', $user->id)->get();
-        }
+
 
         return InboxResource::collection($data);
     }
