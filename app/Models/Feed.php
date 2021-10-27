@@ -48,4 +48,9 @@ class Feed extends Model
     {
         return $this->hasMany(FeedStar::class)->with('admin', 'user', 'facilitator')->latest();
     }
+
+    protected $casts = [
+
+        'tags' => 'array'
+    ];
 }

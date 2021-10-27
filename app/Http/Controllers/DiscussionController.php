@@ -7,6 +7,7 @@ use App\Models\Tribe;
 use App\Models\Discussion;
 use App\Support\Collection;
 use Illuminate\Http\Request;
+use App\Events\NotificationSent;
 use App\Models\DiscussionMessage;
 use Illuminate\Support\Facades\Cache;
 use App\Models\DiscussionMessageComment;
@@ -218,9 +219,9 @@ class DiscussionController extends Controller
         ];
 
 
-        Notification::send($tribemembers, new NewTribeDiscussion($details));
-        broadcast(new NotificationSent());
-        return $data->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
+        // Notification::send($tribemembers, new NewTribeDiscussion($details));
+        // broadcast(new NotificationSent());
+        return $data->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
     }
 
     /**

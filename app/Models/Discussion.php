@@ -62,4 +62,10 @@ class Discussion extends Model
         'facilitator_id',
         'course_id'
     ];
+
+    protected $casts = [
+
+        'category' => 'array',
+        'tags' => 'array'
+    ];
 }

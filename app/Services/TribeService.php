@@ -37,7 +37,7 @@ class  TribeService
       return response([
         'success' => true,
         'message' => 'creation successful',
-        'data' => $tribe->load('users', 'courses', 'discussions', 'feeds', 'events'),
+        'data' => $tribe->load('users', 'discussions', 'feeds', 'events'),
         'bank_info' => $bank_info
       ], 201);
     });

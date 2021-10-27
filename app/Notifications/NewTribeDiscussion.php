@@ -65,7 +65,7 @@ class NewTribeDiscussion extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'notification' => $this->details['message'],
+            'notification' => $this->details['body'],
             'url' => $this->details['url']
 
         ];

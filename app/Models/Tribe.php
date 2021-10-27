@@ -61,4 +61,9 @@ class Tribe extends Model
 
         return $user;
     }
+    protected $casts = [
+
+        'tags' => 'array',
+        'category' => 'array'
+    ];
 }

@@ -42,7 +42,7 @@ class FeedController extends Controller
     }
     public function guestfeeds()
     {
-        return Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest()->paginate(15);
+        return Feed::where('tribe_id', null)->with('user', 'comments', 'likes', 'stars')->latest()->paginate(15);
     }
     public function index()
     {
@@ -64,17 +64,17 @@ class FeedController extends Controller
         }
         $connection = $user->connections()->get()->toArray();
         $connections = ConnectionResource::collection($connection);
-        $myfeeds = $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->toArray();
+        $myfeeds = $user->feeds()->with('user', 'comments', 'likes', 'stars')->get()->toArray();
 
 
         $newarr =  array_map(function ($a) {
             if ($a['follow_type'] == 'user') {
                 $u = User::find($a['following_id']);
-                return $u->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get();
+                return $u->feeds()->with('user', 'comments', 'likes', 'stars')->get();
             }
             if ($a['follow_type'] == 'facilitator') {
                 $u = Facilitator::find($a['following_id']);
-                return $u->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get();
+                return $u->feeds()->with('user', 'comments', 'likes', 'stars')->get();
             }
         }, $connection);
         $filterArray = array_filter($newarr, function ($a) {
@@ -163,7 +163,7 @@ class FeedController extends Controller
     }
     public function getTrendingFeedInterest()
     {
-        $interests = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) {
+        $interests = Feed::where('tribe_id', null)->with('user', 'comments', 'likes', 'stars')->get()->map(function ($i) {
             return $i->tags;
         })->filter(function ($tag) {
             return $tag;
@@ -207,7 +207,7 @@ class FeedController extends Controller
 
     public function getSpecificFeed($interest)
     {
-        $feeds = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->map(function ($i) use ($interest) {
+        $feeds = Feed::where('tribe_id', null)->with('user', 'comments', 'likes', 'stars')->get()->map(function ($i) use ($interest) {
             if (!is_null($i->tags) && count($i->tags))
                 $i->tags = collect($i->tags)->map(function ($v) {
                     return $v->text;
@@ -228,7 +228,7 @@ class FeedController extends Controller
         return (new Collection($trend->values()->all()))->paginate(15);
     }
 
-    public function recentFeedsByInterest()
+    public function customFeeds()
     {
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
@@ -243,9 +243,9 @@ class FeedController extends Controller
             $user = auth('api')->user();
         }
 
-        if (is_null($user->interests)) return;
+        if (is_null($user->interests)) return response('empty');
         $interests = $user->interests;
-        $feeds = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->filter(function ($f)
+        $feeds = Feed::where('tribe_id', null)->with('user', 'comments', 'likes', 'stars')->get()->filter(function ($f)
         use ($interests) {
             $tags = collect($f->tags)->map(function ($t) {
                 return $t->value;
@@ -254,7 +254,7 @@ class FeedController extends Controller
             $check = array_intersect($interests, $tags->toArray());
             return count($check);
         });
-        $myfeeds = $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->toArray();
+        $myfeeds = $user->feeds()->with('user', 'comments', 'likes', 'stars')->get()->toArray();
         $mergedfeeds = collect(array_merge($feeds->toArray(), $myfeeds))->sortByDesc(function ($a) {
             return $a['created_at'];
         });
@@ -263,7 +263,7 @@ class FeedController extends Controller
         return (new Collection($removeDuplicate))->paginate(15);
     }
 
-    public function customFeeds()
+    public function recentFeedsByInterest()
     {
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
@@ -287,10 +287,10 @@ class FeedController extends Controller
             return $f->user_id;
         });
 
-        $myfeeds = $user->feeds()->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->toArray();
+        $myfeeds = $user->feeds()->with('user', 'comments', 'likes', 'stars')->get()->toArray();
 
         $feeds = Feed::orWhereIn('user_id', $users)
-            ->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')
+            ->with('user', 'comments', 'likes', 'stars')
             ->latest()
             ->get()->toArray();
 
@@ -302,7 +302,7 @@ class FeedController extends Controller
     }
     public function trendingFeedsByComments()
     {
-        $sorted = Feed::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->get()->sortByDesc(function ($f) {
+        $sorted = Feed::where('tribe_id', null)->with('user', 'comments', 'likes', 'stars')->get()->sortByDesc(function ($f) {
             return count($f['comments']);
         });
 
@@ -336,7 +336,7 @@ class FeedController extends Controller
 
 
         $data = $user->feeds()->create([
-            'organization_id' => $user->organization_id ? $user->organization_id : 1,
+            'organization_id' => 1,
             'media' => $request->media,
             'url' => $request->url,
             'publicId' => $request->publicId,
@@ -344,8 +344,8 @@ class FeedController extends Controller
             'tribe_id' => $request->tribe_id,
             'tags' => $request->tags
         ]);
-        broadcast(new AddFeed($user, $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')))->toOthers();
-        return $data->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars');
+        broadcast(new AddFeed($user, $data->load('user', 'comments', 'likes', 'stars')))->toOthers();
+        return $data->load('user', 'comments', 'likes', 'stars');
     }
 
     /**
@@ -356,7 +356,7 @@ class FeedController extends Controller
      */
     public function show(Feed $feed)
     {
-        return  $feed->load('admin', 'user', 'facilitator', 'comments', 'likes', 'stars');
+        return  $feed->load('user', 'comments', 'likes', 'stars');
     }
 
     /**

@@ -353,7 +353,7 @@ class UserController extends Controller
                 ]);
                 $details = [
                     'greeting' => 'Welcome',
-                    'body' => "Welcome to Nzukoor, Find facilitators, courses,events according to your personal interests.",
+                    'body' => "Welcome to Nzukoor, Find discussions, share ideas, stories, discover events and so much more, according to your personal interests.",
                     'thanks' => 'Thanks',
                     'actionText' => '',
                     'url' => '',
