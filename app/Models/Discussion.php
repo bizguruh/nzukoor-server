@@ -42,7 +42,7 @@ class Discussion extends Model
 
     public function discussionmessage()
     {
-        return $this->hasMany(DiscussionMessage::class)->with('user',  'discussionmessagecomment')->orderBy('id', 'DESC');
+        return $this->hasMany(DiscussionMessage::class)->with('user',  'discussionmessagecomment', 'discussionmessagevote')->orderBy('id', 'DESC');
     }
     public function discussionvote()
     {

@@ -193,12 +193,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('users', UserController::class);
-
-
     Route::apiResource('feedbacks', FeedbackController::class);
-
-
-
     Route::get('user-get-events', [EventController::class, 'usergetevents']);
     Route::get('user-get-event/{id}', [EventController::class, 'usergetevent']);
 
@@ -244,8 +239,6 @@ Route::apiResource('discussion/message/replies', DiscussionMessageCommentControl
 Route::apiResource('views', DiscussionViewController::class);
 Route::apiResource('votes', DiscussionVoteController::class);
 Route::get('add-view/{id}', [DiscussionViewController::class, 'addview']);
-
-Route::apiResource('votes', DiscussionVoteController::class);
 Route::apiResource('tags', TagController::class);
 Route::apiResource('feeds', FeedController::class);
 Route::apiResource('reports', ReportController::class);
@@ -466,6 +459,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('get/tribe/myevents/{tribe}', [TribeController::class, 'mytribeevents']);
     Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscussions']);
     Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
+    Route::post('vote/discussion/message', [DiscussionMessageController::class, 'votediscussionmessage']);
 });
 
 Route::get('search', [TribeSearchController::class, 'search']);

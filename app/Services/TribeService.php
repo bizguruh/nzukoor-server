@@ -19,7 +19,7 @@ class  TribeService
     return  DB::transaction(function () use ($user, $request) {
       $tribe = Tribe::create([
         'name' => $request->name,
-        'cover' => $request->cover,
+        'cover' => $request->input('cover', 'http://localhost:8000/tribe.jpeg'),
         'type' => $request->type,
         'amount' => $request->amount,
         'description' => $request->description,
@@ -44,9 +44,10 @@ class  TribeService
   }
   public function getmembers($tribe, $user)
   {
-    return $tribe->users()->get()->filter(function ($a) use ($user) {
+    $members = $tribe->users()->get()->filter(function ($a) use ($user) {
       return $a->id != $user->id;
     });
+    return (new Collection($members))->paginate(15);
   }
 
   public function suggestedtribe($user)

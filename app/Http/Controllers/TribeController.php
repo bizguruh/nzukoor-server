@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\TribeService;
 use App\Http\Resources\TribeResource;
 use Illuminate\Support\Facades\Cache;
+use App\Support\Collection;
 use App\Http\Resources\TribeDiscussionResource;
 
 class TribeController extends Controller
@@ -43,9 +44,13 @@ class TribeController extends Controller
 
     public function tribemembers(Tribe $tribe)
     {
-        $tribemembers = $this->tribeservice->getmembers($tribe, $this->user);
-        return Cache::remember('tribemembers' . $tribe->id, 60, function () use ($tribemembers) {
-            return $tribemembers;
+        $user = $this->user;
+        $tribemembers = $tribe->users()->get()->filter(function ($a) use ($user) {
+            return $a->id != $user->id;
+        });
+        $members = (new Collection($tribemembers))->paginate(15);
+        return Cache::remember('tribemembers' . $tribe->id, 60, function () use ($members) {
+            return $members;
         });
     }
 

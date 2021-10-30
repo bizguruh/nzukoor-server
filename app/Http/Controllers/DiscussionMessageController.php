@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Events\AddDiscussion;
 use App\Models\DiscussionMessage;
 use Illuminate\Support\Facades\DB;
+use App\Models\DiscussionMessageVote;
 use App\Notifications\NewDiscussionReply;
 
 class DiscussionMessageController extends Controller
@@ -103,6 +104,34 @@ class DiscussionMessageController extends Controller
 
             return $data->load('admin', 'user', 'facilitator', 'discussionmessagecomment');
         });
+    }
+    public function votediscussionmessage(Request $request)
+    {
+
+
+        $user = auth('api')->user();
+        $data = $user->discussionmessagevote()->where('discussion_message_id', $request->discussion_message_id)->first();
+
+        $data = $user->discussionmessagevote()->firstOrNew([
+            'discussion_message_id' => intval($request->discussion_message_id),
+        ]);
+        $data->vote = $request->vote;
+        $data->save();
+
+
+        $discussionMessage = DiscussionMessageVote::where('discussion_message_id', $request->discussion_message_id)->get();
+        $positive = count(array_filter($discussionMessage->toArray(), function ($a) {
+            return $a['vote'];
+        }));
+        $negative = count(array_filter($discussionMessage->toArray(), function ($a) {
+            return !$a['vote'];
+        }));
+        $count = $positive - $negative;
+
+        return  response()->json([
+            'count' => $count,
+            'status' => 'updated',
+        ]);
     }
 
 

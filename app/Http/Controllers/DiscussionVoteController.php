@@ -14,13 +14,7 @@ class DiscussionVoteController extends Controller
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
         }
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $sender = 'admin';
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
+
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
@@ -31,7 +25,20 @@ class DiscussionVoteController extends Controller
         ]);
         $data->vote = $request->vote;
         $data->save();
-        return $data;
+
+        $discussionMessage = DiscussionVote::where('discussion_id', $request->id)->get();
+        $positive = count(array_filter($discussionMessage->toArray(), function ($a) {
+            return $a['vote'];
+        }));
+        $negative = count(array_filter($discussionMessage->toArray(), function ($a) {
+            return !$a['vote'];
+        }));
+        $count = $positive - $negative;
+
+        return  response()->json([
+            'count' => $count,
+            'status' => 'updated',
+        ]);
     }
 
     /**

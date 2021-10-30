@@ -30,11 +30,11 @@ class DiscussionResource extends JsonResource
         return [
             "id" => $this->id,
             "name" => $this->name,
-            "category" => $this->category,
+            // "category" => $this->category,
             "description" => $this->description,
             "type" => $this->type,
             'commentCount' => count($this->discussionmessage),
-            "discussionmessage" => $this->discussionmessage,
+            "discussionmessage" => DiscussionMessageResource::collection($this->discussionmessage),
             "discussionvote" => $this->handleVote(),
             'discussionview' => $this->discussionview ? $this->discussionview->view : 0,
             'user_id' => $this->user_id,

@@ -204,6 +204,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(DiscussionMessageComment::class);
     }
+    public function discussionmessagevote()
+    {
+        return $this->hasMany(DiscussionMessageVote::class);
+    }
     public function discussionvote()
     {
         return $this->hasMany(DiscussionVote::class);
@@ -234,6 +238,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'organization_id'
     ];
 
     /**
@@ -247,7 +252,8 @@ class User extends Authenticatable
         'show_email' => 'boolean',
         'verification' => 'boolean',
         'email_verified_at' => 'datetime',
-        'interests' => 'array'
+        'interests' => 'array',
+
     ];
 
     public function findForPassport($username)

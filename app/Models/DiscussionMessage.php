@@ -23,7 +23,11 @@ class DiscussionMessage extends Model
     }
     public function discussionmessagecomment()
     {
-        return $this->hasMany(DiscussionMessageComment::class)->with('user', 'admin', 'facilitator', 'discussionmessage')->latest();
+        return $this->hasMany(DiscussionMessageComment::class)->with('user', 'discussionmessage')->latest();
+    }
+    public function discussionmessagevote()
+    {
+        return $this->hasMany(DiscussionMessageVote::class)->with('user', 'discussionmessage')->latest();
     }
     public function user()
     {
