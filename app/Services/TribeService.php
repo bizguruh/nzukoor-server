@@ -19,7 +19,7 @@ class  TribeService
     return  DB::transaction(function () use ($user, $request) {
       $tribe = Tribe::create([
         'name' => $request->name,
-        'cover' => $request->input('cover', 'http://localhost:8000/tribe.jpeg'),
+        'cover' => $request->input('cover', 'https://nzukoor-server.herokuapp.com/tribe.jpeg'),
         'type' => $request->type,
         'amount' => $request->amount,
         'description' => $request->description,

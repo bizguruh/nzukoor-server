@@ -87,7 +87,7 @@ class DiscussionMessageController extends Controller
             $contribution->save();
 
 
-            broadcast(new AddDiscussion($user, $data->load('admin', 'user', 'facilitator', 'discussionmessagecomment')))->toOthers();
+            broadcast(new AddDiscussion($user, $data->load('user',  'discussionmessagecomment', 'discussionmessagevote')))->toOthers();
 
             $title = $user->username . ' replied your discussion - ' . Discussion::find($request->discussion_id)->name;
             $detail = [
@@ -102,7 +102,7 @@ class DiscussionMessageController extends Controller
                 $creator->notify(new NewDiscussionReply($detail));
             }
 
-            return $data->load('admin', 'user', 'facilitator', 'discussionmessagecomment');
+            return $data->load('user', 'discussionmessagecomment', 'discussionmessagevote');
         });
     }
     public function votediscussionmessage(Request $request)

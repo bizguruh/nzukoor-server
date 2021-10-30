@@ -206,7 +206,9 @@ class DiscussionController extends Controller
         }
 
         $tribe = Tribe::find($request->tribe_id);
-        $tribemembers = $tribe->users()->get();
+        $tribemembers = $tribe->users()->get()->filter(function ($a) use ($user) {
+            return $a->id != $user->id;
+        });
         $details = [
             'from_email' => 'nzukoor@gmail.com',
             'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
@@ -219,8 +221,8 @@ class DiscussionController extends Controller
         ];
 
 
-        // Notification::send($tribemembers, new NewTribeDiscussion($details));
-        // broadcast(new NotificationSent());
+        Notification::send($tribemembers, new NewTribeDiscussion($details));
+        broadcast(new NotificationSent())->toOthers();
         return $data->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
     }
 

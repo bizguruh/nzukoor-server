@@ -113,7 +113,9 @@ class EventController extends Controller
 
         ]);
         $tribe = Tribe::find($request->tribe_id);
-        $tribemembers = $tribe->users()->get();
+        $tribemembers = $tribe->users()->get()->filter(function ($a) use ($user) {
+            return $a->id != $user->id;
+        });
         $details = [
             'from_email' => 'nzukoor@gmail.com',
             'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
@@ -127,7 +129,7 @@ class EventController extends Controller
 
 
         Notification::send($tribemembers, new NewTribeEvent($details));
-        broadcast(new NotificationSent());
+        broadcast(new NotificationSent())->toOthers();
         return response($event->load('eventattendance', 'facilitator', 'tribe'), 201);
     }
 
@@ -206,10 +208,9 @@ class EventController extends Controller
         }
         if ($request->has('type') && $request->filled('type') && !empty($request->input('type'))) {
             $event->end = $request->end;
-
-            if ($request->has('status') && $request->filled('status') && !empty($request->input('status'))) {
-                $event->status = $request->status;
-            }
+        }
+        if ($request->has('status') && $request->filled('status') && !empty($request->input('status'))) {
+            $event->status = $request->status;
         }
         if ($request->has('resource') && $request->filled('resource') && !empty($request->input('resource'))) {
             $event->resource  = $request->resource;
