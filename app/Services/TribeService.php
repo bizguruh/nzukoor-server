@@ -17,9 +17,14 @@ class  TribeService
   {
 
     return  DB::transaction(function () use ($user, $request) {
+      if ($request->has('cover') && $request->filled('cover') && !empty($request->input('cover'))) {
+        $cover = $request->cover;
+      } else {
+        $cover = 'https://nzukoor-server.herokuapp.com/tribe.jpeg';
+      }
       $tribe = Tribe::create([
         'name' => $request->name,
-        'cover' => $request->input('cover', 'https://nzukoor-server.herokuapp.com/tribe.jpeg'),
+        'cover' => $cover,
         'type' => $request->type,
         'amount' => $request->amount,
         'description' => $request->description,
@@ -37,7 +42,7 @@ class  TribeService
       return response([
         'success' => true,
         'message' => 'creation successful',
-        'data' => $tribe->load('users', 'discussions', 'feeds', 'events'),
+        'data' => new TribeResource($tribe->load('users')),
         'bank_info' => $bank_info
       ], 201);
     });
@@ -111,7 +116,7 @@ class  TribeService
     return response()->json([
       'success' => true,
       'message' => 'update successful',
-      'data' => $tribe
+      'data' => new TribeResource($tribe->load('users'))
     ]);
   }
   public function addusertotribe($tribe, $user)

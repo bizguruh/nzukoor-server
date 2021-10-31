@@ -41,7 +41,7 @@ class Tribe extends Model
 
         $user = $this->users()->with('accountdetail')->where('is_owner', 1)->first();
         if (!$user->accountdetail) {
-            return [];
+            return null;
         }
         return [
             'name' => $user->name,

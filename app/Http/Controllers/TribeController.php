@@ -126,12 +126,18 @@ class TribeController extends Controller
 
     public function update(Request $request, Tribe $tribe)
     {
+
+        $owner = $tribe->getTribeOwner();
+        if ($this->user->id !== $owner) return response('Unauthorised', 401);
         return $this->tribeservice->update($this->user, $request, $tribe);
     }
 
 
     public function destroy(Tribe $tribe)
     {
+
+        $owner = $tribe->getTribeOwner();
+        if ($this->user->id !== $owner) return response('Unauthorised', 401);
         return $this->tribeservice->remove($tribe);
     }
 }

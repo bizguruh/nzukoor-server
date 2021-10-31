@@ -593,7 +593,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return $user;
+        return $user->load('accountdetail');
     }
 
     public function updatepassword(Request $request)
