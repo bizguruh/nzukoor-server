@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,12 +41,13 @@ class Tribe extends Model
     {
 
         $user = $this->users()->with('accountdetail')->where('is_owner', 1)->first();
-        if (!$user->accountdetail) {
+        if (!$user) {
             return null;
         }
         return [
             'name' => $user->name,
-            'split_code' => $user->accountdetail->group_split_code
+            'split_code' => $user->accountdetail->group_split_code,
+            'data' => new UserResource($user)
         ];
     }
     public function getTribeOwner()

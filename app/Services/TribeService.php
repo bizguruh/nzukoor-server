@@ -181,7 +181,7 @@ class  TribeService
   public function gettribediscussions($tribe)
   {
 
-    return (new Collection($tribe->discussions))->paginate(15);
+    return (new Collection($tribe->discussions))->paginate(2);
   }
   public function leavetribe($tribe, $user)
   {

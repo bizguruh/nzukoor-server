@@ -118,7 +118,7 @@ class DiscussionController extends Controller
         $sorted = $discussion->sortByDesc(function ($a) {
             return count($a['discussionmessage']);
         });
-        return TribeDiscussionResource::collection((new Collection($sorted))->paginate(15))->response()->getData(true);
+        return TribeDiscussionResource::collection((new Collection($sorted))->paginate(2))->response()->getData(true);
     }
 
     public function interestdiscussions()
@@ -138,7 +138,7 @@ class DiscussionController extends Controller
 
         if (is_null($user->interests)) return;
         $interests = $user->interests;
-        $discussion = Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
+        $discussion = Discussion::where('tribe_id', null)->with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
         $result =   $discussion->filter(function ($a) use ($interests) {
             $tags = collect($a->tags)->map(function ($t) {
                 return $t->value;
@@ -379,6 +379,8 @@ class DiscussionController extends Controller
      */
     public function destroy(Discussion $discussion)
     {
+        $user = auth('api')->user();
+        if ($user->id != $discussion->user_id) return response('Unauthorised', 401);
         $discussion->delete();
         return response()->json([
             'message' => 'Delete successful'

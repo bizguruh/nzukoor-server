@@ -81,9 +81,9 @@ class TribeController extends Controller
 
     public function tribediscussions(Tribe $tribe)
     {
-
+        $currentPage = request()->get('page', 1);
         $tribediscsussions =  TribeDiscussionResource::collection($this->tribeservice->gettribediscussions($tribe))->response()->getData(true);
-        return Cache::remember('tribediscussions' . $tribe->id, 60, function () use ($tribediscsussions) {
+        return Cache::remember('tribediscussions' . $tribe->id . '-' . $currentPage, 60, function () use ($tribediscsussions) {
             return $tribediscsussions;
         });
     }
