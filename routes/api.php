@@ -27,6 +27,7 @@ use App\Http\Controllers\FeedLikeController;
 use App\Http\Controllers\FeedStarController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\BankDetailController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\DiscussionController;
@@ -50,16 +51,20 @@ use App\Http\Controllers\EventAttendanceController;
 use App\Http\Controllers\UserInformationController;
 use App\Http\Controllers\FeedCommentReplyController;
 use App\Http\Controllers\MemberAssessmentController;
+use App\Http\Controllers\OrganizationFeedController;
 use App\Http\Controllers\QuestionResponseController;
 use App\Http\Controllers\QuestionTemplateController;
 use App\Http\Controllers\DiscussionMessageController;
 use App\Http\Controllers\DiscussionRequestController;
 use App\Http\Controllers\FacilitatorModuleController;
+use App\Http\Controllers\OrganizationEventController;
+use App\Http\Controllers\OrganizationTribeController;
 use App\Http\Controllers\AssessmentResponseController;
+use App\Http\Controllers\OrganizationReportController;
 use App\Http\Controllers\CourseCommunityLinkController;
 use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
-use App\Http\Controllers\BankDetailController;
+use App\Http\Controllers\OrganizationDiscussionController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\DiscussionMessageCommentController;
 
@@ -88,11 +93,15 @@ Route::middleware(['auth:organization'])->group(function () {
     Route::apiResource('organizations', OrganizationController::class);
 
 
-    Route::post('register-admin', [AdminController::class, 'store']);
-    Route::get('get-admins', [OrganizationController::class, 'index']);
+    Route::post('register/admin', [OrganizationController::class, 'store']);
+    Route::post('register/superadmin', [OrganizationController::class, 'storesuperadmin']);
+    Route::get('get/organization/admins', [OrganizationController::class, 'index']);
     Route::get('get-admin/{id}', [OrganizationController::class, 'getadmin']);
     Route::put('update-admin/{id}', [OrganizationController::class, 'updateadmin']);
     Route::delete('delete-admin/{id}', [OrganizationController::class, 'deleteadmin']);
+    Route::put('verify/admin/{id}', [OrganizationController::class, 'verifyadmin']);
+
+    Route::put('verify/user/{id}', [OrganizationController::class, 'verifyuser']);
 
 
     Route::post('register-facilitator', [FacilitatorController::class, 'store']);
@@ -102,81 +111,89 @@ Route::middleware(['auth:organization'])->group(function () {
     Route::delete('delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
 
     Route::post('register-user', [UserController::class, 'store']);
-    Route::get('get-users', [OrganizationController::class, 'getusers']);
+    Route::get('get/organization/users', [OrganizationController::class, 'getusers']);
     Route::get('get-user/{id}', [OrganizationController::class, 'getuser']);
     Route::put('update-user/{id}', [OrganizationController::class, 'updateuser']);
     Route::delete('delete-user/{id}', [OrganizationController::class, 'deleteuser']);
+
+
+
+    Route::apiResource('get/organization/tribes', OrganizationTribeController::class);
+    Route::apiResource('get/organization/discussions', OrganizationDiscussionController::class);
+    Route::apiResource('get/organization/feeds', OrganizationFeedController::class);
+    Route::apiResource('get/organization/reports', OrganizationReportController::class);
+    Route::apiResource('get/organization/events', OrganizationEventController::class);
 });
 // organizations api routes ends here
 
 
 // admin api routes begin here
-Route::middleware('auth:admin')->get('/admin', function (Request $request) {
-    $login = new LoginHistoryController;
-    $login->store();
-    return $request->user()->load('organization');
-});
-Route::post('admin', [AdminController::class, 'store']);
+// Route::middleware('auth:admin')->get('/admin', function (Request $request) {
+//     $login = new LoginHistoryController;
+//     $login->store();
+//     return $request->user()->load('organization');
+// });
+// Route::post('admin', [AdminController::class, 'store']);
 
-Route::middleware(['auth:admin'])->group(function () {
-    Route::apiResource('admins', AdminController::class);
+// Route::middleware(['auth:admin'])->group(function () {
+//     Route::apiResource('admins', AdminController::class);
 
-    // Route::get('admin-get-facilitator/{id}', [OrganizationController::class, 'getfacilitator']);
+//     // Route::get('admin-get-facilitator/{id}', [OrganizationController::class, 'getfacilitator']);
 
-    Route::put('admin-update-facilitator/{id}', [OrganizationController::class, 'updatefacilitator']);
-    Route::delete('admin-delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
+//     Route::put('admin-update-facilitator/{id}', [OrganizationController::class, 'updatefacilitator']);
+//     Route::delete('admin-delete-facilitator/{id}', [OrganizationController::class, 'deletefacilitator']);
 
-    Route::post('admin-register-user', [UserController::class, 'adminStoreUser']);
+//     Route::post('admin-register-user', [UserController::class, 'adminStoreUser']);
 
-    Route::get('admin-get-users', [OrganizationController::class, 'admingetusers']);
-    Route::get('admin-get-user/{id}', [OrganizationController::class, 'getuser']);
-    Route::put('admin-update-user/{id}', [OrganizationController::class, 'updateuser']);
-    Route::delete('admin-delete-user/{id}', [OrganizationController::class, 'deleteuser']);
+//     Route::get('admin-get-users', [OrganizationController::class, 'admingetusers']);
+//     Route::get('admin-get-user/{id}', [OrganizationController::class, 'getuser']);
+//     Route::put('admin-update-user/{id}', [OrganizationController::class, 'updateuser']);
+//     Route::delete('admin-delete-user/{id}', [OrganizationController::class, 'deleteuser']);
 
 
-    Route::get('admin-get-facilitators', [FacilitatorController::class, 'admingetfacilitators']);
-    Route::get('admin-get-facilitator/{id}', [FacilitatorController::class, 'admingetfacilitator']);
+//     Route::get('admin-get-facilitators', [FacilitatorController::class, 'admingetfacilitators']);
+//     Route::get('admin-get-facilitator/{id}', [FacilitatorController::class, 'admingetfacilitator']);
 
-    Route::apiResource('curriculums', CurriculumController::class);
-});
+//     Route::apiResource('curriculums', CurriculumController::class);
+// });
 // admin api routes ends here
 
 
 // facilitator api routes begin here
 
-Route::middleware('auth:facilitator')->get('/facilitator', function (Request $request) {
-    $login = new LoginHistoryController;
-    $login->store();
-    return $request->user()->load('organization');
-});
+// Route::middleware('auth:facilitator')->get('/facilitator', function (Request $request) {
+//     $login = new LoginHistoryController;
+//     $login->store();
+//     return $request->user()->load('organization');
+// });
 
-Route::post('facilitator-register', [FacilitatorController::class, 'storefacilitator']);
+// Route::post('facilitator-register', [FacilitatorController::class, 'storefacilitator']);
 
-Route::post('facilitator-register-user', [UserController::class, 'facilitatorStoreUser']);
-
-
-Route::middleware(['auth:facilitator'])->group(function () {
+// Route::post('facilitator-register-user', [UserController::class, 'facilitatorStoreUser']);
 
 
-
-    Route::apiResource('facilitators', FacilitatorController::class);
-
-    Route::apiResource('facilitator/modules', FacilitatorModuleController::class);
-
-    Route::get('facilitator/get-user/{id}', [OrganizationController::class, 'getuser']);
-    Route::put('facilitator/update-user/{id}', [OrganizationController::class, 'updateuser']);
-    Route::post('facilitator/delete-user/{id}', [OrganizationController::class, 'deleteuser']);
+// Route::middleware(['auth:facilitator'])->group(function () {
 
 
-    Route::get('facilitator-get-events', [EventController::class, 'facilitatorgetevents']);
-    Route::get('facilitator-get-event/{id}', [EventController::class, 'facilitatorgetevent']);
 
-    Route::get('facilitator-get-users', [UserController::class, 'facilitatorgetusers']);
-    Route::get('facilitator-get-user/{id}', [UserController::class, 'facilitatorgetuser']);
+//     Route::apiResource('facilitators', FacilitatorController::class);
 
-    Route::get('facilitator-get-admins', [AdminController::class, 'facilitatorgetadmins']);
-    Route::get('facilitator-get-admin/{id}', [AdminController::class, 'facilitatorgetadmin']);
-});
+//     Route::apiResource('facilitator/modules', FacilitatorModuleController::class);
+
+//     Route::get('facilitator/get-user/{id}', [OrganizationController::class, 'getuser']);
+//     Route::put('facilitator/update-user/{id}', [OrganizationController::class, 'updateuser']);
+//     Route::post('facilitator/delete-user/{id}', [OrganizationController::class, 'deleteuser']);
+
+
+//     Route::get('facilitator-get-events', [EventController::class, 'facilitatorgetevents']);
+//     Route::get('facilitator-get-event/{id}', [EventController::class, 'facilitatorgetevent']);
+
+//     Route::get('facilitator-get-users', [UserController::class, 'facilitatorgetusers']);
+//     Route::get('facilitator-get-user/{id}', [UserController::class, 'facilitatorgetuser']);
+
+//     Route::get('facilitator-get-admins', [AdminController::class, 'facilitatorgetadmins']);
+//     Route::get('facilitator-get-admin/{id}', [AdminController::class, 'facilitatorgetadmin']);
+// });
 
 // facilitator api routes ends here
 
@@ -386,6 +403,7 @@ Route::get('guest/members', [UserController::class, 'index']);
 Route::get('guest/facilitators', [FacilitatorController::class, 'guestindex']);
 Route::get('guest/courses', [CourseController::class, 'guestcourses']);
 Route::get('guest/discussions', [DiscussionController::class, 'guestdiscussions']);
+Route::get('guest/explore/discussions', [DiscussionController::class, 'guestexplorediscussions']);
 Route::get('guest/events', [EventController::class, 'guestindex']);
 Route::get('guest/feeds', [FeedController::class, 'guestfeeds']);
 Route::get('guest/trending/feeds', [FeedController::class, 'getTrendingFeedInterest']);

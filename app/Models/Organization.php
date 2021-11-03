@@ -27,7 +27,8 @@ class Organization extends Authenticatable
         'logo',
         'email_verified_at',
         'verification',
-        'referral_code'
+        'referral_code',
+        'role_id'
     ];
 
     public function revenue()

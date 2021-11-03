@@ -28,11 +28,11 @@ class OrganizationController extends Controller
     public function index()
     {
         $user = auth('organization')->user();
-        return $user->admins()->with('loginhistory')->latest()->get();
+        return Organization::where('role_id', 3)->latest()->paginate(15);
     }
 
 
-    public function store(Request $request)
+    public function storesuperadmin(Request $request)
     {
 
         $result = DB::transaction(function () use ($request) {
@@ -43,6 +43,7 @@ class OrganizationController extends Controller
                 'email' => 'required|unique:organizations',
                 'password' => 'required|min:6',
                 'phone' => ' required|unique:organizations'
+
             ]);
 
             $referral_code =  $this->generateCode(2);
@@ -66,11 +67,57 @@ class OrganizationController extends Controller
                 'bio' => $request->bio,
                 'logo' => $request->profile,
                 'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
-                'verification' => $request->verification
+                'verification' => $request->verification,
+                'role_id' => 4
             ]);
 
-            $mail =  new MailController;
-            $mail->sendwelcome($user);
+            // $mail =  new MailController;
+            // $mail->sendroleinvite($user->name, $user);
+            return $user;
+        });
+        return response($result, 201);
+    }
+    public function store(Request $request)
+    {
+
+        $result = DB::transaction(function () use ($request) {
+
+
+            $validated = $request->validate([
+                'name' => 'required|max:255',
+                'email' => 'required|unique:organizations',
+                'password' => 'required|min:6',
+                'phone' => ' required|unique:organizations'
+
+            ]);
+
+            $referral_code =  $this->generateCode(2);
+            $check = Organization::where('referral_code', $referral_code)->first();
+            while (!is_null($check)) {
+                $referral_code =  $this->generateCode(2);
+                $check = Organization::where('referral_code', $referral_code)->first();
+            }
+
+
+            $user = Organization::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'address' => $request->address,
+                'phone' => $request->phone,
+                'contact_name' => $request->contact_name,
+                'contact_address' => $request->contact_address,
+                'contact_phone' => $request->contact_phone,
+                'interest' => $request->interest,
+                'bio' => $request->bio,
+                'logo' => $request->profile,
+                'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
+                'verification' => $request->verification,
+                'role_id' => 3
+            ]);
+
+            // $mail =  new MailController;
+            // $mail->sendroleinvite($user->name, $user);
             return $user;
         });
         return response($result, 201);
@@ -101,14 +148,14 @@ class OrganizationController extends Controller
     }
     public function getusers()
     {
-        $user = auth('organization')->user();
-        return $user->user()->with('loginhistory')->latest()->get();
+
+        return User::with('loginhistory')->latest()->paginate(15);
     }
 
     public function admingetusers()
     {
         $user = auth('admin')->user();
-        return User::where('organization_id', $user->organization_id)->with('loginhistory')->latest()->get();
+        return User::with('loginhistory')->latest()->paginate(15);
     }
 
 
@@ -136,12 +183,23 @@ class OrganizationController extends Controller
     public function updateadmin(Request $request, $id)
     {
 
-        $admin =  Admin::find($id);
-        $admin->name = $request->name;
-        $admin->email = $request->email;
-        $admin->bio = $request->bio;
-        $admin->profile = $request->profile;
-        $admin->verification = $request->verification;
+        $admin =  Organization::find($id);
+        if ($request->has('name') && $request->filled('name') && !empty($request->input('name'))) {
+            $admin->name = $request->name;
+        }
+        if ($request->has('email') && $request->filled('email') && !empty($request->input('email'))) {
+            $admin->email = $request->email;
+        }
+
+        if ($request->has('phone') && $request->filled('phone') && !empty($request->input('phone'))) {
+            $admin->phone = $request->phone;
+        }
+
+
+
+        // $admin->bio = $request->bio;
+        // $admin->profile = $request->profile;
+        // $admin->verification = $request->verification;
         $admin->save();
         return $admin;
     }
@@ -172,6 +230,23 @@ class OrganizationController extends Controller
         $user->save();
         return $user;
     }
+    public function verifyadmin(Request $request, $id)
+    {
+
+        $admin =  Organization::find($id);
+        $admin->verification = $request->value;
+        $admin->save();
+        return response()->noContent();
+    }
+
+    public function verifyuser(Request $request, $id)
+    {
+
+        $admin =  User::find($id);
+        $admin->verification = $request->value;
+        $admin->save();
+        return response()->noContent();
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -189,7 +264,7 @@ class OrganizationController extends Controller
     public function deleteadmin($id)
     {
 
-        $user =  Admin::find($id);
+        $user =  Organization::find($id);
         $user->delete();
         return response()->json([
             'message' => 'Delete successful'

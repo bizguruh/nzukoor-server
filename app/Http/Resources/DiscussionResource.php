@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Tribe;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,6 +24,19 @@ class DiscussionResource extends JsonResource
         }));
         return $positive - $negative;
     }
+    public function checkifmember($arr)
+    {
+
+        if (!auth('api')->user()) return false;
+        $id = auth('api')->user()->id;
+
+        return in_array(
+            $id,
+            array_map(function ($a) use ($arr) {
+                return $a;
+            }, $arr->toArray())
+        );
+    }
     public function toArray($request)
     {
 
@@ -40,6 +54,7 @@ class DiscussionResource extends JsonResource
             'user_id' => $this->user_id,
             "user" => new UserResource($this->user),
             'tags' => $this->tags,
+            'isMember' => $this->checkifmember(Tribe::find($this->tribe_id)->users()->pluck('user_id')),
             'tribe_id' => $this->tribe_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

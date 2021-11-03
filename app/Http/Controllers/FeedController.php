@@ -42,7 +42,7 @@ class FeedController extends Controller
     }
     public function guestfeeds()
     {
-        return Feed::where('tribe_id', null)->with('user', 'comments', 'likes', 'stars')->latest()->paginate(15);
+        return Feed::with('user', 'comments', 'likes', 'stars')->latest()->paginate(15);
     }
     public function index()
     {

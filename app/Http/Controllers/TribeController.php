@@ -113,7 +113,8 @@ class TribeController extends Controller
 
     public function show(Tribe $tribe)
     {
-        $showtribe = $this->tribeservice->gettribe($tribe);
+
+        $showtribe = $this->tribeservice->gettribe($tribe, $this->user);
         return Cache::remember('showtribe' . $tribe->id, 60, function () use ($showtribe) {
             return $showtribe;
         });

@@ -56,6 +56,14 @@ class Tribe extends Model
         $user = $this->users()->where('is_owner', 1)->first();
         return $user ? $user->id : null;
     }
+    public function getMembership($user_id)
+    {
+
+
+        $member = $this->users()->where('user_id', $user_id)->first();
+        return $member ? true : false;
+    }
+
     public function getUsersCount()
     {
 

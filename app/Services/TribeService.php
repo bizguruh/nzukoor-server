@@ -59,7 +59,7 @@ class  TribeService
   {
 
     $mytribe = $user->tribes()->get()->pluck('id');
-    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users', 'users', 'courses', 'discussions', 'feeds', 'events')->get();
+    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users', 'courses', 'discussions', 'feeds', 'events')->get();
 
     $interests = $user->interests;
     if (is_null($interests) || gettype($interests) !== 'array') {
@@ -67,14 +67,14 @@ class  TribeService
     }
     $result =  $tribe->filter(function ($a) use ($interests) {
       $tribeinterests =  collect($a->tags)->map(function ($b) {
-        return $b->value;
+        return $b['value'];
       })->toArray();
       $identical = array_intersect($interests, $tribeinterests);
 
       return  count($identical) ? $identical : '';
     });
 
-    return $result;
+    return  TribeResource::collection($result);
   }
   public function usertribe($user)
   {
@@ -83,14 +83,15 @@ class  TribeService
 
     return TribeResource::collection($data)->response()->getData(true);
   }
-  public function gettribe($tribe)
+  public function gettribe($tribe, $user)
   {
 
     return response()->json([
       'success' => true,
       'message' => 'successful',
       'data' => $tribe->load('users'),
-      'owner' => $tribe->getTribeOwnerAttribute()
+      'isMember' => $tribe->getMembership($user->id),
+      'owner' => $tribe->getTribeOwnerAttribute(),
     ]);
   }
 
@@ -181,7 +182,7 @@ class  TribeService
   public function gettribediscussions($tribe)
   {
 
-    return (new Collection($tribe->discussions))->paginate(2);
+    return (new Collection($tribe->discussions))->paginate(15);
   }
   public function leavetribe($tribe, $user)
   {
