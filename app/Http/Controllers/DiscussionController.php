@@ -352,6 +352,9 @@ class DiscussionController extends Controller
 
     public function update(Request $request, Discussion $discussion)
     {
+        $user = auth('api')->user();
+        if ($user->id != $discussion->user_id) return response('Unauthorised', 401);
+
         if ($request->has('type') && $request->filled('type') && !empty($request->input('type'))) {
             $discussion->type = $request->type;
         }
