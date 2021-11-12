@@ -7,6 +7,8 @@ use App\Events\AddCommment;
 use App\Models\FeedComment;
 use Illuminate\Http\Request;
 use App\Events\NotificationSent;
+use App\Http\Resources\FeedCommentResource;
+use App\Http\Resources\SingleFeedCommentResource;
 use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
 
@@ -87,8 +89,8 @@ class FeedCommentController extends Controller
             'comment' => $request->comment
         ]);
 
-        broadcast(new AddCommment($user, $data->load('admin', 'user', 'facilitator', 'feed')))->toOthers();
-        return $data->load('admin', 'user', 'facilitator', 'feed');
+        // broadcast(new AddCommment($user, new FeedCommentResource($data->load('user', 'feed'))))->toOthers();
+        return  new SingleFeedCommentResource($data->load('user', 'feed'));
     }
 
     /**
@@ -99,7 +101,7 @@ class FeedCommentController extends Controller
      */
     public function feedcommentreplies($id)
     {
-        return FeedCommentReply::where('feed_comment_id', $id)->paginate(15);
+        return FeedCommentReply::where('feed_comment_id', $id)->latest()->paginate(15);
     }
 
     /**

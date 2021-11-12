@@ -12,7 +12,7 @@ class FeedLike extends Model
 
     public function feed()
     {
-        return $this->belongsTo(Feed::class);
+        return $this->belongsTo(Feed::class)->with('likes');
     }
     public function user()
     {

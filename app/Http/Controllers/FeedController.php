@@ -6,13 +6,16 @@ use DateTime;
 use App\Models\Feed;
 use App\Models\User;
 use App\Events\AddFeed;
+use App\Models\FeedLike;
 use App\Models\Facilitator;
+use App\Models\FeedComment;
 use App\Support\Collection;
 use Illuminate\Http\Request;
 use App\Http\Resources\FeedResource;
+use App\Http\Resources\FeedLikeResource;
 use App\Http\Resources\ConnectionResource;
 use App\Http\Resources\SingleFeedResource;
-use App\Models\FeedComment;
+use App\Http\Resources\FeedCommentResource;
 
 class FeedController extends Controller
 {
@@ -310,7 +313,7 @@ class FeedController extends Controller
         });
 
 
-        return FeedResource::collection((new Collection($sorted->values()->all()))->paginate(15));
+        return SingleFeedResource::collection((new Collection($sorted->values()->all()))->paginate(15));
     }
     /**
      * Store a newly created resource in storage.
@@ -347,8 +350,9 @@ class FeedController extends Controller
             'tribe_id' => $request->tribe_id,
             'tags' => $request->tags
         ]);
-        broadcast(new AddFeed($user, $data->load('user', 'comments', 'likes')))->toOthers();
-        return $data->load('user', 'comments', 'likes');
+
+        broadcast(new AddFeed($user, new SingleFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();
+        return  new SingleFeedResource($data->load('user', 'comments', 'likes'));
     }
 
     /**
@@ -370,7 +374,11 @@ class FeedController extends Controller
      */
     public function feedcomments($id)
     {
-        return FeedComment::where('feed_id', $id)->paginate(15);
+        return FeedCommentResource::collection(FeedComment::with('feedcommentreplies')->where('feed_id', $id)->latest()->paginate(15));
+    }
+    public function feedlikes($id)
+    {
+        return FeedLikeResource::collection(FeedLike::where('feed_id', $id)->latest()->paginate(15));
     }
 
 

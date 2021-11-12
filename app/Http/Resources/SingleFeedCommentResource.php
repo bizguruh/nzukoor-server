@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FeedCommentResource extends JsonResource
+class SingleFeedCommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,6 +18,7 @@ class FeedCommentResource extends JsonResource
             'id' => $this['id'],
             'created_at' => $this['created_at'],
             "comment" =>  $this['comment'],
+            "feedCommentCount" => count($this['feed']->comments),
             "commentreplycount" => count($this['feedcommentreplies']),
             'feedcommentreplies' =>  FeedCommentRepliesResource::collection($this['feedcommentreplies']),
             "feedcommentlikes" => $this['feedcommentlikes'],

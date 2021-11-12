@@ -267,6 +267,7 @@ Route::get('recent/feeds', [FeedController::class, 'recentFeedsByInterest']);
 
 
 Route::apiResource('feed-comments', FeedCommentController::class);
+Route::get('feed/likes/{id}', [FeedController::class, 'feedlikes']);
 Route::get('feed/comments/{id}', [FeedController::class, 'feedcomments']);
 Route::get('feed/comment/replies/{id}', [FeedCommentController::class, 'feedcommentreplies']);
 Route::post('feed/comment/like', [FeedCommentController::class, 'commentlike']);

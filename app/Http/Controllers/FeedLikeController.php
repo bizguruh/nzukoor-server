@@ -74,7 +74,7 @@ class FeedLikeController extends Controller
             $creator = User::find(Feed::find($request->id)->user_id);
             $creator->notify(new FeedInteraction($detail));
         }
-        return $data->load('admin', 'user', 'facilitator', 'feed');
+        return $data->load('user',  'feed');
     }
 
     /**
