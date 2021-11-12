@@ -7,6 +7,7 @@ use App\Events\AddCommment;
 use App\Models\FeedComment;
 use Illuminate\Http\Request;
 use App\Events\NotificationSent;
+use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
 
 class FeedCommentController extends Controller
@@ -96,9 +97,9 @@ class FeedCommentController extends Controller
      * @param  \App\Models\FeedComment  $feedComment
      * @return \Illuminate\Http\Response
      */
-    public function show(FeedComment $feedComment)
+    public function feedcommentreplies($id)
     {
-        //
+        return FeedCommentReply::where('feed_comment_id', $id)->paginate(15);
     }
 
     /**

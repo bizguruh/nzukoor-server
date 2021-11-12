@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\FeedResource;
 use App\Http\Resources\ConnectionResource;
 use App\Http\Resources\SingleFeedResource;
-
+use App\Models\FeedComment;
 
 class FeedController extends Controller
 {
@@ -368,10 +368,11 @@ class FeedController extends Controller
      * @param  \App\Models\Feed  $feed
      * @return \Illuminate\Http\Response
      */
-    public function edit(Feed $feed)
+    public function feedcomments($id)
     {
-        //
+        return FeedComment::where('feed_id', $id)->paginate(15);
     }
+
 
     /**
      * Update the specified resource in storage.
