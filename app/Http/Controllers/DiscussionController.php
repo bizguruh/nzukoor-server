@@ -311,18 +311,18 @@ class DiscussionController extends Controller
         }
 
 
-        $alldiscussions =  Discussion::where('tribe_id', null)->with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
+        //  $alldiscussions =  Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
 
-        $related =  $alldiscussions->filter(function ($a) use ($discussion) {
+        // $related =  $alldiscussions->filter(function ($a) use ($discussion) {
 
 
-            if (!is_null($a['tags']) && count($a['tags'])) {
-                $interests = array_intersect(sorttags($discussion->tags), sorttags($a->tags));
+        //     if (!is_null($a['tags']) && count($a['tags'])) {
+        //         $interests = array_intersect(sorttags($discussion->tags), sorttags($a->tags));
 
-                return count($interests);
-            }
-        });
-        $discussion->related = $related->values()->all();
+        //         return count($interests);
+        //     }
+        // });
+        // $discussion->related = $related->values()->all();
         $data =  new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
 
         return Cache::remember('discussion', 60, function () use ($data) {
