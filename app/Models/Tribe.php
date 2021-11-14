@@ -46,7 +46,7 @@ class Tribe extends Model
         }
         return [
             'name' => $user->name,
-            'split_code' => $user->accountdetail->group_split_code | null,
+            'split_code' => $user->accountdetail ? $user->accountdetail->group_split_code : null,
             'data' => new UserResource($user)
         ];
     }
