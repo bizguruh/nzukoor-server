@@ -55,50 +55,13 @@ class FeedController extends Controller
             return ('Unauthorized');
         }
 
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $type = 'admin';
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $type = 'facilitator';
-        }
+
         if (auth('api')->user()) {
             $user = auth('api')->user();
             $type = 'user';
         }
-        $connection = $user->connections()->get()->toArray();
-        $connections = ConnectionResource::collection($connection);
-        $myfeeds = $user->feeds()->with('user', 'comments', 'likes')->get()->toArray();
-
-
-        $newarr =  array_map(function ($a) {
-            if ($a['follow_type'] == 'user') {
-                $u = User::find($a['following_id']);
-                return $u->feeds()->with('user', 'comments', 'likes')->get();
-            }
-            if ($a['follow_type'] == 'facilitator') {
-                $u = Facilitator::find($a['following_id']);
-                return $u->feeds()->with('user', 'comments', 'likes')->get();
-            }
-        }, $connection);
-        $filterArray = array_filter($newarr, function ($a) {
-            if (count($a)) {
-                return $a;
-            }
-        });
-        $singleArray = [];
-
-        foreach ($filterArray as $child) {
-            foreach ($child as $value) {
-                $singleArray[] = $value;
-            }
-        }
-        $mergedfeeds =  array_merge($myfeeds, $singleArray);
-        usort($mergedfeeds, function ($a, $b) {
-            return new DateTime($b['created_at']) <=> new DateTime($a['created_at']);
-        });
-        return (new Collection($mergedfeeds))->paginate(15);
+        $feeds =  Feed::with('user', 'comments', 'likes')->latest()->paginate(15);
+        return SingleFeedResource::collection($feeds);
     }
 
     /**
@@ -143,7 +106,7 @@ class FeedController extends Controller
         }
 
         $tags = $user->interests ? $user->interests : [];
-        $feeds = Feed::where('tribe_id', null)->get()->toArray();
+        $feeds = Feed::with('user', 'comments', 'likes')->get()->toArray();
         $allfeeds = [];
         if (count($feeds)) {
             if (count($tags)) {
@@ -176,7 +139,7 @@ class FeedController extends Controller
             return $a->text;
         })->unique();
 
-        $feeds  = Feed::where('tribe_id', null)->get()->map(function ($i) {
+        $feeds  = Feed::with('user', 'comments', 'likes')->get()->map(function ($i) {
             if (!is_null($i->tags) && count($i->tags))
                 $i->tags = collect($i->tags)->map(function ($v) {
                     return $v->text;
@@ -212,7 +175,7 @@ class FeedController extends Controller
 
     public function getSpecificFeed($interest)
     {
-        $feeds = Feed::where('tribe_id', null)->with('user', 'comments', 'likes')->get()->map(function ($i) use ($interest) {
+        $feeds = Feed::with('user', 'comments', 'likes')->get()->map(function ($i) use ($interest) {
             if (!is_null($i->tags) && count($i->tags))
                 $i->tags = collect($i->tags)->map(function ($v) {
                     return $v->text;
@@ -250,7 +213,7 @@ class FeedController extends Controller
 
         if (is_null($user->interests)) return response('empty');
         $interests = $user->interests;
-        $feeds = Feed::where('tribe_id', null)->with('user', 'comments', 'likes')->get()->filter(function ($f)
+        $feeds = Feed::with('user', 'comments', 'likes')->get()->filter(function ($f)
         use ($interests) {
             $tags = collect($f->tags)->map(function ($t) {
                 return $t->value;
@@ -268,7 +231,7 @@ class FeedController extends Controller
         return FeedResource::collection((new Collection($removeDuplicate))->paginate(15));
     }
 
-    public function recentFeedsByInterest()
+    public function recentFeedsByConnection()
     {
 
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
@@ -308,7 +271,7 @@ class FeedController extends Controller
     }
     public function trendingFeedsByComments()
     {
-        $sorted = Feed::where('tribe_id', null)->with('user', 'comments', 'likes')->get()->sortByDesc(function ($f) {
+        $sorted = Feed::with('user', 'comments', 'likes')->get()->sortByDesc(function ($f) {
             return count($f['comments']);
         });
 

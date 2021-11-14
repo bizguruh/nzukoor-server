@@ -263,7 +263,7 @@ Route::apiResource('feed/comment/reply', FeedCommentReplyController::class);
 Route::post('feed/comment/reply/like', [FeedCommentReplyController::class, 'replylike']);
 Route::get('trending/feeds', [FeedController::class, 'trendingFeedsByComments']);
 Route::get('custom/feeds', [FeedController::class, 'customFeeds']);
-Route::get('recent/feeds', [FeedController::class, 'recentFeedsByInterest']);
+Route::get('recent/feeds', [FeedController::class, 'recentFeedsByConnection']);
 
 
 Route::apiResource('feed-comments', FeedCommentController::class);
