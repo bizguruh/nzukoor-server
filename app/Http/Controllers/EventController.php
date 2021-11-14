@@ -160,7 +160,7 @@ class EventController extends Controller
             $details = [
 
                 'image' => $value['cover'],
-                'title' => 'Event is starting soon - Nzukoor',
+                'title' => 'Event is starting soon ',
                 'from_email' => 'nzukoor@gmail.com',
                 'from_name' => 'Nzukoor',
                 'greeting' => 'Hello',
