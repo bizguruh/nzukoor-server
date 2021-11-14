@@ -215,15 +215,17 @@ class FeedController extends Controller
         $interests = $user->interests;
         $feeds = Feed::with('user', 'comments', 'likes')->get()->filter(function ($f)
         use ($interests) {
-            if (is_null($f->tags)) {
-                return;
-            }
-            $tags = collect($f->tags)->map(function ($t) {
-                return $t->value;
-            });
+            if (!is_null($f->tags) && count($f->tags)) {
 
-            $check = array_intersect($interests, $tags->toArray());
-            return count($check);
+
+                $tags = collect($f->tags)->map(function ($t) {
+                    return $t->value;
+                });
+
+                $check = array_intersect($interests, $tags->toArray());
+                return count($check);
+            }
+            return;
         });
         $myfeeds = $user->feeds()->with('user', 'comments', 'likes')->get()->toArray();
         $mergedfeeds = collect(array_merge($feeds->toArray(), $myfeeds))->sortByDesc(function ($a) {
