@@ -14,8 +14,8 @@ class AddCategoryTagsToTribesTable extends Migration
     public function up()
     {
         Schema::table('tribes', function (Blueprint $table) {
-            $table->text('category');
-            $table->text('tags');
+
+            $table->json('tags');
         });
     }
 
@@ -27,7 +27,7 @@ class AddCategoryTagsToTribesTable extends Migration
     public function down()
     {
         Schema::table('tribes', function (Blueprint $table) {
-            $table->dropColumn('category', 'tags');
+            $table->dropColumn('tags');
         });
     }
 }

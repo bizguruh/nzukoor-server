@@ -61,7 +61,7 @@ class FeedLikeController extends Controller
         $data->save();
 
 
-        $title = $user->username . ' liked your post - Nzukoor';
+        $title = $user->username . ' liked your post ';
         $detail = [
             'title' => $title,
             'message' => Feed::find($request->id)->message,

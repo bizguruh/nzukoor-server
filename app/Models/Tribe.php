@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tribe extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'name', 'description', 'cover', 'category', 'tags', 'type', 'amount'];
+    protected $fillable = ['user_id', 'name', 'description', 'cover',  'tags', 'type', 'amount'];
 
     public function users()
     {
@@ -74,6 +74,6 @@ class Tribe extends Model
     protected $casts = [
 
         'tags' => 'array',
-        'category' => 'array'
+
     ];
 }

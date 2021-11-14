@@ -28,7 +28,7 @@ class  TribeService
         'type' => $request->type,
         'amount' => $request->amount,
         'description' => $request->description,
-        'category' => $request->category,
+
         'tags' => $request->tags
       ]);
       $user->tribes()->attach($tribe->id, ['is_owner' => true]);
