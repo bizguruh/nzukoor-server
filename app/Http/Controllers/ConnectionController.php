@@ -225,25 +225,16 @@ class ConnectionController extends Controller
             $check = array_intersect($interests, $userinterests);
             return count($check);
         });
-        $similarFacilitators = $allfacilitators->filter(function ($f)
-        use ($interests) {
-            $userinterests = $f->interests ? $f->interests : [];
-            $check = array_intersect($interests, $userinterests);
-            return count($check);
-        });
+
 
         $mapsimilarusers = $similarUsers->map(function ($a) use ($interests) {
 
             $a->similar = count(array_intersect($interests, $a->interests));
             return $a;
         });
-        $mapsimilarfacilitators = $similarFacilitators->map(function ($a) use ($interests) {
 
-            $a->similar = count(array_intersect($interests, $a->interests));
-            return $a;
-        });
 
-        $mergedUsers = array_merge($mapsimilarfacilitators->values()->all(), $mapsimilarusers->values()->all());
+        $mergedUsers = $mapsimilarusers->values()->all();
         return $mergedUsers;
     }
     public function getUsersWithInterest($interest)
