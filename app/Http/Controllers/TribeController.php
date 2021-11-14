@@ -45,9 +45,10 @@ class TribeController extends Controller
     public function tribemembers(Tribe $tribe)
     {
         $user = $this->user;
-        $tribemembers = $tribe->users()->get()->filter(function ($a) use ($user) {
-            return $a->id != $user->id;
-        });
+        $tribemembers = $tribe->users()->get();
+        // ->filter(function ($a) use ($user) {
+        //     return $a->id != $user->id;
+        // });
         $members = (new Collection($tribemembers))->paginate(15);
         return Cache::remember('tribemembers' . $tribe->id, 60, function () use ($members) {
             return $members;

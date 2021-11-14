@@ -71,7 +71,7 @@ class InboxController extends Controller
                 'status' => false,
 
             ]);
-            $title = $user->username . ' sent you a message - Nzukoor';
+            $title = $user->username . ' sent you a message ';
             $detail = [
                 'title' => $title,
                 'message' => $request->message,

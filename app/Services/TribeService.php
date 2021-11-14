@@ -49,9 +49,10 @@ class  TribeService
   }
   public function getmembers($tribe, $user)
   {
-    $members = $tribe->users()->get()->filter(function ($a) use ($user) {
-      return $a->id != $user->id;
-    });
+    $members = $tribe->users()->get();
+    // ->filter(function ($a) use ($user) {
+    //   return $a->id != $user->id;
+    // });
     return (new Collection($members))->paginate(15);
   }
 
