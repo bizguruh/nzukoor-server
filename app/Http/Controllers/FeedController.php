@@ -210,12 +210,12 @@ class FeedController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-
+        // feed by interests
         if (is_null($user->interests)) return response('empty');
         $interests = $user->interests;
         $feeds = Feed::with('user', 'comments', 'likes')->get()->filter(function ($f)
         use ($interests) {
-            if (!$f->tags) {
+            if (is_null($f->tags)) {
                 return;
             }
             $tags = collect($f->tags)->map(function ($t) {
