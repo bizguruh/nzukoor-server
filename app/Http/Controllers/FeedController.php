@@ -216,10 +216,8 @@ class FeedController extends Controller
         $feeds = Feed::with('user', 'comments', 'likes')->get()->filter(function ($f)
         use ($interests) {
             if (!is_null($f->tags) && count($f->tags)) {
-
-
                 $tags = collect($f->tags)->map(function ($t) {
-                    return $t->value;
+                    return $t['value'];
                 });
 
                 $check = array_intersect($interests, $tags->toArray());
