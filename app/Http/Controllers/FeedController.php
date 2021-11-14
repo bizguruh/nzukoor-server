@@ -215,7 +215,7 @@ class FeedController extends Controller
         $interests = $user->interests;
         $feeds = Feed::with('user', 'comments', 'likes')->get()->filter(function ($f)
         use ($interests) {
-            if (!count($f->tags) || $f->tags) {
+            if (!$f->tags) {
                 return;
             }
             $tags = collect($f->tags)->map(function ($t) {
