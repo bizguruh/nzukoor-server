@@ -51,6 +51,7 @@ class Feed extends Model
 
     protected $casts = [
 
-        'tags' => 'array'
+        'tags' => 'array',
+        'media' => 'array'
     ];
 }
