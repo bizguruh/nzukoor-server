@@ -377,7 +377,7 @@ class FeedController extends Controller
 
 
         $feed->save();
-        return $feed->load('user', 'comments', 'likes');
+        return new SingleFeedResource($feed->load('user', 'comments', 'likes'));
     }
 
     /**
