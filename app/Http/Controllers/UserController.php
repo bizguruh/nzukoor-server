@@ -59,6 +59,15 @@ class UserController extends Controller
             ]);
     }
 
+    public function getuserbyid(User $user)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'found',
+            'data' => $user
+        ]);
+    }
+
     public function userinfo($id)
     {
         return User::find($id)->load('role');

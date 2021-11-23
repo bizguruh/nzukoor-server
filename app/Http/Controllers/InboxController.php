@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Inbox;
 use App\Events\MessageSent;
+use App\Http\Resources\ChatHistoryResource;
 use App\Models\Facilitator;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Return_;
@@ -29,11 +30,33 @@ class InboxController extends Controller
 
         if (auth('api')->user()) {
             $user = auth('api')->user();
-            $data = Inbox::where([['receiver', '=', 'user'], ['receiver_id', '=', $user->id]])->orWhere('user_id', $user->id)->get();
+            $data = Inbox::where('receiver_id',  $user->id)->orWhere('user_id', $user->id)->get();
         }
 
 
         return InboxResource::collection($data);
+    }
+
+    public function getchathistory($id)
+    {
+
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+            $data = Inbox::where([['user_id', '=', $id], ['receiver_id', '=', $user->id]])
+                ->orWhere([['receiver_id', '=', $id], ['user_id', '=', $user->id]])->get();
+        }
+           $unread  = $data->filter(function($a){
+            return !$a['is_read'];
+        })->count();
+
+        $lastmessage = $data->last();
+        $messages = ChatHistoryResource::collection($data);
+
+        return response([
+            "unreadCount" => $unread,
+            "lastMessage" => $lastmessage,
+            'message'=> $messages,
+        ],200);
     }
 
 
@@ -43,21 +66,11 @@ class InboxController extends Controller
             return ('Unauthorized');
         }
         return $result =  DB::transaction(function () use ($request) {
-            if (auth('facilitator')->user()) {
-                $user = auth('facilitator')->user();
-                $sender_type = 'facilitator';
-                $receiver = Facilitator::find($request->receiver_id);
-            }
+
             if (auth('api')->user()) {
                 $user = auth('api')->user();
                 $sender_type = null;
                 $receiver = User::find($request->receiver_id);
-            }
-            if (auth('admin')->user()) {
-                $user = auth('admin')->user();
-
-                $sender_type = 'admin';
-                $receiver = Admin::find($request->receiver_id);
             }
 
 
@@ -79,22 +92,22 @@ class InboxController extends Controller
             ];
 
 
-            $data = $message->load('admin', 'user', 'facilitator');
+            $data = $message->load('user');
             broadcast(new MessageSent($receiver, new SingleInboxResource($data)))->toOthers();
 
 
             $receiver->notify(new NewMessage($detail));
-            return $message->load('admin', 'user', 'facilitator');
+            return $message->load( 'user');
         });
     }
 
     public function markread(Request $request)
     {
 
-
-        $mesages =  Inbox::whereIn('id', $request->ids)->update(['status' => true]);
+        $message =  Inbox::whereIn('id', $request->ids)->update(['status' => true,'is_read'=>true]);
         return response()->json([
-            'message' => 'updated'
+            'message' => 'updated',
+            'data' => $message
         ]);
     }
 

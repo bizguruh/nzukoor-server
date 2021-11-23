@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 class Inbox extends Model
 {
     use HasFactory, Notifiable;
-    protected $fillable = ['message', 'attachment', 'user_id', 'facilitator_id', 'admin_id', 'receiver', 'receiver_id', 'status', 'voicenote'];
+    protected $fillable = ['is_read','message', 'attachment', 'user_id', 'facilitator_id', 'admin_id', 'receiver', 'receiver_id', 'status', 'voicenote'];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -22,4 +22,9 @@ class Inbox extends Model
     {
         return $this->belongsTo(Facilitator::class);
     }
+    protected $hidden = [
+        'admin_id',
+        'facilitator_id',
+    ];
 }
+

@@ -216,11 +216,14 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('user-get-facilitators', [FacilitatorController::class, 'usergetfacilitators']);
     Route::get('user-get-facilitator/{id}', [FacilitatorController::class, 'usergetfacilitator']);
+    Route::get('get/message/history/{id}', [InboxController::class, 'getchathistory']);
+
 });
 
 Route::post('user-register', [UserController::class, 'storeuser']);
 
 Route::get('get/userprofile/{username}', [UserController::class, 'getuserbyusername']);
+Route::get('get/profile/{user}', [UserController::class, 'getuserbyid']);
 
 // User api routes ends here
 

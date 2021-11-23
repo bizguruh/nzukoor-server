@@ -103,7 +103,8 @@ class  TribeService
     }
     if ($request->has('type') && $request->filled('type') && !empty($request->input('type'))) {
       $tribe->type = $request->type;
-
+    }
+    if ($request->has('description') && $request->filled('description') && !empty($request->input('description'))) {
       $tribe->description = $request->description;
     }
     if ($request->has('amount') && $request->filled('amount') && !empty($request->input('amount'))) {
