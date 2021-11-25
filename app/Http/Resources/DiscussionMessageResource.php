@@ -32,7 +32,7 @@ class DiscussionMessageResource extends JsonResource
             'message' => $this->message,
             'message' => $this->message,
             'discussionmessagecomment' => $this->discussionmessagecomment,
-            'user' => new UserResource($this->user),
+            'user' => new UserNameResource($this->user),
             "discussionmessagevote" => $this->handleVote(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

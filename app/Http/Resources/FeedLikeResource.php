@@ -20,7 +20,7 @@ class FeedLikeResource extends JsonResource
             "like" =>  $this['like'],
             "feed_id" => $this['feed_id'],
             "user_id" => $this['user_id'],
-            'user' => new UserResource($this['user'])
+            'user' => new UserNameResource($this['user'])
         ];
     }
 }

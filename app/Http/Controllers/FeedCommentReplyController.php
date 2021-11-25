@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Events\NotificationSent;
 use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
+use App\Http\Resources\FeedCommentRepliesResource;
 
 class FeedCommentReplyController extends Controller
 {
@@ -48,7 +49,8 @@ class FeedCommentReplyController extends Controller
         //     $owner->notify(new CommentReply($details));
         // }
 
-        return response($data->load('user'), 201);
+
+        return response(new  FeedCommentRepliesResource($data->load('user')), 201);
     }
     public function replylike(Request $request)
     {

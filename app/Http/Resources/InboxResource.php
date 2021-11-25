@@ -24,10 +24,10 @@ class InboxResource extends JsonResource
             'attachment' => $this->attachment,
             'status' => $this->status,
             'user_id' => $this->user_id,
-            'user' => new UserResource($this->user),
+            'user' => new UserNameResource($this->user),
             'receiver_id' => $this->receiver_id,
             'receiver' => $this->receiver,
-            'receiver_info' =>  new UserResource(User::find($this->receiver_id)),
+            'receiver_info' =>  new UserNameResource(User::find($this->receiver_id)),
             'created_at' => $this->created_at,
         ];
     }

@@ -20,11 +20,11 @@ class FeedCommentResource extends JsonResource
             "comment" =>  $this['comment'],
             "commentreplycount" => count($this['feedcommentreplies']),
             'feedcommentreplies' =>  FeedCommentRepliesResource::collection($this['feedcommentreplies']),
-            "feedcommentlikes" => $this['feedcommentlikes'],
-            "iscommentliked" => $this['feedcommentlikes'] ? true : false,
+            // "feedcommentlikes" => $this['feedcommentlikes'],
+            "isLiked" => $this['feedcommentlikes'] ? true : false,
             "feed_id" => $this['feed_id'],
-            "user_id" => $this['user_id'],
-            'user' => new UserResource($this['user'])
+             "user_id" => $this['user_id'],
+             'user' => new UserNameResource($this['user'])
         ];
     }
 }

@@ -4,9 +4,10 @@ namespace App\Http\Resources;
 
 use App\Models\User;
 use App\Models\Inbox;
+use App\Http\Resources\UserNameResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ConnectionResource extends JsonResource
+class FollowerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,7 +26,7 @@ class ConnectionResource extends JsonResource
         })->count();
         return [
             'id' => $this->id,
-            'user_follower' =>  new UserNameResource(User::find($this->following_id)),
+            'user_follower' =>  new UserNameResource(User::find($this->user_id)),
             'last_message' => $last_message,
             'unread_message' => $unread_messages
 

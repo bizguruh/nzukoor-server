@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FeedLikeResource extends JsonResource
+class UserNameResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +15,12 @@ class FeedLikeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this['id'],
-            'created_at' => $this['created_at'],
-            "like" =>  $this['like'],
-            "feed_id" => $this['feed_id'],
-            "user_id" => $this['user_id'],
-            'user' => new UserNameResource($this['user'])
+            "id" => $this['id'],
+            "name" => $this['name'],
+            "profile" => $this['profile'],
+            "username" => $this['username'],
+
+
         ];
     }
 }

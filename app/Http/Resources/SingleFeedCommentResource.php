@@ -22,10 +22,10 @@ class SingleFeedCommentResource extends JsonResource
             "commentreplycount" => count($this['feedcommentreplies']),
             'feedcommentreplies' =>  FeedCommentRepliesResource::collection($this['feedcommentreplies']),
             "feedcommentlikes" => $this['feedcommentlikes'],
-            "iscommentliked" => $this['feedcommentlikes'] ? true : false,
+            "isLiked" => $this['feedcommentlikes'] ? true : false,
             "feed_id" => $this['feed_id'],
             "user_id" => $this['user_id'],
-            'user' => new UserResource($this['user'])
+            'user' => new UserNameResource($this['user'])
         ];
     }
 }

@@ -37,7 +37,7 @@ class TribeDiscussionResource extends JsonResource
             "discussionvote" => $this->handleVote(),
             'discussionview' => $this->discussionview ? $this->discussionview->view : 0,
             'user_id' => $this->user_id,
-            "user" => new UserResource($this->user),
+            "user" => new UserNameResource($this->user),
             'tags' => $this->tags,
             'tribe_id' => $this->tribe_id,
             'created_at' => $this->created_at,

@@ -45,8 +45,8 @@ class InboxController extends Controller
             $data = Inbox::where([['user_id', '=', $id], ['receiver_id', '=', $user->id]])
                 ->orWhere([['receiver_id', '=', $id], ['user_id', '=', $user->id]])->get();
         }
-           $unread  = $data->filter(function($a){
-            return !$a['is_read'];
+        $unread  = $data->filter(function ($a) use ($user) {
+            return !$a['is_read'] && $a['receiver_id'] == $user->id;
         })->count();
 
         $lastmessage = $data->last();
@@ -55,8 +55,8 @@ class InboxController extends Controller
         return response([
             "unreadCount" => $unread,
             "lastMessage" => $lastmessage,
-            'message'=> $messages,
-        ],200);
+            'message' => $messages,
+        ], 200);
     }
 
 
@@ -93,23 +93,44 @@ class InboxController extends Controller
 
 
             $data = $message->load('user');
-            broadcast(new MessageSent($receiver, new SingleInboxResource($data)))->toOthers();
+             broadcast(new MessageSent($receiver, new ChatHistoryResource($data)))->toOthers();
 
 
-            $receiver->notify(new NewMessage($detail));
-            return $message->load( 'user');
+             $receiver->notify(new NewMessage($detail));
+            return new ChatHistoryResource($data);
         });
     }
 
     public function markread(Request $request)
     {
 
-        $message =  Inbox::whereIn('id', $request->ids)->update(['status' => true,'is_read'=>true]);
+        $message =  Inbox::whereIn('id', $request->ids)->update(['status' => true, 'is_read' => true]);
         return response()->json([
+            'success' => true,
             'message' => 'updated',
             'data' => $message
         ]);
     }
+    public function markunread(Request $request)
+    {
+
+        $id = $request->id;
+        $user = auth('api')->user();
+        $data = Inbox::where([['user_id', '=', $id], ['receiver_id', '=', $user->id]])
+            ->orWhere([['receiver_id', '=', $id], ['user_id', '=', $user->id]])->get();
+
+         $ids  = $data->filter(function ($a) use ($user) {
+            return !$a['is_read'] && $a['receiver_id'] == $user->id;
+        })->pluck('id',);
+
+        $message =  Inbox::whereIn('id', $ids)->update(['status' => true, 'is_read' => true]);
+        return response()->json([
+            'success' => true,
+            'message' => 'updated',
+
+        ]);
+    }
+
 
     /**
      * Display the specified resource.

@@ -20,7 +20,7 @@ class SingleFeedResource extends JsonResource
         if ($this['user_id'] == $id) return true;
         return false;
     }
-    public function handleIsLiked($arr)
+    public function handleisLiked($arr)
     {
         if (!auth('api')->user()) return false;
         $id = auth('api')->user()->id;
@@ -44,11 +44,11 @@ class SingleFeedResource extends JsonResource
             'comments' =>  FeedCommentResource::collection($this['comments']),
             'likes' =>  FeedLikeResource::collection($this['likes']),
             'isOwner' => $this->handleIsOwner(),
-            'isLiked' => $this->handleIsLiked($this['likes']),
+            'isLiked' => $this->handleisLiked($this['likes']),
             'url' => $this['url'],
             'publicId' => $this['publicId'],
             'user_id' => $this['user_id'],
-            'user' =>  new UserResource($this['user']),
+            'user' =>  new UserNameResource($this['user']),
             'tags' => $this['tags'],
             'tribe_id' => $this['tribe_id'],
 

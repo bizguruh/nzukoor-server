@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ConnectionResource;
-use App\Models\Connection;
+use App\Models\User;
 use App\Models\Course;
+use App\Models\Connection;
 use App\Models\Discussion;
 use App\Models\Facilitator;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Http\Resources\FollowerResource;
+use App\Http\Resources\ChatUsersResource;
+use App\Http\Resources\ConnectionResource;
 
 class ConnectionController extends Controller
 {
@@ -21,18 +24,6 @@ class ConnectionController extends Controller
     {
 
 
-
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
-            return ('Unauthorized');
-        }
-
-
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
@@ -40,31 +31,27 @@ class ConnectionController extends Controller
 
         return ConnectionResource::collection($user->connections()->latest()->get());
     }
-    public function myconnections()
+    public function chatusers()
     {
 
-
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
-            return ('Unauthorized');
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
         }
 
+        $data = Connection::where('following_id', $user->id)->orWhere('user_id', $user->id)->with('user')->latest()->get();
+        $res = ChatUsersResource::collection($data);
+        return  collect($res)->sortByDesc('last_message_time')->values()->all();
 
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $type = 'admin';
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $type = 'facilitator';
-        }
+    }
+    public function myconnections()
+    {
         if (auth('api')->user()) {
             $user = auth('api')->user();
             $type = 'user';
         }
 
-        return Connection::where('follow_type', $type)->where('following_id', $user->id)->with('user', 'facilitator')->latest()->get()->map(function ($a) {
-            return  !is_null($a->user) ? $a->user : $a->facilitator;
-        })->values()->all();
+      $data = Connection::where('following_id', $user->id)->latest()->get();
+        return  FollowerResource::collection($data);
     }
 
 
@@ -73,17 +60,7 @@ class ConnectionController extends Controller
 
 
 
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
-            return ('Unauthorized');
-        }
 
-
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }

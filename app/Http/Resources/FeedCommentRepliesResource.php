@@ -19,10 +19,11 @@ class FeedCommentRepliesResource extends JsonResource
             'created_at' => $this['created_at'],
             "message" =>  $this['message'],
             "feed_comment_id" =>   $this['feed_comment_id'],
-            "feedcommentreplylikes" => $this['feedcommentreplylikes'],
+            // "feedcommentreplylikes" => $this['feedcommentreplylikes'],
             "feed_id" => $this['feed_id'],
-            "user_id" => $this['user_id'],
-            'user' => new UserResource($this['user'])
+            "isLiked" => $this['feedcommentreplylikes'] ? true : false,
+             "user_id" => $this['user_id'],
+             'user' => new UserNameResource($this['user'])
         ];
     }
 }

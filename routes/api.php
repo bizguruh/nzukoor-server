@@ -218,6 +218,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('user-get-facilitator/{id}', [FacilitatorController::class, 'usergetfacilitator']);
     Route::get('get/message/history/{id}', [InboxController::class, 'getchathistory']);
 
+    Route::apiResource('connections', ConnectionController::class);
+    Route::get('my/connections', [ConnectionController::class, 'myconnections']);
+    Route::get('get/chat/connections', [ConnectionController::class, 'chatusers']);
+
+
+
 });
 
 Route::post('user-register', [UserController::class, 'storeuser']);
@@ -238,6 +244,8 @@ Route::post('/auth/{provider}/callback', [SocialLoginController::class, 'callbac
 Route::apiResource('inboxes', InboxController::class);
 
 Route::post('inboxes/mark/read', [InboxController::class, 'markread']);
+
+Route::post('messages/mark/read', [InboxController::class, 'markunread']);
 
 
 //Todos routes
@@ -300,9 +308,6 @@ Route::get('mark-notification/{id}', [NotificationController::class, 'marksingle
 Route::get('unread-notifications', [NotificationController::class, 'unreadnotifications']);
 Route::get('read-notifications', [NotificationController::class, 'readnotifications']);
 
-Route::apiResource('connections', ConnectionController::class);
-
-Route::get('my/connections', [ConnectionController::class, 'myconnections']);
 
 Route::apiResource('libraries', LibraryController::class);
 Route::apiResource('answer-questionnaires', AnsweredQuestionnaireController::class);

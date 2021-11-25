@@ -7,10 +7,11 @@ use App\Events\AddCommment;
 use App\Models\FeedComment;
 use Illuminate\Http\Request;
 use App\Events\NotificationSent;
-use App\Http\Resources\FeedCommentResource;
-use App\Http\Resources\SingleFeedCommentResource;
 use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
+use App\Http\Resources\FeedCommentResource;
+use App\Http\Resources\SingleFeedCommentResource;
+use App\Http\Resources\FeedCommentRepliesResource;
 
 class FeedCommentController extends Controller
 {
@@ -101,7 +102,7 @@ class FeedCommentController extends Controller
      */
     public function feedcommentreplies($id)
     {
-        return FeedCommentReply::where('feed_comment_id', $id)->latest()->paginate(15);
+        return   FeedCommentRepliesResource::collection(FeedCommentReply::where('feed_comment_id', $id)->with('feedcommentreplylikes')->latest()->paginate(15));
     }
 
     /**
