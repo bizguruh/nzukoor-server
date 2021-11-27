@@ -28,7 +28,7 @@ class TribeController extends Controller
     {
         $currentPage = request()->get('page', 1);
         $data = Tribe::with('users')->paginate(15);
-        $tribes = TribeResource::collection($data)->response()->getData(true);
+        return  $tribes = TribeResource::collection($data)->response()->getData(true);
         return Cache::remember('tribes' . $currentPage, 60, function () use ($tribes) {
             return $tribes;
         });
