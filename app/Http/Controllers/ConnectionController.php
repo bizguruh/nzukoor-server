@@ -40,8 +40,16 @@ class ConnectionController extends Controller
 
         $data = Connection::where('following_id', $user->id)->orWhere('user_id', $user->id)->with('user')->latest()->get();
         $res = ChatUsersResource::collection($data);
-        return  collect($res)->sortByDesc('last_message_time')->values()->all();
+          $results = collect($res)->sortByDesc('last_message_time')->values()->all();
 
+
+        $models = array_map(function ($result) {
+            return $result['user_follower']->id;
+        }, $results);
+
+          $unique_models = array_unique($models, SORT_REGULAR);
+
+        return array_values(array_intersect_key($results, $unique_models));
     }
     public function myconnections()
     {
@@ -50,7 +58,7 @@ class ConnectionController extends Controller
             $type = 'user';
         }
 
-      $data = Connection::where('following_id', $user->id)->latest()->get();
+        $data = Connection::where('following_id', $user->id)->latest()->get();
         return  FollowerResource::collection($data);
     }
 
