@@ -39,7 +39,7 @@ class ChatUsersResource extends JsonResource
             'user_follower' =>  $user,
             'last_message' => $last_message,
             'unread_message' => $unread_messages,
-            'last_message_time' => $last_message->created_at
+            'last_message_time' => $last_message? $last_message->created_at:null
 
 
         ];
