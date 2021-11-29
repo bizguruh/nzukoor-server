@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feed;
 use App\Models\User;
 use App\Events\AddCommment;
 use App\Models\FeedComment;
@@ -35,8 +36,17 @@ class FeedCommentController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
+
         $feed = FeedComment::find($request->feed_comment_id);
         $creator = User::find($feed->user_id);
+        $mainfeed = Feed::find($feed->feed_id);
+        if ($mainfeed->user_id !== $user->id) {
+            return response([
+                'success' => false,
+                'message' => 'only creator allowed'
+            ], 401);
+        }
+
         $message = $user->username . ' liked your comment';
         $url = 'https://nzukoor.com/member/feed/view/' . $feed->feed_id;
         $details = [

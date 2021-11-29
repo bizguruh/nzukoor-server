@@ -289,18 +289,7 @@ class FeedController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
-            return ('Unauthorized');
-        }
 
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $type = 'admin';
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $type = 'facilitator';
-        }
         if (auth('api')->user()) {
             $user = auth('api')->user();
             $type = 'user';
