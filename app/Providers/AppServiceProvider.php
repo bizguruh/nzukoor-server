@@ -2,20 +2,22 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Models\Admin;
+use App\Models\Tribe;
 use App\Models\Course;
 use App\Models\Facilitator;
-use App\Models\User;
-use App\Observers\CourseObserver;
-use App\Observers\FacilitatorObserver;
 use App\Observers\UserObserver;
+use App\Observers\TribeObserver;
+use Laravel\Telescope\Telescope;
+use App\Observers\CourseObserver;
+use App\Resolvers\SocialUserResolver;
+use App\Observers\FacilitatorObserver;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Resolvers\SocialUserResolver;
-use Coderello\SocialGrant\Resolvers\SocialUserResolverInterface;
-use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeServiceProvider;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Coderello\SocialGrant\Resolvers\SocialUserResolverInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,8 +56,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         JsonResource::withoutWrapping();
-        User::observe(UserObserver::class);
-        Course::observe(CourseObserver::class);
-        Facilitator::observe(FacilitatorObserver::class);
+        Tribe::observe(TribeObserver::class);
     }
 }

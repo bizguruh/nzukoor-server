@@ -28,8 +28,9 @@ class TribeController extends Controller
     {
         $currentPage = request()->get('page', 1);
         $data = Tribe::with('users')->paginate(15);
-        return  $tribes = TribeResource::collection($data)->response()->getData(true);
-        return Cache::remember('tribes' . $currentPage, 60, function () use ($tribes) {
+
+        $tribes = TribeResource::collection($data)->response()->getData(true);
+        return Cache::tags(['tribes'])->remember('tribes' . $currentPage, 3600, function () use ($tribes) {
             return $tribes;
         });
     }
@@ -37,7 +38,7 @@ class TribeController extends Controller
     {
         $data = Tribe::with('users')->get();
         $tribes = TribeResource::collection($data);
-        return Cache::remember('guesttribes', 60, function () use ($tribes) {
+        return Cache::tags(['guesttribes'])->remember('guesttribes', 3600, function () use ($tribes) {
             return $tribes;
         });
     }
@@ -45,12 +46,13 @@ class TribeController extends Controller
     public function tribemembers(Tribe $tribe)
     {
         $user = $this->user;
+        $currentPage = request()->get('page', 1);
         $tribemembers = $tribe->users()->get();
         // ->filter(function ($a) use ($user) {
         //     return $a->id != $user->id;
         // });
         $members = (new Collection($tribemembers))->paginate(15);
-        return Cache::remember('tribemembers' . $tribe->id, 60, function () use ($members) {
+        return Cache::tags(['tribemembers'])->remember('tribemembers' . $tribe->id . '-' . $currentPage, 60, function () use ($members) {
             return $members;
         });
     }
@@ -84,7 +86,7 @@ class TribeController extends Controller
     {
         $currentPage = request()->get('page', 1);
         $tribediscsussions =  TribeDiscussionResource::collection($this->tribeservice->gettribediscussions($tribe))->response()->getData(true);
-        return Cache::remember('tribediscussions' . $tribe->id . '-' . $currentPage, 60, function () use ($tribediscsussions) {
+        return Cache::tags(['tribediscussions'])->remember('tribediscussions' . $tribe->id . '-' . $currentPage, 60, function () use ($tribediscsussions) {
             return $tribediscsussions;
         });
     }
@@ -102,7 +104,7 @@ class TribeController extends Controller
     {
         $currentPage = request()->get('page', 1);
         $usertribes =  $this->tribeservice->usertribe($this->user);
-        return Cache::remember($this->user->id . 'usertribes' . $currentPage, 60, function () use ($usertribes) {
+        return Cache::tags(['usertribes'])->remember($this->user->id . 'usertribes' . $currentPage, 60, function () use ($usertribes) {
             return $usertribes;
         });
     }
@@ -115,8 +117,9 @@ class TribeController extends Controller
     public function show(Tribe $tribe)
     {
 
+
         $showtribe = $this->tribeservice->gettribe($tribe, $this->user);
-        return Cache::remember('showtribe' . $tribe->id, 60, function () use ($showtribe) {
+        return Cache::tags(['showtribe'])->remember('showtribe' . $tribe->id, 60, function () use ($showtribe) {
             return $showtribe;
         });
     }
@@ -131,6 +134,7 @@ class TribeController extends Controller
 
         $owner = $tribe->getTribeOwner();
         if ($this->user->id !== $owner) return response('Unauthorised', 401);
+
         return $this->tribeservice->update($this->user, $request, $tribe);
     }
 
@@ -140,6 +144,7 @@ class TribeController extends Controller
 
         $owner = $tribe->getTribeOwner();
         if ($this->user->id !== $owner) return response('Unauthorised', 401);
+
         return $this->tribeservice->remove($tribe);
     }
 }

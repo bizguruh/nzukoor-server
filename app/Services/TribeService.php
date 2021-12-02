@@ -38,7 +38,8 @@ class  TribeService
         $banking = new BankDetailController();
         $bank_info = $banking->store($request);
       }
-
+      Cache::tags('tribes')->flush();
+      Cache::tags('guesttribes')->flush();
       return response([
         'success' => true,
         'message' => 'creation successful',
@@ -116,6 +117,8 @@ class  TribeService
 
 
     $tribe->save();
+    Cache::tags('tribes')->flush();
+    Cache::tags('guesttribes')->flush();
     return response()->json([
       'success' => true,
       'message' => 'update successful',
@@ -126,6 +129,9 @@ class  TribeService
   {
 
     $tribe->users()->attach($user->id);
+    Cache::tags('tribemembers')->flush();
+    Cache::tags('usertribes')->flush();
+    Cache::tags('showtribe')->flush();
     return response()->json([
       'success' => true,
       'message' => 'successful'
@@ -190,6 +196,9 @@ class  TribeService
   {
 
     $tribe->users()->detach($user->id);
+    Cache::tags('tribemembers')->flush();
+    Cache::tags('usertribes')->flush();
+    Cache::tags('showtribe')->flush();
     return response()->json([
       'success' => true,
       'message' => 'successful'
@@ -198,6 +207,7 @@ class  TribeService
   public function remove($tribe)
   {
     $tribe->delete();
+    Cache::tags('tribes')->flush();
     return response()->json([
       'success' => true,
       'message' => 'delete successful'

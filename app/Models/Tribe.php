@@ -11,6 +11,8 @@ class Tribe extends Model
     use HasFactory;
     protected $fillable = ['user_id', 'name', 'description', 'cover',  'tags', 'type', 'amount'];
 
+
+
     public function users()
     {
         return $this->belongsToMany(User::class);

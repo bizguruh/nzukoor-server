@@ -43,7 +43,7 @@ class DiscussionController extends Controller
 
         $discussions = Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
 
-        return Cache::remember('discussions', 60, function () use ($discussions) {
+        return Cache::tags(['discussions'])->remember('discussions', 3600, function () use ($discussions) {
             return $discussions;
         });
     }
@@ -325,7 +325,7 @@ class DiscussionController extends Controller
         // $discussion->related = $related->values()->all();
         $data =  new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
 
-        return Cache::remember('discussion', 60, function () use ($data) {
+        return Cache::tags(['discussion'])->remember('discussion'. $discussion->id, 3600, function () use ($data) {
             return $data;
         });
     }

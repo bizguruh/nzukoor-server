@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Discussion extends Model
 {
@@ -12,6 +13,17 @@ class Discussion extends Model
 
     protected $fillable = ['type', 'name', 'description', 'category', 'tags', 'creator', 'course_id', 'tribe_id', 'organization_id', 'user_id', 'facilitator_id', 'admin_id',];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function () {
+            Cache::forget('discussion');
+            Cache::forget('discussions');
+            Cache::tags('tribediscussions')->flush();
+            Cache::tags('discussion')->flush();
+        });
+    }
 
     public function reports()
     {
