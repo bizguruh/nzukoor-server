@@ -169,7 +169,7 @@ class DiscussionController extends Controller
         $validated = $request->validate([
             'name' => 'required',
             'description' => 'required',
-            'category' => 'required',
+
             'tags' => ' required',
 
         ]);
@@ -192,15 +192,14 @@ class DiscussionController extends Controller
 
         $tribe = Tribe::find($request->tribe_id);
         $data = $user->discussions()->create([
-            'type' => $request->type,
+            'type' =>'public',
             'name' => $request->name,
             'category' => $tribe->category,
             'tags' => $request->tags,
-            'creator' => $sender,
+            'creator' => 'user',
             'description' => $request->description,
-            'course_id' => $request->course_id,
             'tribe_id' => $request->tribe_id,
-            'organization_id' => $user->organization_id ? $user->organization_id : 1,
+            'organization_id' =>  1,
         ]);
 
 
@@ -325,9 +324,9 @@ class DiscussionController extends Controller
         // $discussion->related = $related->values()->all();
         $data =  new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
 
-        return Cache::tags(['discussion'])->remember('discussion'. $discussion->id, 3600, function () use ($data) {
+
             return $data;
-        });
+
     }
 
     public function getdiscussion($id)
