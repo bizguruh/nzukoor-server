@@ -27,8 +27,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->everyMinute()->emailOutputTo('succy2010@gmail.com');;
         $schedule->command('check:event')->everyMinute();
         $schedule->command('telescope:prune')->daily();
-        $schedule->command('event:reminder')->everyThirtyMinutes();
-        $schedule->command('queue:work --stop-when-empty')->everyFiveMinutes();
+        $schedule->command('event:reminder')->everyFifteenMinutes();
+        $schedule->command('queue:work --stop-when-empty')->everyMinute();
     }
 
     /**
