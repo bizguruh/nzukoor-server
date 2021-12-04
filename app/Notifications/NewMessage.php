@@ -10,7 +10,7 @@ use NotificationChannels\WebPush\WebPushChannel;
 use NotificationChannels\WebPush\WebPushMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NewMessage extends Notification implements ShouldQueue
+class NewMessage extends Notification
 {
     use Queueable;
 
