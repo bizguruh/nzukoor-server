@@ -9,7 +9,7 @@ use NotificationChannels\WebPush\WebPushChannel;
 use NotificationChannels\WebPush\WebPushMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class EventReminder extends Notification
+class EventReminder extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -18,6 +18,7 @@ class EventReminder extends Notification
      *
      * @return void
      */
+    public $details;
     public function __construct($details)
     {
         $this->details = $details;

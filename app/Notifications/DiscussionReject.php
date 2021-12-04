@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DiscussionReject extends Notification
+class DiscussionReject extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,6 +16,7 @@ class DiscussionReject extends Notification
      *
      * @return void
      */
+    public $details;
     public function __construct($details)
     {
         $this->details = $details;

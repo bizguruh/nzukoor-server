@@ -28,6 +28,7 @@ use App\Notifications\SendNotification;
 use App\Http\Controllers\MailController;
 use App\Http\Resources\ConnectionResource;
 use App\Http\Controllers\BankDetailController;
+use App\Jobs\WelcomeEmail;
 use App\Notifications\PrivateDiscussionCreated;
 
 class UserController extends Controller
@@ -200,31 +201,17 @@ class UserController extends Controller
             }
 
 
-            if ($request->referral) {
-                if (CourseCommunityLink::where('code', $request->referral)->first()) {
-                    $referral_type = 'group_course';
-                } else {
-                    $referral_type = 'normal';
-                }
+            if ($request->has('referral') && $request->filled('referral') && !empty($request->input('referral'))) {
 
 
-                if ($referral_type == 'normal') {
-                    if (User::where('referral_code', $request->referral)->with('organization')->first()) {
-                        $olduser = User::where('referral_code', $request->referral)->with('organization')->first();
-                        $ref = 'member';
-                    }
-                    $organization_id = 1;
+                if (User::where('referral_code', $request->referral)->first()) {
+                    $olduser = User::where('referral_code', $request->referral)->first();
+                    $ref = 'member';
                 }
 
-                if ($referral_type == 'group_course') {
-                    $link = CourseCommunityLink::where('code', $request->referral)->first();
-                    $olduser = User::find($link->user_id)->first();
-                    $co = Course::find($link->course_id);
-                    $organization_id = 1;
-                }
 
                 $newuser = User::create([
-                    'organization_id' => $organization_id ? $organization_id : 1,
+                    'organization_id' =>  1,
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -243,106 +230,25 @@ class UserController extends Controller
 
                 // Add referral
 
-                if ($referral_type == 'normal') {
-                    $referral_detail = [
-                        'greeting' => 'Welcome',
-                        'body' => $newuser->name . " just used your referral link to create an account",
-                        'thanks' => 'Thanks',
-                        'actionText' => '',
-                        'url' => '',
-                        'to' => 'user',
-                        'id' => $newuser->id
-                    ];
-                    $olduser->notify(new SendNotification($referral_detail));
-                    $olduser->referral()->create([
-                        'referree_type' =>    $ref,
-                        'referree_id'    =>  $newuser->id
-                    ]);
-                }
 
-
-                if ($referral_type == 'group_course') {
-                    $referral_detail = [
-                        'greeting' => 'Welcome',
-                        'body' => $newuser->name . " accepted your invitation to take the course titled " . $co->title . " with you",
-                        'thanks' => 'Thanks',
-                        'actionText' => '',
-                        'url' => '',
-                        'to' => 'user',
-                        'id' => $newuser->id
-                    ];
-                    $olduser->notify(new SendNotification($referral_detail));
-
-                    $olduser->referral()->create([
-                        'referree_type' =>    'member',
-                        'referree_id'    =>  $newuser->id
-                    ]);
-                    $newuser->coursecommunity()->create([
-                        'code' => $request->referral,
-                        'course_id' => $link->course_id
-                    ]);
-
-
-                    $link_users = CourseCommunity::where('code', $request->referral)->get();
-                    if (count($link_users) == $link->amount) {
-                        $course = Course::find($link->course_id)->first();
-                        $discussion = $olduser->discussions()->create([
-                            'type' => 'private',
-                            'name' => $request->referral,
-                            'tags' => [],
-                            'creator' => 'user',
-                            'description' => $course->description,
-                            'course_id' => $course->id,
-                            'organization_id' => 1,
-                        ]);
-
-                        foreach ($link_users as $key => $value) {
-                            $info = User::find($value->user_id);
-                            $info->library()->create([
-                                'course_id' => $link->course_id
-                            ]);
-                            $enroll = EnrollCount::where('course_id', $link->course_id)->where('organization_id', $info->organization_id)->first();
-
-                            if (is_null($enroll)) {
-                                EnrollCount::create([
-                                    'course_id' => $link->course_id,
-                                    'organization_id' => $info->organization_id,
-                                    'count' => 1
-                                ]);
-                            } else {
-                                $enroll->count = $enroll->count + 1;
-                                $enroll->save();
-                            }
-
-                            $details = [
-                                'body' =>  \ucfirst(Course::find($link->course_id)->title) . ' course has just been added to your library',
-                            ];
-
-
-
-                            $info->notify(new AddedToLibrary($details));
-
-
-                            $info->privatediscusion()->create([
-                                'discussion_id' => $discussion->id,
-                                'type' => 'user'
-                            ]);
-                            $detail = [
-                                'body' => 'A private discussion titled ' . \ucfirst($request->referral) . ' has been started. Check your discussions to view!',
-                            ];
-                            $info->notify(new PrivateDiscussionCreated($detail));
-                        }
-                    }
-                }
-                $details = [
+                $referral_detail = [
                     'greeting' => 'Welcome',
-                    'body' => "Welcome to Nzukoor, Find discussions, courses, discover events according to your personal interests.",
+                    'body' => $newuser->name . " just used your referral link to create an account",
                     'thanks' => 'Thanks',
                     'actionText' => '',
                     'url' => '',
                     'to' => 'user',
                     'id' => $newuser->id
                 ];
+                $olduser->notify(new SendNotification($referral_detail));
+                $olduser->referral()->create([
+                    'referree_type' =>    $ref,
+                    'referree_id'    =>  $newuser->id
+                ]);
+
+
+
+
             } else {
                 $newuser = User::create([
 
@@ -360,15 +266,7 @@ class UserController extends Controller
                     'username' => $request->username,
                     'referral_code' =>  preg_replace('/\s+/', '_', strtolower($request->name)) . '_' . $referral_code,
                 ]);
-                $details = [
-                    'greeting' => 'Welcome',
-                    'body' => "Welcome to Nzukoor, Find discussions, share ideas, stories, discover events and so much more, according to your personal interests.",
-                    'thanks' => 'Thanks',
-                    'actionText' => '',
-                    'url' => '',
-                    'to' => 'user',
-                    'id' => $newuser->id
-                ];
+
             }
 
             if ($request->tribe_id) {
@@ -377,9 +275,19 @@ class UserController extends Controller
             }
 
 
+            $details = [
+                'greeting' => 'Welcome',
+                'body' => "Welcome to Nzukoor, Find discussions, share ideas, stories, discover events and so much more, according to your personal interests.",
+                'thanks' => 'Thanks',
+                'actionText' => '',
+                'url' => '',
+                'to' => 'user',
+                'id' => $newuser->id
+            ];
             $newuser->notify(new SendNotification($details));
             $mail = new MailController;
             // $mail->memberwelcome($newuser);
+           WelcomeEmail::dispatch($newuser);
             return $newuser;
         });
 

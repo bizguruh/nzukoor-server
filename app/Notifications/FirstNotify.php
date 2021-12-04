@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class FirstNotify extends Notification
+class FirstNotify extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,6 +16,7 @@ class FirstNotify extends Notification
      *
      * @return void
      */
+    public $details;
     public function __construct($details)
     {
         $this->details = $details;

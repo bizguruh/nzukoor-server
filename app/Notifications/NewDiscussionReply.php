@@ -10,7 +10,7 @@ use NotificationChannels\WebPush\WebPushChannel;
 use NotificationChannels\WebPush\WebPushMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NewDiscussionReply extends Notification
+class NewDiscussionReply extends Notification implements ShouldQueue
 {
     use Queueable;
 

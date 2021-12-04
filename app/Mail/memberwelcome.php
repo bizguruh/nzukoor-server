@@ -16,9 +16,10 @@ class memberwelcome extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public $details;
+    public function __construct($details)
     {
-        //
+        $this->details = $details;
     }
 
     /**
@@ -28,6 +29,6 @@ class memberwelcome extends Mailable
      */
     public function build()
     {
-        return $this->view('email.memberwelcome');
+        return $this->subject('Welcome to Nzukoor Community')->view('email.memberwelcome',$this->details);
     }
 }

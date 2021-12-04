@@ -12,7 +12,7 @@ use NotificationChannels\WebPush\WebPushChannel;
 
 use Log;
 
-class NotifyMe extends Notification
+class NotifyMe extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -21,6 +21,7 @@ class NotifyMe extends Notification
      *
      * @return void
      */
+    public $msg;
     public function __construct($msg)
     {
         $this->msg = $msg;

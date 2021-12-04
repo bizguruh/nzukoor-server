@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PrivateDiscussionCreated extends Notification
+class PrivateDiscussionCreated extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,6 +16,7 @@ class PrivateDiscussionCreated extends Notification
      *
      * @return void
      */
+    public $details;
     public function __construct($details)
     {
         $this->details = $details;

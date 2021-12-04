@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewTribeDiscussion extends Notification
+class NewTribeDiscussion extends Notification implements ShouldQueue
 {
     use Queueable;
 
