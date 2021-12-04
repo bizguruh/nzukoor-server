@@ -169,21 +169,13 @@ class DiscussionController extends Controller
         $validated = $request->validate([
             'name' => 'required',
             'description' => 'required',
-
             'tags' => ' required',
 
         ]);
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
         }
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $sender = 'admin';
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $sender = 'facilitator';
-        }
+
         if (auth('api')->user()) {
             $user = auth('api')->user();
             $sender = 'user';
@@ -194,7 +186,6 @@ class DiscussionController extends Controller
         $data = $user->discussions()->create([
             'type' =>'public',
             'name' => $request->name,
-            'category' => $tribe->category,
             'tags' => $request->tags,
             'creator' => 'user',
             'description' => $request->description,
