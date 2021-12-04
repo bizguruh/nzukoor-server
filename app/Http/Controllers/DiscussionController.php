@@ -202,6 +202,7 @@ class DiscussionController extends Controller
         }
 
         $tribe = Tribe::find($request->tribe_id);
+        if(is_null($tribe)) return response(404,'Tribe not found');
         $tribemembers = $tribe->users()->get()->filter(function ($a) use ($user) {
             return $a->id != $user->id;
         });
@@ -219,7 +220,7 @@ class DiscussionController extends Controller
 
         Notification::send($tribemembers, new NewTribeDiscussion($details));
         broadcast(new NotificationSent())->toOthers();
-        return $data->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
+        return new DiscussionResource($data->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
     }
 
     /**
