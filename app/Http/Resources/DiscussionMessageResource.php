@@ -25,6 +25,7 @@ class DiscussionMessageResource extends JsonResource
     }
     public function toArray($request)
     {
+        $user  = auth('api')->user()->id;
         return [
             'id' => $this->id,
             'message' => $this->message,
@@ -33,7 +34,14 @@ class DiscussionMessageResource extends JsonResource
             'message' => $this->message,
             'discussionmessagecomment' => $this->discussionmessagecomment,
             'user' => new UserNameResource($this->user),
-            "discussionmessagevote" => $this->handleVote(),
+            "votecount" => $this->handleVote(),
+            "upvotecount" => count(array_filter($this->discussionmessagevote->toArray(), function ($a) {
+                return $a['vote'];
+            })),
+            "downvotecount" => count(array_filter($this->discussionmessagevote->toArray(), function ($a) {
+                return !$a['vote'];
+            })),
+            "upvoted"=> in_array($user, $this->discussionmessagevote->pluck('user_id')->toArray()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

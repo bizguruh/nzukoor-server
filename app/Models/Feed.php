@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Feed extends Model
 {
     use HasFactory;
-    protected $fillable = ['media', 'message', 'tags', 'comment', 'admin_id', 'user_id', 'tribe_id', 'facilitator_id', 'organization_id', 'url', 'publicId'];
+    protected $fillable = ['media', 'message', 'tags', 'comment', 'mediaType','user_id', 'tribe_id', 'facilitator_id', 'organization_id', 'url', 'publicId'];
 
     public function user()
     {

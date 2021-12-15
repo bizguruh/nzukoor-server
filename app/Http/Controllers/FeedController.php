@@ -303,7 +303,8 @@ class FeedController extends Controller
             'publicId' => $request->publicId,
             'message' => $request->message,
             'tribe_id' => $request->tribe_id,
-            'tags' => $request->tags
+            'tags' => $request->tags,
+            'mediaType'=>$request->mediaType
         ]);
 
         broadcast(new AddFeed($user, new SingleFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();

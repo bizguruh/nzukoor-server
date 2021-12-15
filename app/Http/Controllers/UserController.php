@@ -461,6 +461,9 @@ class UserController extends Controller
         if ($request->has('email') && $request->filled('email') && !empty($request->input('email'))) {
             $user->email = $request->email;
         }
+        if ($request->has('username') && $request->filled('username') && !empty($request->input('username'))) {
+            $user->username = $request->username;
+        }
         if ($request->has('address') && $request->filled('address') && !empty($request->input('address'))) {
             $user->address = $request->address;
         }

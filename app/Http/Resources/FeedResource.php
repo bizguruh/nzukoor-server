@@ -46,6 +46,7 @@ class FeedResource extends JsonResource
             'isOwner' => $this->handleIsOwner(),
             'isLiked' => $this->handleisLiked($this['likes']),
             'url' => $this['url'],
+            'mediaType' => $this['mediaType'],
             'publicId' => $this['publicId'],
             'user_id' => $this['user_id'],
             'user' =>  new UserNameResource($this['user']),

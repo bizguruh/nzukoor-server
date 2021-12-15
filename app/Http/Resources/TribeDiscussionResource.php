@@ -12,6 +12,7 @@ class TribeDiscussionResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+
     public function handleVote()
     {
         $positive = count(array_filter($this->discussionvote->toArray(), function ($a) {

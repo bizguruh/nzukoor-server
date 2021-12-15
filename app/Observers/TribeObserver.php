@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Tribe;
+use Illuminate\Support\Facades\Cache;
 
 class TribeObserver
 {

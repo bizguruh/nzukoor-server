@@ -6,6 +6,7 @@ use App\Models\Tribe;
 use App\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\TribeResource;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\BankDetailController;
 use App\Http\Resources\Tribe as ResourcesTribe;
 
