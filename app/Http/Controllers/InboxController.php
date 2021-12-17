@@ -34,7 +34,7 @@ class InboxController extends Controller
         }
 
 
-        return InboxResource::collection($data);
+        return ChatHistoryResource::collection($data);
     }
 
     public function getchathistory($id)
@@ -129,6 +129,13 @@ class InboxController extends Controller
             'message' => 'updated',
 
         ]);
+    }
+    public function getunreadmessages(){
+        $user = auth('api')->user();
+        $data = Inbox::where('receiver_id',  $user->id)->orWhere('user_id', $user->id)->latest()->get()->filter(function($a){
+            return !$a->is_read;
+        });
+        return ChatHistoryResource::collection($data);
     }
 
 

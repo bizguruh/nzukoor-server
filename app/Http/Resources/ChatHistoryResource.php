@@ -21,14 +21,14 @@ class ChatHistoryResource extends JsonResource
         "message"=> $this->message,
         "attachment"=> $this->attachment,
         "receiver"=> "user",
-        "receiver_info"=> new UserResource(User::find($this->receiver_id)),
+        "receiver_info"=> new UserNameResource(User::find($this->receiver_id)),
         "receiver_id"=> $this->receiver_id,
         "user_id"=> $this->user_id,
-        "user" => new UserResource(User::find($this->user_id)),
+        "user" => new UserNameResource(User::find($this->user_id)),
         "status"=> $this->status,
         "is_read"=> $this->is_read,
         'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+        'updated_at' => $this->updated_at,
 
         ];
     }

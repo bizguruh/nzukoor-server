@@ -223,6 +223,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('get/chat/connections', [ConnectionController::class, 'chatusers']);
 
 
+    //Inbox routes
+
+    Route::apiResource('inboxes', InboxController::class);
+
+    Route::post('inboxes/mark/read', [InboxController::class, 'markread']);
+
+    Route::post('messages/mark/read', [InboxController::class, 'markunread']);
+    Route::get('messages/unread', [InboxController::class, 'getunreadmessages']);
+
 
 });
 
@@ -239,13 +248,6 @@ Route::get('/auth/{provider}/redirect', [SocialLoginController::class, 'redirect
 Route::post('/auth/{provider}/callback', [SocialLoginController::class, 'callback']);
 
 
-//Inbox routes
-
-Route::apiResource('inboxes', InboxController::class);
-
-Route::post('inboxes/mark/read', [InboxController::class, 'markread']);
-
-Route::post('messages/mark/read', [InboxController::class, 'markunread']);
 
 
 //Todos routes
