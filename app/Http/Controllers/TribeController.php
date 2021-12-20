@@ -102,11 +102,9 @@ class TribeController extends Controller
     }
     public function getusertribe()
     {
-        $currentPage = request()->get('page', 1);
-        $usertribes =  $this->tribeservice->usertribe($this->user);
-        return Cache::tags(['usertribes'])->remember($this->user->id . 'usertribes' . $currentPage, 60, function () use ($usertribes) {
-            return $usertribes;
-        });
+        // $currentPage = request()->get('page', 1);
+        return  $this->tribeservice->usertribe($this->user);
+
     }
 
     public function store(Request $request)

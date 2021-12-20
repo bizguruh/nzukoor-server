@@ -82,7 +82,7 @@ class  TribeService
   public function usertribe($user)
   {
 
-    $data =  $user->tribes()->with('users')->latest()->paginate(10);
+    $data =  $user->tribes()->with('users')->latest()->paginate(15);
 
     return TribeResource::collection($data)->response()->getData(true);
   }
@@ -129,6 +129,13 @@ class  TribeService
   public function addusertotribe($tribe, $user)
   {
 
+     $members = $tribe->users()->get()->map(function($a){
+      return $a->id;
+    })->values()->all();
+    $check  = in_array($user->id, $members);
+    if($check){
+      return response('Already a member',405);
+    }
     $tribe->users()->attach($user->id);
     Cache::tags('tribemembers')->flush();
     Cache::tags('usertribes')->flush();
