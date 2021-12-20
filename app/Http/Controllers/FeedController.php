@@ -198,18 +198,10 @@ class FeedController extends Controller
 
     public function customFeeds()
     {
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
-            return ('Unauthorized');
-        }
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
-        if (auth('api')->user()) {
+
+
             $user = auth('api')->user();
-        }
+
         // feed by interests
         if (is_null($user->interests)) return response('empty');
         $interests = $user->interests;
@@ -221,7 +213,7 @@ class FeedController extends Controller
                 });
 
                 $check = array_intersect($interests, $tags->toArray());
-                return count($check);
+                return $check;
             }
             return;
         });
