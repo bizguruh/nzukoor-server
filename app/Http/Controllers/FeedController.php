@@ -213,7 +213,7 @@ class FeedController extends Controller
                 });
 
                 $check = array_intersect($interests, $tags->toArray());
-                return $check;
+                return count($check);
             }
             return;
         });

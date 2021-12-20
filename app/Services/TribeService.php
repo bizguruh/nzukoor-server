@@ -66,7 +66,7 @@ class  TribeService
 
     $interests = $user->interests;
     if (is_null($interests) || gettype($interests) !== 'array') {
-      return $tribe;
+      return TribeResource::collection($tribe);
     }
     $result =  $tribe->filter(function ($a) use ($interests) {
       $tribeinterests =  collect($a->tags)->map(function ($b) {
