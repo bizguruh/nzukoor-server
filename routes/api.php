@@ -64,9 +64,11 @@ use App\Http\Controllers\OrganizationReportController;
 use App\Http\Controllers\CourseCommunityLinkController;
 use App\Http\Controllers\HighestEarningCourseController;
 use App\Http\Controllers\AnsweredQuestionnaireController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrganizationDiscussionController;
 use App\Http\Controllers\PrivateDiscussionMemberController;
 use App\Http\Controllers\DiscussionMessageCommentController;
+use App\Http\Controllers\InterestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -455,7 +457,7 @@ Route::get('member/events/{id}', [UserController::class, 'userevents']);
 Route::get('get/feeds/tags', [FeedController::class, 'getFeedsByInterest']);
 
 
-Route::get('get/interests/{interest}', [GuestController::class, 'getInterestContent']);
+//Route::get('get/interests/{interest}', [GuestController::class, 'getInterestContent']);
 Route::get('get/members', [GuestController::class, 'getmembers']);
 
 
@@ -513,3 +515,18 @@ Route::post('transaction/initiate', [BankDetailController::class, 'makepayment']
 
 Route::get('transaction/verify/{reference}', [BankDetailController::class, 'verifytransaction']);
 Route::post('transaction/verify', [BankDetailController::class, 'transactionevent']);
+
+
+// Interests categories api
+
+Route::get('get/interests/{id}',[InterestController::class, 'getinterests']);
+Route::get('get/interest/{id}', [InterestController::class, 'getinterest']);
+Route::get('add/interests', [InterestController::class, 'addinterests']);
+
+
+
+Route::get('get/categories', [CategoryController::class, 'getcategories']);
+Route::get('get/category/{id}', [CategoryController::class, 'getcategory']);
+Route::get('add/categories', [CategoryController::class, 'addcategories']);
+
+
