@@ -242,4 +242,10 @@ class InterestController extends Controller
         return Interest::find($id);
 
     }
+    public function dropinterests()
+    {
+        $ids =  Interest::pluck('id');
+        Interest::destroy($ids);
+        return 'Ok';
+    }
 }

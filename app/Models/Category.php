@@ -16,6 +16,6 @@ class Category extends Model
     ];
 
     public function interests(){
-        return $this->hasMany(interest::class);
+        return $this->hasMany(Interest::class);
     }
 }

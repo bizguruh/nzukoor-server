@@ -75,4 +75,10 @@ class CategoryController extends Controller
     {
         return Category::find($id);
     }
+
+    public function dropcategories(){
+      $ids =  Category::pluck('id');
+      Category::destroy($ids);
+    return 'Ok';
+    }
 }

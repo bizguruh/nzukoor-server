@@ -522,11 +522,13 @@ Route::post('transaction/verify', [BankDetailController::class, 'transactioneven
 Route::get('get/interests/{id}',[InterestController::class, 'getinterests']);
 Route::get('get/interest/{id}', [InterestController::class, 'getinterest']);
 Route::get('add/interests', [InterestController::class, 'addinterests']);
+Route::get('drop/interests', [InterestController::class, 'dropinterests']);
 
 
 
 Route::get('get/categories', [CategoryController::class, 'getcategories']);
 Route::get('get/category/{id}', [CategoryController::class, 'getcategory']);
 Route::get('add/categories', [CategoryController::class, 'addcategories']);
+Route::get('drop/categories', [CategoryController::class, 'dropcategories']);
 
 
