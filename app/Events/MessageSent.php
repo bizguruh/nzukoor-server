@@ -24,12 +24,14 @@ class MessageSent implements ShouldBroadcastNow
      * @var Message
      */
     public $message;
+    public $user_connection_id;
 
-    public function __construct($user, $message)
+    public function __construct($user, $message, $user_connection_id)
 
     {
         $this->user = $user;
         $this->message = $message;
+        $this->user_connection_id = $user_connection_id;
     }
 
     /**

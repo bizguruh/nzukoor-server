@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Inbox;
+use App\Models\Connection;
 use App\Events\MessageSent;
-use App\Http\Resources\ChatHistoryResource;
 use App\Models\Facilitator;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Return_;
@@ -13,7 +13,9 @@ use App\Notifications\NewMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\InboxResource;
+use App\Http\Resources\ChatHistoryResource;
 use App\Http\Resources\SingleInboxResource;
+use App\Models\PendingConnectionMessage;
 
 class InboxController extends Controller
 {
@@ -59,6 +61,13 @@ class InboxController extends Controller
         ], 200);
     }
 
+    public function getpendingmessages()
+    {
+    }
+    public function getpendingconnections()
+    {
+    }
+
 
     public function store(Request $request)
     {
@@ -91,12 +100,21 @@ class InboxController extends Controller
                 'image' => $user->profile
             ];
 
-
+            $user_connection_id = Connection::where('user_id', $user->id)->where('following_id', $request->receiver_id)->value('id');
+            $check_connected =  Connection::where('following_id', $user->id)->where('user_id', $request->receiver_id)->first();
+            if (is_null($check_connected)) {
+                if (is_null(PendingConnectionMessage::where('following_id', $user->id)->where('user_id', $request->receiver_id)->first())) {
+                    PendingConnectionMessage::create([
+                        'following_id' => $user->id,
+                        'user_id' => $request->receiver_id
+                    ]);
+                }
+            }
             $data = $message->load('user');
-             broadcast(new MessageSent($receiver, new ChatHistoryResource($data)))->toOthers();
+            broadcast(new MessageSent($receiver, new ChatHistoryResource($data), $user_connection_id))->toOthers();
 
 
-             $receiver->notify(new NewMessage($detail));
+            $receiver->notify(new NewMessage($detail));
             return new ChatHistoryResource($data);
         });
     }
@@ -119,7 +137,7 @@ class InboxController extends Controller
         $data = Inbox::where([['user_id', '=', $id], ['receiver_id', '=', $user->id]])
             ->orWhere([['receiver_id', '=', $id], ['user_id', '=', $user->id]])->get();
 
-         $ids  = $data->filter(function ($a) use ($user) {
+        $ids  = $data->filter(function ($a) use ($user) {
             return !$a['is_read'] && $a['receiver_id'] == $user->id;
         })->pluck('id',);
 
@@ -130,9 +148,10 @@ class InboxController extends Controller
 
         ]);
     }
-    public function getunreadmessages(){
+    public function getunreadmessages()
+    {
         $user = auth('api')->user();
-        $data = Inbox::where('receiver_id',  $user->id)->orWhere('user_id', $user->id)->latest()->get()->filter(function($a){
+        $data = Inbox::where('receiver_id',  $user->id)->orWhere('user_id', $user->id)->latest()->get()->filter(function ($a) {
             return !$a->is_read;
         });
         return ChatHistoryResource::collection($data);

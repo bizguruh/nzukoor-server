@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\User;
 use App\Models\Inbox;
 use App\Http\Resources\UserNameResource;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChatUsersResource extends JsonResource
@@ -39,7 +40,7 @@ class ChatUsersResource extends JsonResource
             'user_follower' =>  $user,
             'last_message' => $last_message,
             'unread_message' => $unread_messages,
-            'last_message_time' => $last_message? $last_message->created_at:null
+            'last_message_time' => $last_message? Carbon::parse($last_message->created_at):null
 
 
         ];

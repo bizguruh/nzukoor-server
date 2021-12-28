@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Inbox;
 use App\Models\Course;
 use App\Models\Connection;
 use App\Models\Discussion;
@@ -12,6 +13,7 @@ use Illuminate\Support\Carbon;
 use App\Http\Resources\FollowerResource;
 use App\Http\Resources\ChatUsersResource;
 use App\Http\Resources\ConnectionResource;
+use App\Models\PendingConnectionMessage;
 
 class ConnectionController extends Controller
 {
@@ -38,18 +40,30 @@ class ConnectionController extends Controller
             $user = auth('api')->user();
         }
 
-        $data = Connection::where('following_id', $user->id)->orWhere('user_id', $user->id)->with('user')->latest()->get();
+        $data = Connection::where('user_id', $user->id)->with('user')->latest()->get();
+         $res = ChatUsersResource::collection($data);
+       return  $results = collect($res)->sortByDesc('last_message_time')->values()->all();
+
+    }
+    public function pendingchatusers()
+    {
+
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+        $data = PendingConnectionMessage::where('user_id', $user->id)->with('user')->latest()->get();
         $res = ChatUsersResource::collection($data);
-          $results = collect($res)->sortByDesc('last_message_time')->values()->all();
+        return  $results = collect($res)->sortByDesc('last_message_time')->values()->all();
 
 
-        $models = array_map(function ($result) {
-            return $result['user_follower']->id;
-        }, $results);
 
-          $unique_models = array_unique($models, SORT_REGULAR);
+    }
+    public function anonymousmessage(){
+      $user =  auth('api')->user();
+      $messages = Inbox::where('receiver_id', $user->id)->get();
 
-        return array_values(array_intersect_key($results, $unique_models));
+
     }
     public function myconnections()
     {
@@ -74,6 +88,10 @@ class ConnectionController extends Controller
         }
 
         $check = $user->connections()->where([['follow_type', $request->follow_type], ['following_id', $request->following_id]])->first();
+        $checkpending = $user->pendingconnections()->where( 'following_id', $request->following_id)->first();
+        if(!is_null($checkpending)){
+            $checkpending->delete();
+        }
         if (is_null($check)) {
             return  $user->connections()->create([
                 'follow_type' => $request->follow_type,

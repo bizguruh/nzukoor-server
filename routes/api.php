@@ -223,6 +223,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('connections', ConnectionController::class);
     Route::get('my/connections', [ConnectionController::class, 'myconnections']);
     Route::get('get/chat/connections', [ConnectionController::class, 'chatusers']);
+    Route::get('get/pending/chat', [ConnectionController::class, 'pendingchatusers']);
+
 
 
     //Inbox routes

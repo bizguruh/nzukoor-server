@@ -216,6 +216,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Connection::class);
     }
+    public function pendingconnections()
+    {
+        return $this->hasMany(PendingConnectionMessage::class);
+    }
 
     public function library()
     {
