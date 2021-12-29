@@ -125,6 +125,8 @@ Route::middleware(['auth:organization'])->group(function () {
     Route::apiResource('get/organization/feeds', OrganizationFeedController::class);
     Route::apiResource('get/organization/reports', OrganizationReportController::class);
     Route::apiResource('get/organization/events', OrganizationEventController::class);
+    Route::post('delete/report', [OrganizationReportController::class,'deletereport']);
+    Route::post('mark/report', [OrganizationReportController::class, 'markreport']);
 });
 // organizations api routes ends here
 

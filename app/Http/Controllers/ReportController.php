@@ -15,28 +15,11 @@ class ReportController extends Controller
 
         $user = auth('api')->user();
 
-        switch ($request->type) {
-            case 'feed':
-                $type = \App\Models\Feed::class;
-                break;
-            case 'feedcomment':
-                $type = \App\Models\FeedComment::class;
-                break;
-            case 'discussion':
-                $type =  \App\Models\Discussion::class;
-                break;
-            case 'discussionmessage':
-                $type = \App\Models\DiscussionMessage::class;
-                break;
 
-            default:
-                # code...
-                break;
-        }
-        $check = $user->reports()->where('type', $type)->where('type_report_id', $request->type_report_id)->first();
+        $check = $user->reports()->where('type', $request->type)->where('type_report_id', $request->type_report_id)->first();
         if (is_null($check)) {
             return  $user->reports()->create([
-                'type' => $type,
+                'type' =>  $request->type,
                 'type_report_id' => $request->type_report_id,
                 'message' => $request->message,
                 'status' => 'in review'
