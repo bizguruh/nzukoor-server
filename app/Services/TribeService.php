@@ -140,6 +140,7 @@ class  TribeService
     Cache::tags('tribemembers')->flush();
     Cache::tags('usertribes')->flush();
     Cache::tags('showtribe')->flush();
+    Cache::tags('tribes')->flush();
     return response()->json([
       'success' => true,
       'message' => 'successful'
@@ -207,6 +208,7 @@ class  TribeService
     Cache::tags('tribemembers')->flush();
     Cache::tags('usertribes')->flush();
     Cache::tags('showtribe')->flush();
+    Cache::tags('tribes')->flush();
     return response()->json([
       'success' => true,
       'message' => 'successful'
