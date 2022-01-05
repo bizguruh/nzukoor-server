@@ -260,6 +260,8 @@ class  TribeService
   }
   public function leavetribe($tribe, $user)
   {
+   $owner_id = $tribe->getTribeOwner()->id;
+   if($owner_id === $user->id) return response('Tribe owner not allowed', 405);
 
     $tribe->users()->detach($user->id);
     Cache::tags('tribemembers')->flush();
