@@ -9,7 +9,12 @@ use App\Http\Resources\TribeResource;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\BankDetailController;
 use App\Http\Resources\Tribe as ResourcesTribe;
-
+use App\Http\Resources\TribeRequestResource;
+use App\Models\TribeRequest;
+use App\Models\User;
+use App\Notifications\TribeRequestAlert;
+use App\Notifications\TribeRequestApprove;
+use App\Notifications\TribeRequestReject;
 
 class  TribeService
 {
@@ -126,16 +131,68 @@ class  TribeService
       'data' => new TribeResource($tribe->load('users'))
     ]);
   }
-  public function addusertotribe($tribe, $user)
+  public function createtriberequest($tribe, $user)
   {
 
-     $members = $tribe->users()->get()->map(function($a){
+
+    $check = $tribe->requests()->where('user_id', $user->id)->first();
+
+    if (!is_null($check))  return response('Request already sent', 405);
+    $owner = $tribe->getTribeOwner();
+    $tribe->requests()->create([
+      'user_id' => $user->id,
+      'response' => 'pending',
+      'tribe_owner_id' => $owner->id
+    ]);
+    $details = [
+      'message' => ucfirst($user->username) . ' has requested to join your tribe, ' . ucfirst($tribe->name),
+      'url' => 'https://nzukoor.com/member/tribe/discussions' . $tribe->id
+    ];
+    $owner->notify(new TribeRequestAlert($details));
+
+
+    return response('request sent', 200);
+  }
+  public function gettribesrequest($user)
+  {
+    return TribeRequestResource::collection(TribeRequest::where('tribe_owner_id', $user->id)->where('response', 'pending')->with('tribe', 'user')->get());
+  }
+  public function respondtriberequest($triberequest, $request)
+  {
+
+    return  DB::transaction(function () use ($triberequest, $request) {
+      $tribe = Tribe::find($triberequest->tribe_id);
+      $user = User::find($triberequest->user_id);
+      if ($request->response === 'approve') {
+        $this->addusertotribe($tribe, $user);
+        $details = [
+          'message' => 'Your  request to join the tribe, ' . ucfirst($tribe->name) . ' has been approved',
+          'url' => 'https://nzukoor.com/member/tribe/discussions' . $tribe->id
+        ];
+        $user->notify(new TribeRequestApprove($details));
+      } else {
+        $details = [
+          'message' => 'Your  request to join the tribe, ' . ucfirst($tribe->name) . ' has been rejected',
+
+        ];
+        $user->notify(new TribeRequestReject($details));
+      }
+
+      $triberequest->delete();
+      return response('ok', 200);
+    });
+  }
+  public function addusertotribe(object $tribe, object $user)
+  {
+
+    $members = $tribe->users()->get()->map(function ($a) {
       return $a->id;
     })->values()->all();
     $check  = in_array($user->id, $members);
-    if($check){
-      return response('Already a member',405);
+    if ($check) {
+      return response('Already a member', 405);
     }
+
     $tribe->users()->attach($user->id);
     Cache::tags('tribemembers')->flush();
     Cache::tags('usertribes')->flush();

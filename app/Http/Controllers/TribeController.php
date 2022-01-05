@@ -9,6 +9,7 @@ use App\Http\Resources\TribeResource;
 use Illuminate\Support\Facades\Cache;
 use App\Support\Collection;
 use App\Http\Resources\TribeDiscussionResource;
+use App\Models\TribeRequest;
 
 class TribeController extends Controller
 {
@@ -94,6 +95,20 @@ class TribeController extends Controller
     {
         return $this->tribeservice->addusertotribe($tribe, $this->user);
     }
+    public function createtriberequest(Tribe $tribe)
+    {
+
+        return $this->tribeservice->createtriberequest($tribe, $this->user);
+    }
+    public function respondtriberequest(Request $request ,TribeRequest $triberequest)
+    {
+        return $this->tribeservice->respondtriberequest($triberequest, $request);
+    }
+
+    public function gettribesrequest(){
+        return $this->tribeservice->gettribesrequest($this->user);
+    }
+
 
 
     public function leavetribe(Tribe $tribe)
@@ -131,7 +146,7 @@ class TribeController extends Controller
     {
 
         $owner = $tribe->getTribeOwner();
-        if ($this->user->id !== $owner) return response('Unauthorised', 401);
+        if ($this->user->id !== $owner->id) return response('Unauthorised', 401);
 
         return $this->tribeservice->update($this->user, $request, $tribe);
     }
@@ -141,7 +156,7 @@ class TribeController extends Controller
     {
 
         $owner = $tribe->getTribeOwner();
-        if ($this->user->id !== $owner) return response('Unauthorised', 401);
+        if ($this->user->id !== $owner->id) return response('Unauthorised', 401);
 
         return $this->tribeservice->remove($tribe);
     }

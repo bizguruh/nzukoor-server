@@ -10,6 +10,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnalyticController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\InboxController;
@@ -499,6 +500,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscussions']);
     Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
     Route::post('vote/discussion/message', [DiscussionMessageController::class, 'votediscussionmessage']);
+
+    Route::get('create/tribe/request/{tribe}', [TribeController::class, 'createtriberequest']);
+    Route::put('respond/tribe/request/{triberequest}', [TribeController::class, 'respondtriberequest']);
+    Route::get('tribe/requests', [TribeController::class, 'gettribesrequest']);
+
+    Route::get('get/analytics', [AnalyticController::class, 'getanalytics']);
+
+
 });
 
 Route::get('search', [TribeSearchController::class, 'search']);

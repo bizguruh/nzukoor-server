@@ -29,7 +29,7 @@ class TribeResource extends JsonResource
     public function isOwner()
     {
         if (!auth('api')->user()) return false;
-        $owner_id =   Tribe::find($this->id)->getTribeOwner();
+        $owner_id =   Tribe::find($this->id)->getTribeOwner()->id;
         $id = auth('api')->user()->id;
 
         return  $owner_id ? $owner_id == $id : false;

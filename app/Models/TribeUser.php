@@ -9,6 +9,8 @@ class TribeUser extends Model
 {
     use HasFactory;
 
+    protected $table = 'tribe_user';
+
     protected $fillable = ['user_id', 'tribe_id'];
 
     public function users()

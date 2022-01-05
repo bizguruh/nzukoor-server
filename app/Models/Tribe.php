@@ -13,6 +13,10 @@ class Tribe extends Model
 
 
 
+    public function requests()
+    {
+        return $this->hasMany(TribeRequest::class);
+    }
     public function users()
     {
         return $this->belongsToMany(User::class);
@@ -56,7 +60,7 @@ class Tribe extends Model
     {
 
         $user = $this->users()->where('is_owner', 1)->first();
-        return $user ? $user->id : null;
+        return $user ? $user : null;
     }
     public function getMembership($user_id)
     {
