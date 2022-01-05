@@ -225,7 +225,7 @@ class AnalyticController extends Controller
             'likesthismonth' => $this->getlikesthismonth(),
             'commentsthismonth' => $this->getcommentsthismonth(),
             'repliesthismonth' => $this->getrepliesthismonth(),
-            'poststhisweek' => $this->getpoststhismonth(),
+            'poststhismonth' => $this->getpoststhismonth(),
             'votesthismonth' => $this->getvotesthismonth(),
             'connectionsthisweek' => $this->getconnectionsthisweek(),
             'connections' => $this->getconnections(),
