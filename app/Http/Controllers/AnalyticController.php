@@ -111,6 +111,28 @@ class AnalyticController extends Controller
     {
         return  $this->user->discussionvote()->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count() + $this->user->discussionmessagevote()->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
     }
+    public function getlikesthismonth()
+    {
+        return $this->user->likes()->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->count();
+    }
+    public function getcommentsthismonth()
+    {
+
+        return $this->user->comments()->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->count()  + $this->user->feedcommentreplies()->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
+    }
+    public function getrepliesthismonth()
+    {
+
+        return  $this->user->discussionmessagecomment()->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->count() + $this->user->discussionmessage()->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
+    }
+    public function getpoststhismonth()
+    {
+        return $this->user->feeds()->whereBetween('created_at', [Carbon::now()->startOfmonth(), Carbon::now()->endOfMonth()])->count();
+    }
+    public function getvotesthismonth()
+    {
+        return  $this->user->discussionvote()->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->count() + $this->user->discussionmessagevote()->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
+    }
     public function getconnectionsthisweek()
     {
         return $this->user->connections()->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
@@ -200,6 +222,11 @@ class AnalyticController extends Controller
             'repliesthisweek' => $this->getrepliesthisweek(),
             'poststhisweek' => $this->getpoststhisweek(),
             'votesthisweek' => $this->getvotesthisweek(),
+            'likesthismonth' => $this->getlikesthismonth(),
+            'commentsthismonth' => $this->getcommentsthismonth(),
+            'repliesthismonth' => $this->getrepliesthismonth(),
+            'poststhisweek' => $this->getpoststhismonth(),
+            'votesthismonth' => $this->getvotesthismonth(),
             'connectionsthisweek' => $this->getconnectionsthisweek(),
             'connections' => $this->getconnections(),
             'locations' => $this->getuserlocation(),
