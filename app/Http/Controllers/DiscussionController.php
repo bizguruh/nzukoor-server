@@ -73,7 +73,7 @@ class DiscussionController extends Controller
     }
     public function guestexplorediscussions()
     {
-        return  DiscussionResource::collection(Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->latest()->paginate(6));
+        return  Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->latest()->paginate(6);
     }
 
     public function customdiscussions()
