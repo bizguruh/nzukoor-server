@@ -23,7 +23,7 @@ class CreateOrdersTable extends Migration
             $table->string('transaction');
             $table->string('trxref');
             $table->string('redirecturl');
-            $table->foreignId('course_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+           
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('facilitator_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('admin_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
