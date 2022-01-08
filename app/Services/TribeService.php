@@ -67,7 +67,7 @@ class  TribeService
   {
 
     $mytribe = $user->tribes()->get()->pluck('id');
-    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users', 'courses', 'discussions', 'feeds', 'events')->get();
+    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users',  'discussions', 'feeds', 'events')->get();
 
     $interests = $user->interests;
     if (is_null($interests) || gettype($interests) !== 'array') {
