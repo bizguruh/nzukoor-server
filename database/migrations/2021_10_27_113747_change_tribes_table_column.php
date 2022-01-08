@@ -14,7 +14,7 @@ class ChangeTribesTableColumn extends Migration
     public function up()
     {
         Schema::table('tribes', function (Blueprint $table) {
-            // $table->json('tags')->change();
+            $table->json('tags')->change();
            // $table->json('category')->change();
         });
     }

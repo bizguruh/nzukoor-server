@@ -15,7 +15,7 @@ class AddCategoryTagsToTribesTable extends Migration
     {
         Schema::table('tribes', function (Blueprint $table) {
 
-            $table->json('tags')->nullable();
+            $table->string('tags');
         });
     }
 
