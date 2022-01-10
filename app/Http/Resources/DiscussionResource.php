@@ -57,6 +57,7 @@ class DiscussionResource extends JsonResource
             'tribe_id' => $this->tribe_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'related' => $this->related ? $this->related : []
         ];
     }
 }
