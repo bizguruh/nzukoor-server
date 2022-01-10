@@ -35,15 +35,10 @@ class DiscussionMessageCommentController extends Controller
 
     public function getdiscussionmessages($id)
     {
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+        if (!auth('api')->user() ) {
             return ('Unauthorized');
         }
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
+
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
@@ -94,7 +89,7 @@ class DiscussionMessageCommentController extends Controller
             $owner->notify(new CommentReply($details));
         }
 
-        return response($data->load('admin', 'user', 'facilitator'), 201);
+        return response($data->load( 'user'), 201);
     }
 
 

@@ -277,6 +277,7 @@ class DiscussionController extends Controller
             }
         });
         $discussion->related = $related->values()->all();
+      
 
         return new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
     }
