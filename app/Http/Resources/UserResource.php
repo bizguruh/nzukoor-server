@@ -20,7 +20,10 @@ class UserResource extends JsonResource
             "profile" => $this['profile'],
             "bio" => $this['bio'],
             "username" => $this['username'],
-            'interests' => $this['interests']
+            'interests' => $this['interests'],
+            "email" => $this['email']
+
+
 
         ];
     }
