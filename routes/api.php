@@ -491,6 +491,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('user/tribes', [TribeController::class, 'getusertribe']);
     Route::get('tribe/members/{tribe}', [TribeController::class, 'tribemembers']);
     Route::get('check/tribe/{tribe}', [TribeController::class, 'checktribe']);
+    Route::get('check/tribe/discussion/{discussion}', [TribeController::class, 'checkdiscussiontribe']);
     Route::get('join/tribe/{tribe}', [TribeController::class, 'addusertotribe']);
     Route::get('leave/tribe/{tribe}', [TribeController::class, 'leavetribe']);
     Route::get('get/tribe/feeds/{tribe}', [TribeController::class, 'tribefeeds']);

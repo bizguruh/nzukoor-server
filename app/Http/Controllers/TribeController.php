@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tribe;
+use App\Models\Discussion;
+use App\Support\Collection;
+use App\Models\TribeRequest;
 use Illuminate\Http\Request;
 use App\Services\TribeService;
 use App\Http\Resources\TribeResource;
 use Illuminate\Support\Facades\Cache;
-use App\Support\Collection;
 use App\Http\Resources\TribeDiscussionResource;
-use App\Models\TribeRequest;
 
 class TribeController extends Controller
 {
@@ -138,6 +139,12 @@ class TribeController extends Controller
     }
     public function checktribe(Tribe $tribe)
     {
+        return $this->tribeservice->checktribe($tribe, $this->user);
+    }
+    public function checkdiscussiontribe(Discussion $discussion)
+    {
+
+        $tribe = Tribe::find($discussion->tribe_id);
         return $this->tribeservice->checktribe($tribe, $this->user);
     }
 

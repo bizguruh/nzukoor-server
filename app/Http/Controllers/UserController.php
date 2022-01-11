@@ -273,6 +273,7 @@ class UserController extends Controller
                 $tribe = Tribe::find($request->tribe_id);
                 $tribe->users()->attach($newuser->id);
             }
+           
 
 
             $details = [
