@@ -38,11 +38,11 @@ class TribeController extends Controller
     }
     public function guesttribes()
     {
-        $data = Tribe::with('users')->get();
-        $tribes = TribeResource::collection($data);
-        return Cache::tags(['guesttribes'])->remember('guesttribes', 3600, function () use ($tribes) {
-            return $tribes;
-        });
+        $data = Tribe::with('users')->inRandomOrder()->take(6)->get();
+     return   $tribes = TribeResource::collection($data);
+        // return Cache::tags(['guesttribes'])->remember('guesttribes', 3600, function () use ($tribes) {
+        //     return $tribes;
+        // });
     }
 
     public function tribemembers(Tribe $tribe)
