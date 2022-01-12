@@ -6,8 +6,10 @@ use Carbon\Carbon;
 use App\Models\Otp;
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\Tribe;
 use App\Mail\OtpReset;
 use App\Models\Course;
+use App\Jobs\WelcomeEmail;
 use App\Models\Discussion;
 use App\Mail\memberwelcome;
 use App\Models\EnrollCount;
@@ -28,7 +30,6 @@ use App\Notifications\SendNotification;
 use App\Http\Controllers\MailController;
 use App\Http\Resources\ConnectionResource;
 use App\Http\Controllers\BankDetailController;
-use App\Jobs\WelcomeEmail;
 use App\Notifications\PrivateDiscussionCreated;
 
 class UserController extends Controller
@@ -273,7 +274,7 @@ class UserController extends Controller
                 $tribe = Tribe::find($request->tribe_id);
                 $tribe->users()->attach($newuser->id);
             }
-           
+
 
 
             $details = [
