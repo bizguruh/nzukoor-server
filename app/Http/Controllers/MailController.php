@@ -111,7 +111,7 @@ class MailController extends Controller
 
     public function sendtribeinvite(Request $request)
     {
-
+      
         $tribe  = Tribe::find($request->id);
         if (auth('api')->user()) {
             $user = auth('api')->user();
