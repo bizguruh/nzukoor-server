@@ -484,6 +484,8 @@ Route::post('notify', [NotificationController::class, 'notify']);
 Route::apiResource('tribes', TribeController::class);
 Route::get('guest/tribes', [TribeController::class, 'guesttribes']);
 
+Route::get('guest/tribe/{tribe}', [TribeController::class, 'guesttribe']);
+
 
 Route::middleware(['auth:api'])->group(function () {
     Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);

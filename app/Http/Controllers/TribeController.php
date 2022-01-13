@@ -127,6 +127,11 @@ class TribeController extends Controller
     {
         return  $this->tribeservice->create($this->user, $request);
     }
+    public function guesttribe(Tribe $tribe)
+    {
+
+ return $tribe;
+    }
 
     public function show(Tribe $tribe)
     {
