@@ -7,6 +7,7 @@ use App\Models\Tribe;
 use App\Mail\ContactMail;
 use App\Mail\EventInvite;
 use App\Mail\TribeInvite;
+use App\Models\Discussion;
 use App\Mail\ReferralInvite;
 use App\Models\Organization;
 use Illuminate\Http\Request;
@@ -111,7 +112,7 @@ class MailController extends Controller
 
     public function sendtribeinvite(Request $request)
     {
-      
+
         $tribe  = Tribe::find($request->id);
         if (auth('api')->user()) {
             $user = auth('api')->user();
@@ -122,7 +123,7 @@ class MailController extends Controller
         $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
         $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
 
-        $url = 'https://nzukoor.com/register?tribe_id=' . $request->id;
+        $url = 'https://nzukoor.com/explore?activity=join_tribe&tribe_id=' . $request->id;
 
 
 
@@ -234,10 +235,10 @@ class MailController extends Controller
             'url' => "https://nzukoor.com/explore/discussion/" . $request->id,
 
         ];
-
+        $tribe_id = Discussion::find($request->id)->tribe_id;
         Mail::to($request->users)->send(new DiscussionInvite($details));
 
-        $url = "https://nzukoor.com/member/discussion/" . $request->id;
+        $url = "https://nzukoor.com/member/tribe/".$tribe_id."discussion/" . $request->id;
         $body = 'I just started a discussion, <b>' . $request->title . '</b> on Nzukoor and I’d like to hear your thoughts. <br> <a href=' . $url . '>' . $url . '</a>';
 
 
