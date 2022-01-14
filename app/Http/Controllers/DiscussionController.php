@@ -73,7 +73,7 @@ class DiscussionController extends Controller
     }
     public function guestexplorediscussions()
     {
-        return  Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->latest()->paginate(6);
+        return  Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->inRandomOrder()->take(6)->get();
     }
 
     public function customdiscussions()
@@ -266,7 +266,7 @@ class DiscussionController extends Controller
         }
 
 
-        $alldiscussions =  Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->get();
+        $alldiscussions =  Discussion::where('tribe_id', null)->with('tribe', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->get();
         $discussion = Discussion::where('id', $id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->first();
         $related =  $alldiscussions->filter(function ($a) use ($discussion) {
 

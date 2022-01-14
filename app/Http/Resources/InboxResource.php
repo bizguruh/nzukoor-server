@@ -29,7 +29,8 @@ class InboxResource extends JsonResource
             'receiver' => $this->receiver,
             'receiver_info' =>  new UserNameResource(User::find($this->receiver_id)),
             'created_at' => $this->created_at,
-            'is_read' => $this->is_read
+            'is_read' => $this->is_read,
+            'voicenote' => $this->voicenote
         ];
     }
 }

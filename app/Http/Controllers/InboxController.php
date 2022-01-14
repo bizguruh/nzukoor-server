@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Inbox;
 use App\Models\Connection;
@@ -12,10 +13,12 @@ use PhpParser\Node\Stmt\Return_;
 use App\Notifications\NewMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use App\Http\Resources\InboxResource;
+use Illuminate\Support\Facades\Storage;
+use App\Models\PendingConnectionMessage;
 use App\Http\Resources\ChatHistoryResource;
 use App\Http\Resources\SingleInboxResource;
-use App\Models\PendingConnectionMessage;
 
 class InboxController extends Controller
 {
@@ -71,6 +74,7 @@ class InboxController extends Controller
 
     public function store(Request $request)
     {
+
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
         }
@@ -82,15 +86,17 @@ class InboxController extends Controller
                 $receiver = User::find($request->receiver_id);
             }
 
+           $file = $request->file('file');
 
+             Storage::disk('local')->put("/audio"."/".Carbon::now()->timestamp.'.wav', file_get_contents($file));
 
             $message = $user->inbox()->create([
                 'message' => $request->message,
                 'attachment' => $request->attachment,
                 'receiver' => 'user',
                 'receiver_id' => $request->receiver_id,
-                'voicenote' => $request->voicenote,
-                'status' => false,
+                'voicenote' => asset('audio/'.Carbon::now()->timestamp . '.wav'),
+                'status' => true,
 
             ]);
             $title = $user->username . ' sent you a message ';
@@ -111,7 +117,7 @@ class InboxController extends Controller
                 }
             }
             $data = $message->load('user');
-            broadcast(new MessageSent($receiver, new ChatHistoryResource($data), $user_connection_id))->toOthers();
+           broadcast(new MessageSent($receiver, new ChatHistoryResource($data), $user_connection_id))->toOthers();
 
 
             $receiver->notify(new NewMessage($detail));
@@ -168,6 +174,7 @@ class InboxController extends Controller
     {
         $inbox = Inbox::find($id);
         $inbox->status = 'delivered';
+         $inbox->is_read = true;
         $inbox->save();
         return $inbox;
     }

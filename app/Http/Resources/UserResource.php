@@ -22,9 +22,6 @@ class UserResource extends JsonResource
             "username" => $this['username'],
             'interests' => $this['interests'],
             "email" => $this['email']
-
-
-
         ];
     }
 }

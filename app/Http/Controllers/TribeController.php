@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tribe;
+use App\Models\Discussion;
+use App\Support\Collection;
+use App\Models\TribeRequest;
 use Illuminate\Http\Request;
 use App\Services\TribeService;
 use App\Http\Resources\TribeResource;
 use Illuminate\Support\Facades\Cache;
-use App\Support\Collection;
 use App\Http\Resources\TribeDiscussionResource;
-use App\Models\TribeRequest;
 
 class TribeController extends Controller
 {
@@ -37,11 +38,11 @@ class TribeController extends Controller
     }
     public function guesttribes()
     {
-        $data = Tribe::with('users')->get();
-        $tribes = TribeResource::collection($data);
-        return Cache::tags(['guesttribes'])->remember('guesttribes', 3600, function () use ($tribes) {
-            return $tribes;
-        });
+        $data = Tribe::with('users')->inRandomOrder()->take(6)->get();
+     return   $tribes = TribeResource::collection($data);
+        // return Cache::tags(['guesttribes'])->remember('guesttribes', 3600, function () use ($tribes) {
+        //     return $tribes;
+        // });
     }
 
     public function tribemembers(Tribe $tribe)
@@ -126,6 +127,11 @@ class TribeController extends Controller
     {
         return  $this->tribeservice->create($this->user, $request);
     }
+    public function guesttribe(Tribe $tribe)
+    {
+
+ return $tribe;
+    }
 
     public function show(Tribe $tribe)
     {
@@ -138,6 +144,12 @@ class TribeController extends Controller
     }
     public function checktribe(Tribe $tribe)
     {
+        return $this->tribeservice->checktribe($tribe, $this->user);
+    }
+    public function checkdiscussiontribe(Discussion $discussion)
+    {
+
+        $tribe = Tribe::find($discussion->tribe_id);
         return $this->tribeservice->checktribe($tribe, $this->user);
     }
 

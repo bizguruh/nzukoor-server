@@ -243,12 +243,8 @@ class FeedController extends Controller
         $connections = $user->connections()->get();
 
 
-        $users = $connections->filter(function ($a) {
-            if ($a->follow_type == 'user') {
-                return $a;
-            }
-        })->map(function ($f) {
-            return $f->user_id;
+    $users = $connections->map(function ($f) {
+            return intval($f->following_id);
         });
 
         $myfeeds = $user->feeds()->with('user', 'comments', 'likes')->get()->toArray();

@@ -46,6 +46,7 @@ class DiscussionResource extends JsonResource
             "name" => $this->name,
             "description" => $this->description,
             "type" => $this->type,
+            "tribe" => $this->tribe?$this->tribe:null,
             'commentCount' => count($this->discussionmessage),
             "discussionmessage" => DiscussionMessageResource::collection($this->discussionmessage),
             "discussionvote" => $this->handleVote(),

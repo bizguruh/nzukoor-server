@@ -10,6 +10,7 @@ use App\Models\DiscussionMessage;
 use Illuminate\Support\Facades\DB;
 use App\Models\DiscussionMessageVote;
 use App\Notifications\NewDiscussionReply;
+use App\Http\Resources\DiscussionMessageResource;
 
 class DiscussionMessageController extends Controller
 {
@@ -87,7 +88,7 @@ class DiscussionMessageController extends Controller
             $contribution->save();
 
 
-            broadcast(new AddDiscussion($user, $data->load('user',  'discussionmessagecomment', 'discussionmessagevote')))->toOthers();
+            broadcast(new AddDiscussion($user,new DiscussionMessageResource($data->load('user', 'discussionmessagecomment', 'discussionmessagevote'))))->toOthers();
 
             $title = $user->username . ' replied your discussion - ' . Discussion::find($request->discussion_id)->name;
             $detail = [
@@ -102,7 +103,7 @@ class DiscussionMessageController extends Controller
                 $creator->notify(new NewDiscussionReply($detail));
             }
 
-            return $data->load('user', 'discussionmessagecomment', 'discussionmessagevote');
+            return new DiscussionMessageResource($data->load('user', 'discussionmessagecomment', 'discussionmessagevote'));
         });
     }
     public function votediscussionmessage(Request $request)
