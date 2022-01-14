@@ -13,9 +13,10 @@ use App\Notifications\NewMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\InboxResource;
+use Illuminate\Support\Facades\Storage;
+use App\Models\PendingConnectionMessage;
 use App\Http\Resources\ChatHistoryResource;
 use App\Http\Resources\SingleInboxResource;
-use App\Models\PendingConnectionMessage;
 
 class InboxController extends Controller
 {
@@ -82,7 +83,8 @@ class InboxController extends Controller
                 $receiver = User::find($request->receiver_id);
             }
 
-
+            // $file = $request->file('voicenote');
+            // Storage::put('audio/test.mp3', file_get_contents($file));
 
             $message = $user->inbox()->create([
                 'message' => $request->message,
@@ -90,7 +92,7 @@ class InboxController extends Controller
                 'receiver' => 'user',
                 'receiver_id' => $request->receiver_id,
                 'voicenote' => $request->voicenote,
-                'status' => false,
+                'status' => true,
 
             ]);
             $title = $user->username . ' sent you a message ';
@@ -111,7 +113,7 @@ class InboxController extends Controller
                 }
             }
             $data = $message->load('user');
-            broadcast(new MessageSent($receiver, new ChatHistoryResource($data), $user_connection_id))->toOthers();
+           broadcast(new MessageSent($receiver, new ChatHistoryResource($data), $user_connection_id))->toOthers();
 
 
             $receiver->notify(new NewMessage($detail));
@@ -168,6 +170,7 @@ class InboxController extends Controller
     {
         $inbox = Inbox::find($id);
         $inbox->status = 'delivered';
+         $inbox->is_read = true;
         $inbox->save();
         return $inbox;
     }

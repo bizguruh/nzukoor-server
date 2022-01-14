@@ -29,7 +29,7 @@ class ChatHistoryResource extends JsonResource
         "is_read"=> $this->is_read,
         'created_at' => $this->created_at,
         'updated_at' => $this->updated_at,
-            'voicenote' => $this->voicenote
+        'voicenote' => $this->voicenote
 
         ];
     }
