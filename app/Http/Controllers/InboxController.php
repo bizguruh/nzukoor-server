@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Inbox;
 use App\Models\Connection;
@@ -12,6 +13,7 @@ use PhpParser\Node\Stmt\Return_;
 use App\Notifications\NewMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use App\Http\Resources\InboxResource;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PendingConnectionMessage;
@@ -72,6 +74,7 @@ class InboxController extends Controller
 
     public function store(Request $request)
     {
+
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
             return ('Unauthorized');
         }
@@ -83,15 +86,16 @@ class InboxController extends Controller
                 $receiver = User::find($request->receiver_id);
             }
 
-            // $file = $request->file('voicenote');
-            // Storage::put('audio/test.mp3', file_get_contents($file));
+           $file = $request->file('file');
+
+             Storage::disk('local')->put("/audio"."/".Carbon::now()->timestamp.'.wav', file_get_contents($file));
 
             $message = $user->inbox()->create([
                 'message' => $request->message,
                 'attachment' => $request->attachment,
                 'receiver' => 'user',
                 'receiver_id' => $request->receiver_id,
-                'voicenote' => $request->voicenote,
+                'voicenote' => asset('audio/'.Carbon::now()->timestamp . '.wav'),
                 'status' => true,
 
             ]);
