@@ -52,6 +52,7 @@ class FeedResource extends JsonResource
             'user' =>  new UserNameResource($this['user']),
             'tags' => $this['tags'],
             'tribe_id' => $this['tribe_id'],
+            'isEdited' => $this->updated_at->gt($this->created_at)
 
         ];
     }
