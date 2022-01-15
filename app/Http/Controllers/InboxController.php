@@ -86,16 +86,19 @@ class InboxController extends Controller
                 $receiver = User::find($request->receiver_id);
             }
 
-           $file = $request->file('file');
-
-             Storage::disk('local')->put("/audio"."/".Carbon::now()->timestamp.'.wav', file_get_contents($file));
-
+            if ($request->has('file') && $request->filled('file') && !empty($request->input('file'))) {
+                $file = $request->file('file');
+                Storage::disk('local')->put("/audio" . "/" . Carbon::now()->timestamp . '.wav', file_get_contents($file));
+                $vnpath = asset('audio/' . Carbon::now()->timestamp . '.wav');
+            } else {
+                $vnpath = null;
+            }
             $message = $user->inbox()->create([
                 'message' => $request->message,
                 'attachment' => $request->attachment,
                 'receiver' => 'user',
                 'receiver_id' => $request->receiver_id,
-                'voicenote' => asset('audio/'.Carbon::now()->timestamp . '.wav'),
+                'voicenote' => $vnpath,
                 'status' => true,
 
             ]);
