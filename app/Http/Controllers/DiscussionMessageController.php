@@ -10,6 +10,8 @@ use App\Models\DiscussionMessage;
 use Illuminate\Support\Facades\DB;
 use App\Models\DiscussionMessageVote;
 use App\Notifications\NewDiscussionReply;
+use App\Notifications\TaggedNotification;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\DiscussionMessageResource;
 
 class DiscussionMessageController extends Controller
@@ -97,10 +99,27 @@ class DiscussionMessageController extends Controller
                 'url' => "/member/discussion/" . $request->discussion_id
 
             ];
-
+            $discussion = Discussion::find($request->discussion_id);
             if ($user->id !== Discussion::find($request->discussion_id)->user_id) {
                 $creator = User::find(Discussion::find($request->discussion_id)->user_id);
                 $creator->notify(new NewDiscussionReply($detail));
+            }
+            $regex = '(@\w+)';
+            $tagged = [];
+            if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
+
+                foreach ($matches[0] as $word) {
+                    $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
+                    if (!is_null($username)) {
+                        array_push($tagged, $username);
+                    }
+                }
+                $detail = [
+                    'body' => $user->username . ' mentioned you in a discussion reply',
+                     'url' => 'https://nzukoor.com/member/tribe/'.$discussion->tribe_id.'discussion/'. $discussion->id
+                ];
+
+                Notification::send($tagged, new TaggedNotification($detail));
             }
 
             return new DiscussionMessageResource($data->load('user', 'discussionmessagecomment', 'discussionmessagevote'));

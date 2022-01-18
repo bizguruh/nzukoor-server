@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Events\NotificationSent;
 use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
+use App\Notifications\TaggedNotification;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\FeedCommentRepliesResource;
 
 class FeedCommentReplyController extends Controller
@@ -49,7 +51,23 @@ class FeedCommentReplyController extends Controller
         //     $owner->notify(new CommentReply($details));
         // }
 
+        $regex = '(@\w+)';
+        $tagged = [];
+        if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
 
+            foreach ($matches[0] as $word) {
+                $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
+                if (!is_null($username)) {
+                    array_push($tagged, $username);
+                }
+            }
+            $detail = [
+                'body' => $user->username . ' mentioned you in a comment',
+                'url' => 'https://nzukoor.com/member/feed/view/' . $request->feed_id
+            ];
+
+            Notification::send($tagged, new TaggedNotification($detail));
+        }
         return response(new  FeedCommentRepliesResource($data->load('user')), 201);
     }
     public function replylike(Request $request)

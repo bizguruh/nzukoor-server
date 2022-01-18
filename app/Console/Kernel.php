@@ -25,9 +25,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->everyMinute()->emailOutputTo('succy2010@gmail.com');;
-        $schedule->command('check:event')->everyMinute();
+       // $schedule->command('check:event')->everyMinute();
         $schedule->command('telescope:prune')->daily();
-        $schedule->command('event:reminder')->everyFifteenMinutes();
+       // $schedule->command('event:reminder')->everyFifteenMinutes();
         $schedule->command('queue:work --stop-when-empty')->everyMinute();
     }
 

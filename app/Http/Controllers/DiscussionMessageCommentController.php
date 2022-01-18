@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Notifications\CommentReply;
 use App\Models\DiscussionMessageComment;
 use App\Notifications\NewDiscussionReply;
+use App\Notifications\TaggedNotification;
+use Illuminate\Support\Facades\Notification;
 
 class DiscussionMessageCommentController extends Controller
 {
@@ -72,8 +74,8 @@ class DiscussionMessageCommentController extends Controller
             'organization_id' => $user->organization_id ? $user->organization_id : 1,
         ]);
 
-        $discussion = Discussion::find($request->discussion_id)->value('name');
-        $body = $user->username . ' replied your comment - ' . $discussion;
+        $discussion = Discussion::find($request->discussion_id);
+        $body = $user->username . ' replied your comment - ' . $discussion->name;
         $owner = User::find(DiscussionMessageComment::where('discussion_message_id', $request->message_id)->value('user_id'));
         $details = [
             'from_email' => 'nzukoor@gmail.com',
@@ -89,6 +91,23 @@ class DiscussionMessageCommentController extends Controller
             $owner->notify(new CommentReply($details));
         }
 
+        $regex = '(@\w+)';
+        $tagged = [];
+        if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
+
+            foreach ($matches[0] as $word) {
+                $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
+                if (!is_null($username)) {
+                    array_push($tagged, $username);
+                }
+            }
+            $detail = [
+                'body' => $user->username . ' mentioned you in a discussion reply',
+                'url' => 'https://nzukoor.com/member/tribe/'.$discussion->tribe_id.'discussion/'. $discussion->id
+            ];
+
+            Notification::send($tagged, new TaggedNotification($detail));
+        }
         return response($data->load( 'user'), 201);
     }
 

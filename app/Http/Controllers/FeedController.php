@@ -13,9 +13,11 @@ use App\Support\Collection;
 use Illuminate\Http\Request;
 use App\Http\Resources\FeedResource;
 use App\Http\Resources\FeedLikeResource;
+use App\Notifications\TaggedNotification;
 use App\Http\Resources\ConnectionResource;
 use App\Http\Resources\SingleFeedResource;
 use App\Http\Resources\FeedCommentResource;
+use Illuminate\Support\Facades\Notification;
 
 class FeedController extends Controller
 {
@@ -200,7 +202,7 @@ class FeedController extends Controller
     {
 
 
-            $user = auth('api')->user();
+        $user = auth('api')->user();
 
         // feed by interests
         if (is_null($user->interests)) return response('empty');
@@ -243,7 +245,7 @@ class FeedController extends Controller
         $connections = $user->connections()->get();
 
 
-    $users = $connections->map(function ($f) {
+        $users = $connections->map(function ($f) {
             return intval($f->following_id);
         });
 
@@ -284,6 +286,7 @@ class FeedController extends Controller
         }
 
 
+
         $data = $user->feeds()->create([
             'organization_id' => 1,
             'media' => $request->media,
@@ -292,10 +295,29 @@ class FeedController extends Controller
             'message' => $request->message,
             'tribe_id' => $request->tribe_id,
             'tags' => $request->tags,
-            'mediaType'=>$request->mediaType
+            'mediaType' => $request->mediaType
         ]);
 
+
+
         broadcast(new AddFeed($user, new SingleFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();
+        $regex = '(@\w+)';
+        $tagged = [];
+        if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
+
+            foreach ($matches[0] as $word) {
+                $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
+                if (!is_null($username)) {
+                    array_push($tagged, $username);
+                }
+            }
+            $details = [
+                'body' => $user->username . ' tagged you in a post',
+                'url' => 'https://nzukoor.com/member/feed/view/' . $data->id
+            ];
+
+            Notification::send($tagged, new TaggedNotification($details));
+        }
         return  new SingleFeedResource($data->load('user', 'comments', 'likes'));
     }
 

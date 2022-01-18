@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 use App\Events\NotificationSent;
 use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
+use App\Notifications\TaggedNotification;
 use App\Http\Resources\FeedCommentResource;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Resources\SingleFeedCommentResource;
 use App\Http\Resources\FeedCommentRepliesResource;
 
@@ -100,7 +102,26 @@ class FeedCommentController extends Controller
             'comment' => $request->comment
         ]);
 
-        // broadcast(new AddCommment($user, new FeedCommentResource($data->load('user', 'feed'))))->toOthers();
+         broadcast(new AddCommment($user, new FeedCommentResource($data->load('user', 'feed'))))->toOthers();
+
+        $regex = '(@\w+)';
+        $tagged = [];
+        if (preg_match_all($regex, $request->comment, $matches, PREG_PATTERN_ORDER)) {
+
+            foreach ($matches[0] as $word) {
+                $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
+                if (!is_null($username)) {
+                    array_push($tagged, $username);
+                }
+            }
+            $details = [
+                'body' => $user->username . ' mentioned you in a comment',
+                'url' => 'https://nzukoor.com/member/feed/view/' . $request->id
+            ];
+
+            Notification::send($tagged, new TaggedNotification($details));
+        }
+
         return  new SingleFeedCommentResource($data->load('user', 'feed'));
     }
 
