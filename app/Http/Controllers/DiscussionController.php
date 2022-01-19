@@ -379,6 +379,36 @@ class DiscussionController extends Controller
      * @param  \App\Models\Discussion  $discussion
      * @return \Illuminate\Http\Response
      */
+
+     public function updatediscussioncomment(Request $request){
+
+        $find = DiscussionMessage::find($request->id);
+        $find->message = $request->message;
+        $find->save();
+        return $find;
+     }
+      public function updatediscussionreply(Request $request){
+
+        $find = DiscussionMessageComment::find($request->id);
+        $find->message = $request->message;
+        $find->save();
+        return $find;
+     }
+      public function dropdiscussioncomment( $id){
+      
+        $find = DiscussionMessage::find($id);
+        $find->delete();
+
+        return response('ok');
+     }
+    public function dropdiscussionreply( $id)
+    {
+
+        $find = DiscussionMessageComment::find($id);
+        $find->delete();
+
+        return response('ok');
+    }
     public function destroy(Discussion $discussion)
     {
         $user = auth('api')->user();

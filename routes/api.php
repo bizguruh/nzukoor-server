@@ -240,7 +240,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('messages/mark/read', [InboxController::class, 'markunread']);
     Route::get('messages/unread', [InboxController::class, 'getunreadmessages']);
 
-
+ Route::post('update/discussion/reply', [DiscussionController::class,'updatediscussionreply']);
+    Route::post('update/discussion/comment', [DiscussionController::class, 'updatediscussioncomment']);
+    Route::delete('drop/discussion/comment/{id}', [DiscussionController::class, 'dropdiscussioncomment']);
+    Route::delete('drop/discussion/reply/{id}', [DiscussionController::class, 'dropdiscussionreply']);
 });
 
 Route::post('user-register', [UserController::class, 'storeuser']);
