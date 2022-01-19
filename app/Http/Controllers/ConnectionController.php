@@ -99,6 +99,24 @@ class ConnectionController extends Controller
             ]);
         }
     }
+    public function deletepending(Request $request)
+    {
+
+
+
+
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
+
+
+        $checkpending = $user->pendingconnections()->where( 'following_id', $request->following_id)->first();
+
+        $checkpending->delete();
+        return response('ok');
+
+
+    }
 
     public function getmemberswithinterests()
     {
