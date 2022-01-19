@@ -293,10 +293,10 @@ class ConnectionController extends Controller
 
         if (is_null($user->interests)) return;
         $interests = $user->interests;
-        $discussion = Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $discussion = Discussion::with( 'user', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
         $result =   $discussion->filter(function ($a) use ($interests) {
             $tags = collect($a->tags)->map(function ($t) {
-                return $t->value;
+                return $t['value'];
             });
 
             $check = array_intersect($interests, $tags->toArray());
