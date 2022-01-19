@@ -261,7 +261,7 @@ class DiscussionController extends Controller
         function filtertag($arr)
         {
             return  array_map(function ($val) {
-                return $val->value;
+                 return $val['value'];
             }, $arr);
         }
 
@@ -277,7 +277,7 @@ class DiscussionController extends Controller
             }
         });
         $discussion->related = $related->values()->all();
-      
+
 
         return new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
     }
