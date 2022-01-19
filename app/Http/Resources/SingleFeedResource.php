@@ -40,6 +40,7 @@ class SingleFeedResource extends JsonResource
             'created_at' => $this['created_at'],
             'message' => $this['message'],
             'media' => $this['media'],
+            'mediaType' => $this['mediaType'],
             'commentCount' => count($this['comments']),
             'likesCount' => count($this['likes']),
             'comments' =>  FeedCommentResource::collection($this['comments']),

@@ -293,9 +293,9 @@ class ConnectionController extends Controller
 
         if (is_null($user->interests)) return;
         $interests = $user->interests;
-        $discussion = Discussion::where('organization_id', $user->organization_id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $discussion = Discussion::with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
         $result =   $discussion->filter(function ($a) use ($interests) {
-            $tags = collect(json_decode($a->tags))->map(function ($t) {
+            $tags = collect($a->tags)->map(function ($t) {
                 return $t->value;
             });
 

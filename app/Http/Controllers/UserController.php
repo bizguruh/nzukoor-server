@@ -288,7 +288,7 @@ class UserController extends Controller
             ];
             $newuser->notify(new SendNotification($details));
             $mail = new MailController;
-            // $mail->memberwelcome($newuser);
+            $mail->memberwelcome($newuser);
            WelcomeEmail::dispatch($newuser);
             return $newuser;
         });
