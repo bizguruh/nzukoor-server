@@ -103,7 +103,7 @@ class DiscussionMessageCommentController extends Controller
             }
             $detail = [
                 'body' => $user->username . ' mentioned you in a discussion reply',
-                'url' => 'https://nzukoor.com/member/tribe/'.$discussion->tribe_id.'discussion/'. $discussion->id
+                'url' => 'https://nzukoor.com/member/tribe/'.$discussion->tribe_id.'/discussion/'. $discussion->id
             ];
 
             Notification::send($tagged, new TaggedNotification($detail));
