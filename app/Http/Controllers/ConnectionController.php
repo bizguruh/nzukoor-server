@@ -7,13 +7,15 @@ use App\Models\Inbox;
 use App\Models\Course;
 use App\Models\Connection;
 use App\Models\Discussion;
+use App\Events\SearchEvent;
 use App\Models\Facilitator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\FollowerResource;
+use App\Models\PendingConnectionMessage;
 use App\Http\Resources\ChatUsersResource;
 use App\Http\Resources\ConnectionResource;
-use App\Models\PendingConnectionMessage;
 
 class ConnectionController extends Controller
 {
@@ -389,5 +391,25 @@ class ConnectionController extends Controller
         return response()->json([
             'message' => 'Delete successful'
         ]);
+    }
+
+
+
+    public function search(Request $request)
+    {
+        $query = $request->query('query');
+        $users = User::where('username', 'like', '%' . $query . '%')->get();
+
+        //broadcast search results with Pusher channels
+        event(new SearchEvent( UserResource::collection($users)));
+
+        return response()->json("ok");
+    }
+
+    //fetch all products
+    public function get(Request $request)
+    {
+        $users = User::get();
+        return response()->json($users);
     }
 }

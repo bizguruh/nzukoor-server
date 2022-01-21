@@ -18,12 +18,12 @@ class SearchEvent implements ShouldBroadcastNow
      * @return void
      */
 
-    public $tribes;
+    public $result;
 
-    public function __construct($tribes)
+    public function __construct($result)
     {
         //
-        $this->tribes = $tribes;
+        $this->result = $result;
     }
 
     /**

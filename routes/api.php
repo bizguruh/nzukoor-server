@@ -520,6 +520,9 @@ Route::middleware(['auth:api'])->group(function () {
 Route::get('search', [TribeSearchController::class, 'search']);
 Route::get('all/tribes', [TribeSearchController::class, 'get']);
 
+Route::get('search/users', [ConnectionController::class, 'search']);
+Route::get('all/users', [ConnectionController::class, 'get']);
+
 
 // Mobile Password
 Route::post('generate/otp', [UserController::class, 'createotp']);
