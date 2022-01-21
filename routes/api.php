@@ -396,7 +396,7 @@ Route::post('send/event/invite', [MailController::class, 'sendeventinvite']);
 Route::get('guest/events/{id}', [EventController::class, 'guestevent']);
 Route::get('guest/discussions/{id}', [DiscussionController::class, 'getguestdiscussion']);
 
-Route::post('guest/send/discussion/invite', [MailController::class, 'senddiscussioninvite']);
+Route::post('guest/send/discussion/invite', [MailController::class, 'guestsenddiscussioninvite']);
 Route::post('guest/send/event/invite', [MailController::class, 'sendeventinvite']);
 
 

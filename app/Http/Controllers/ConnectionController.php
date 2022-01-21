@@ -314,6 +314,7 @@ class ConnectionController extends Controller
         $discussion = Discussion::with( 'user', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
         $result =   $discussion->filter(function ($a) use ($interests) {
             $tags = collect($a->tags)->map(function ($t) {
+
                 return $t['value'];
             });
 

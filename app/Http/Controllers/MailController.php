@@ -260,6 +260,28 @@ class MailController extends Controller
 
         return response($details, 200);
     }
+    public function guestsenddiscussioninvite(Request $request)
+    {
+
+
+
+
+        $details = [
+
+            'from_email' => 'info@nzukoor.com',
+            'from_name' => 'Nzukoor',
+            'greeting' => 'Hello',
+            'body' => 'You have been invited to join the discussion, **' . $request->title . '** on Nzukoor and We’d like to hear your thoughts. ',
+            'actionText' => 'Join here',
+            'url' => "https://nzukoor.com/explore/discussion/" . $request->id,
+
+        ];
+        $tribe_id = Discussion::find($request->id)->tribe_id;
+        Mail::to($request->users)->send(new DiscussionInvite($details));
+
+
+        return response($details, 200);
+    }
 
     public function sendeventinvite(Request $request)
     {
