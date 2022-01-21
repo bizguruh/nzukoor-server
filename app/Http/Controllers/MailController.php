@@ -35,7 +35,7 @@ class MailController extends Controller
         }
 
         $details = [
-            'from_email' => 'nzukoor@gmail.com',
+            'from_email' => 'info@nzukoor.com',
             'from_name' => 'Nzukoor Team',
             'greeting' => 'Hello ' . $name,
             'body' => $body,
@@ -59,7 +59,7 @@ class MailController extends Controller
         ];
         Mail::send('email.organizationwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject('Here’s Your Passport To Be More ');
-            $message->from('nzukoor@gmail.com', 'Nzukoor Team');
+            $message->from('info@nzukoor.com', 'Nzukoor Team');
         });
     }
 
@@ -71,7 +71,7 @@ class MailController extends Controller
         ];
         Mail::send('email.facilitatorwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject(' A Home For You To Share');
-            $message->from('nzukoor@gmail.com', 'Nzukoor Team');
+            $message->from('info@nzukoor.com', 'Nzukoor Team');
         });
     }
 
@@ -83,7 +83,7 @@ class MailController extends Controller
         ];
         Mail::send('email.memberwelcome', $data, function ($message) use ($info) {
             $message->to($info->email, $info->name)->subject(' A Home For You To Share');
-            $message->from('nzukoor@gmail.com', 'Nzukoor Team');
+            $message->from('info@nzukoor.com', 'Nzukoor Team');
         });
     }
 
@@ -130,7 +130,7 @@ class MailController extends Controller
         $details = [
 
             'title' => $title,
-            'from_email' => 'nzukoor@gmail.com',
+            'from_email' => 'info@nzukoor.com',
             'from_name' => 'Nzukoor Team',
             'greeting' => 'Hello Friend',
             'body' => $body,
@@ -161,7 +161,7 @@ class MailController extends Controller
         $details = [
 
             'title' => $title,
-            'from_email' => 'nzukoor@gmail.com',
+            'from_email' => 'info@nzukoor.com',
             'from_name' => 'Nzukoor',
             'greeting' => 'Hello ',
             'body' => $body,
@@ -187,7 +187,7 @@ class MailController extends Controller
 
         ];
 
-        Mail::to('nzukoor@gmail.com')->send(new ContactMail($details));
+        Mail::to('info@nzukoor.com')->send(new ContactMail($details));
         return response($details, 200);
     }
     public function senddiscussioninvite(Request $request)
@@ -196,7 +196,7 @@ class MailController extends Controller
         if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user()) {
             $details = [
 
-                'from_email' => 'nzukoor@gmail.com',
+                'from_email' => 'info@nzukoor.com',
                 'from_name' => 'Nzukoor',
                 'greeting' => 'Hello',
                 'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
@@ -290,7 +290,7 @@ class MailController extends Controller
 
             $details = [
 
-                'from_email' => 'nzukoor@gmail.com',
+                'from_email' => 'info@nzukoor.com',
                 'from_name' => 'Nzukoor',
                 'greeting' => 'Hello',
                 'body' => 'I will be attending the event, **' . $request->title . '** on Nzukoor and I think you’d like it. Join me! ',

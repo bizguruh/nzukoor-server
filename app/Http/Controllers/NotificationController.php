@@ -139,7 +139,7 @@ class NotificationController extends Controller
         $receiver =  $request->type == 'user' ?  User::find($request->id) :  Facilitator::find($request->id);
         $details = [
             'from_name' => 'Nzukoor',
-            'from_email' => 'nzukoor@gmail.com',
+            'from_email' => 'info@nzukoor.com',
             'greeting' => 'Hello',
             'body' => $user->name . " added you as a connection",
             'thanks' => 'Thanks',

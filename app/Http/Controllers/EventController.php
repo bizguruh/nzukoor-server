@@ -117,7 +117,7 @@ class EventController extends Controller
             return $a->id != $user->id;
         });
         $details = [
-            'from_email' => 'nzukoor@gmail.com',
+            'from_email' => 'info@nzukoor.com',
             'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
             'greeting' => 'Hello ',
             'body' => 'New Tribe Event Alert! ' . $user->username . " just created a new event in" . $tribe->name . 'Tribe',
@@ -161,7 +161,7 @@ class EventController extends Controller
 
                 'image' => $value['cover'],
                 'title' => 'Event is starting soon ',
-                'from_email' => 'nzukoor@gmail.com',
+                'from_email' => 'info@nzukoor.com',
                 'from_name' => 'Nzukoor',
                 'greeting' => 'Hello',
                 'body' => 'The event, **' . $value['title'] . '** will be starting in few hours. Don\'t forget to Join! ',

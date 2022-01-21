@@ -38,7 +38,7 @@ class FeedCommentReplyController extends Controller
         $body = $user->username . ' replied your comment - ' . $feed;
         $owner = User::find(FeedCommentReply::where('feed_comment_id', $request->feed_comment_id)->value('user_id'));
         $details = [
-            'from_email' => 'nzukoor@gmail.com',
+            'from_email' => 'info@nzukoor.com',
             'from_name' => 'Nzukoor',
             'greeting' => 'Hello ' . $owner->username,
             'body' => $body,

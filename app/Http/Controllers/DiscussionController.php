@@ -207,7 +207,7 @@ class DiscussionController extends Controller
             return $a->id != $user->id;
         });
         $details = [
-            'from_email' => 'nzukoor@gmail.com',
+            'from_email' => 'info@nzukoor.com',
             'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
             'greeting' => 'Hello ',
             'body' => 'New Tribe Discussion Alert! ' . $user->username . " just created a new discussion in" . $tribe->name . 'Tribe',
@@ -395,7 +395,7 @@ class DiscussionController extends Controller
         return $find;
      }
       public function dropdiscussioncomment( $id){
-      
+
         $find = DiscussionMessage::find($id);
         $find->delete();
 

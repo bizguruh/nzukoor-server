@@ -42,7 +42,7 @@ class DeletedContent extends Notification
     {
         return (new MailMessage)
             ->subject('Improper Conduct')
-            ->from('nzukoor@gmail.com', 'Nzukoor Team')
+            ->from('info@nzukoor.com', 'Nzukoor Team')
             ->line($this->details['message']);
 
     }
