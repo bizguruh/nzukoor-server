@@ -45,11 +45,11 @@ class InboxController extends Controller
     public function getchathistory($id)
     {
 
-        if (auth('api')->user()) {
-            $user = auth('api')->user();
-            $data = Inbox::where([['user_id', '=', $id], ['receiver_id', '=', $user->id]])
-                ->orWhere([['receiver_id', '=', $id], ['user_id', '=', $user->id]])->get();
-        }
+
+        $user = auth('api')->user();
+        $data = Inbox::where([['user_id', '=', $id], ['receiver_id', '=', $user->id]])
+            ->orWhere([['receiver_id', '=', $id], ['user_id', '=', $user->id]])->orderBy('created_at')->get();
+
         $unread  = $data->filter(function ($a) use ($user) {
             return !$a['is_read'] && $a['receiver_id'] == $user->id;
         })->count();
@@ -120,7 +120,7 @@ class InboxController extends Controller
                 }
             }
             $data = $message->load('user');
-           broadcast(new MessageSent($receiver, new ChatHistoryResource($data), $user_connection_id))->toOthers();
+            broadcast(new MessageSent($receiver, new ChatHistoryResource($data), $user_connection_id))->toOthers();
 
 
             $receiver->notify(new NewMessage($detail));
@@ -177,7 +177,7 @@ class InboxController extends Controller
     {
         $inbox = Inbox::find($id);
         $inbox->status = 'delivered';
-         $inbox->is_read = true;
+        $inbox->is_read = true;
         $inbox->save();
         return $inbox;
     }
