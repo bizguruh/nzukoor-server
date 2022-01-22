@@ -48,7 +48,7 @@ class InboxController extends Controller
         if (auth('api')->user()) {
             $user = auth('api')->user();
             $data = Inbox::where([['user_id', '=', $id], ['receiver_id', '=', $user->id]])
-                ->orWhere([['receiver_id', '=', $id], ['user_id', '=', $user->id]])->get();
+                ->orWhere([['receiver_id', '=', $id], ['user_id', '=', $user->id]])->orderBy('created_at')->get();
         }
         $unread  = $data->filter(function ($a) use ($user) {
             return !$a['is_read'] && $a['receiver_id'] == $user->id;
