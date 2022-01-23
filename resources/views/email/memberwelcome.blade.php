@@ -246,7 +246,7 @@ p {
     <tr>
    <td class="p-2 text-center">
       <div class="rounded ">
-    <img src="{{asset('landing/explore.png')}}"  class="image"  alt="Explore">
+    <img src="{{asset('/landing/explore.png')}}"  class="image"  alt="Explore">
      <div class="p-2" style="line-height: 1.4">
         <div class="t_header">Explore</div>
         <p> Explore to discover people, knowledge and opportunities.</p>
@@ -257,7 +257,7 @@ p {
      <td class="p-2  text-center">
 
        <div class="rounded ">
-      <img src="{{asset('landing/engage.png')}}"   class="image" alt="Engage">
+      <img src="{{asset('/landing/engage.png')}}"   class="image" alt="Engage">
        <div class="p-2" style="line-height: 1.4">
         <div  class="t_header">Engage</div>
       <p>Engage by starting or joining conversations of interest.</p>
@@ -269,7 +269,7 @@ p {
       <tr>
           <td class="p-2  text-center">
          <div class="rounded ">
-        <img src="{{asset('landing/evolve.png')}}"  class="image"  alt="Evolve">
+        <img src="{{asset('/landing/evolve.png')}}"  class="image"  alt="Evolve">
          <div class="p-2" style="line-height: 1.4">
             <div  class="t_header">Evolve</div>
         <p>Evolve by enrolling to courses and events.</p>
@@ -278,7 +278,7 @@ p {
       </td>
      <td class="p-2 text-center">
          <div class="rounded ">
-         <img src="{{asset('landing/impact.png')}}" class="image" alt="Impact">
+         <img src="{{asset('/landing/impact.png')}}" class="image" alt="Impact">
           <div class="p-2" style="line-height: 1.4">
            <div  class="t_header">Impact</div>
          <p>Impact others by inviting them to our community.</p>
