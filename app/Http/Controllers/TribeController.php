@@ -29,12 +29,10 @@ class TribeController extends Controller
     public function index()
     {
         $currentPage = request()->get('page', 1);
-        $data = Tribe::with('users')->paginate(15);
+        $data = Tribe::with('users')->inRandomOrder()->paginate(15);
 
-        $tribes = TribeResource::collection($data)->response()->getData(true);
-        return Cache::tags(['tribes'])->remember('tribes' . $currentPage, 3600, function () use ($tribes) {
-            return $tribes;
-        });
+       return TribeResource::collection($data)->response()->getData(true);
+
     }
     public function guesttribes()
     {

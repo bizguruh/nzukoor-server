@@ -29,7 +29,7 @@ class FeedResource extends JsonResource
         return in_array(
             $id,
             array_map(function ($a) use ($arr) {
-                return $a['user_id'] && $a['like'];
+                return $a['user_id'];
             }, $arr)
         );
     }
