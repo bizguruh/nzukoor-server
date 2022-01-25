@@ -350,6 +350,9 @@ class DiscussionController extends Controller
         if ($request->has('type') && $request->filled('type') && !empty($request->input('type'))) {
             $discussion->type = $request->type;
         }
+        if ($request->has('description') && $request->filled('description') && !empty($request->input('description'))) {
+            $discussion->description = $request->description;
+        }
         if ($request->has('name') && $request->filled('name') && !empty($request->input('name'))) {
             $discussion->name = $request->name;
         }
@@ -362,15 +365,13 @@ class DiscussionController extends Controller
         if ($request->has('creator') && $request->filled('creator') && !empty($request->input('creator'))) {
             $discussion->creator = $request->creator;
         }
-        if ($request->has('course_id') && $request->filled('course_id') && !empty($request->input('course_id'))) {
-            $discussion->course_id = $request->course_id;
-        }
+
 
 
 
 
         $discussion->save();
-        return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
+        return $discussion->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
     }
 
     /**
