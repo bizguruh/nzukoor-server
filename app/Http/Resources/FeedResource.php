@@ -30,7 +30,7 @@ class FeedResource extends JsonResource
             $id,
             array_map(function ($a) use ($arr) {
                 return $a['user_id'];
-            }, $arr)
+            }, $arr->toArray())
         );
     }
     public function toArray($request)
@@ -45,7 +45,9 @@ class FeedResource extends JsonResource
             'comments' =>  FeedCommentResource::collection($this['comments']),
             'likes' =>  FeedLikeResource::collection($this['likes']),
             'isOwner' => $this->handleIsOwner(),
-            'isLiked' => $this->handleisLiked($this['likes']),
+            'isLiked' => $this->handleisLiked(collect($this['likes'])->filter(function ($a) {
+                return $a['like'];
+            })),
             'url' => $this['url'],
             'mediaType' => $this['mediaType'],
             'publicId' => $this['publicId'],

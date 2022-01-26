@@ -46,7 +46,9 @@ class SingleFeedResource extends JsonResource
             'comments' =>  FeedCommentResource::collection($this['comments']),
             'likes' =>  FeedLikeResource::collection($this['likes']),
             'isOwner' => $this->handleIsOwner(),
-            'isLiked' => $this->handleisLiked($this['likes']),
+            'isLiked' => $this->handleisLiked(collect($this['likes'])->filter(function($a){
+                return $a['like'];
+            })),
             'url' => $this['url'],
             'publicId' => $this['publicId'],
             'user_id' => $this['user_id'],
