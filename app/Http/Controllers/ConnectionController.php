@@ -200,28 +200,7 @@ class ConnectionController extends Controller
         }
 
 
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $userconnection = $user->connections()->get();
 
-            $connectedusers = $user->connections()->get()->filter(function ($u) {
-                if ($u->follow_type == 'user')  return $u;
-            })->map(function ($u) {
-
-                return $u->following_id;
-            });
-            $connectedfacilitators = $user->connections()->get()->filter(function ($u) {
-                if ($u->follow_type == 'facilitator')  return $u;
-            })->map(function ($u) {
-
-                return $u->following_id;
-            });
-
-
-            $allusers = User::whereNotIn('id', $connectedusers->toArray())->get();
-            $allfacilitators = Facilitator::where('id', '!=', $user->id)->whereNotIn('id', $connectedfacilitators->toArray())->get();
-        }
-        if (auth('api')->user()) {
             $user = auth('api')->user();
             $connectedusers = $user->connections()->get()->filter(function ($u) {
                 if ($u->follow_type == 'user')  return $u;
@@ -229,17 +208,12 @@ class ConnectionController extends Controller
 
                 return $u->following_id;
             });
-            $connectedfacilitators = $user->connections()->get()->filter(function ($u) {
-                if ($u->follow_type == 'facilitator')  return $u;
-            })->map(function ($u) {
-
-                return $u->following_id;
-            });
 
 
-            $allusers = User::where('id', '!=', $user->id)->whereNotIn('id', $connectedusers->toArray())->get();
-            $allfacilitators = Facilitator::whereNotIn('id',  $connectedfacilitators->toArray())->get();
-        }
+
+            $allusers = User::where('id', '!=', $user->id)->whereNotIn('id', $connectedusers->toArray())->inRandomOrder()->get();
+
+
         if (is_null($user->interests)) return;
         $interests = $user->interests;
         $similarUsers = $allusers->filter(function ($f)
@@ -258,7 +232,7 @@ class ConnectionController extends Controller
 
 
         $mergedUsers = $mapsimilarusers->values()->all();
-        return $mergedUsers;
+        return array_slice($mergedUsers,0,10);
     }
     public function getUsersWithInterest($interest)
     {

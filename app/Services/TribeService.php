@@ -67,19 +67,19 @@ class  TribeService
   {
 
     $mytribe = $user->tribes()->get()->pluck('id');
-    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users',  'discussions', 'feeds', 'events')->get();
+    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users',  'discussions', 'feeds', 'events')->inRandomOrder()->take(10)->get();
 
     $interests = $user->interests;
     if (is_null($interests) || gettype($interests) !== 'array') {
       return TribeResource::collection($tribe);
     }
-    $result =  $tribe->filter(function ($a) use ($interests) {
+    $result =  $tribe->filter(function ($a) use ($interests, $tribe) {
       $tribeinterests =  collect($a->tags)->map(function ($b) {
         return $b['value'];
       })->toArray();
       $identical = array_intersect($interests, $tribeinterests);
 
-      return  count($identical) ? $identical : '';
+      return  count($identical) ? $identical : $tribe;
     });
 
     return  TribeResource::collection($result);
