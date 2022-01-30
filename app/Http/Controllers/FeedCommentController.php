@@ -42,12 +42,12 @@ class FeedCommentController extends Controller
         $feed = FeedComment::find($request->feed_comment_id);
         $creator = User::find($feed->user_id);
         $mainfeed = Feed::find($feed->feed_id);
-        if ($mainfeed->user_id !== $user->id) {
-            return response([
-                'success' => false,
-                'message' => 'only creator allowed'
-            ], 401);
-        }
+        // if ($mainfeed->user_id !== $user->id) {
+        //     return response([
+        //         'success' => false,
+        //         'message' => 'only creator allowed'
+        //     ], 401);
+        // }
 
         $message = $user->username . ' liked your comment';
         $url = 'https://nzukoor.com/member/feed/view/' . $feed->feed_id;
@@ -167,6 +167,7 @@ class FeedCommentController extends Controller
      */
     public function destroy(FeedComment $feedComment)
     {
-        //
+        $feedComment->delete();
+        return response('ok');
     }
 }

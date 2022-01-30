@@ -25,7 +25,7 @@ class FeedComment extends Model
     }
     public function feedcommentlikes()
     {
-        return $this->hasOne(FeedCommentLike::class);
+        return $this->hasMany(FeedCommentLike::class);
     }
 
 

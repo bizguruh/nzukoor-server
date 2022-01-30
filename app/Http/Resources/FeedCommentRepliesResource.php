@@ -12,6 +12,18 @@ class FeedCommentRepliesResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+    public function handleisLiked($arr)
+    {
+        if (!auth('api')->user()) return false;
+        $id = auth('api')->user()->id;
+
+        return in_array(
+            $id,
+           collect($arr)->map(function ($a) {
+               return $a['user_id'];
+           })->all()
+        );
+    }
     public function toArray($request)
     {
         return [
@@ -21,7 +33,8 @@ class FeedCommentRepliesResource extends JsonResource
             "feed_comment_id" =>   $this['feed_comment_id'],
             // "feedcommentreplylikes" => $this['feedcommentreplylikes'],
             "feed_id" => $this['feed_id'],
-            "isLiked" => $this['feedcommentreplylikes'] ? true : false,
+            "isLiked" => $this->handleisLiked($this['feedcommentreplylikes']),
+            "likeCount"=> count($this['feedcommentreplylikes']),
              "user_id" => $this['user_id'],
              'user' => new UserNameResource($this['user'])
         ];
