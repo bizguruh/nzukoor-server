@@ -1872,8 +1872,8 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 window.Pusher = __webpack_require__(Object(function webpackMissingModule() { var e = new Error("Cannot find module 'pusher-js'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 window.Echo = new Object(function webpackMissingModule() { var e = new Error("Cannot find module 'laravel-echo'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())({
   broadcaster: "pusher",
-  key: "e1c39173a3f0a174688d",
-  cluster: "eu",
+  key: "35db7038d78ae4a57201",
+  cluster: "mt1",
   forceTLS: true
 });
 

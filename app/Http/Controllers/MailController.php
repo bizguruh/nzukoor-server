@@ -89,22 +89,16 @@ class MailController extends Controller
 
     public function sendreferral(Request $request)
     {
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
-        if (auth('api')->user()) {
+
             $user = auth('api')->user();
-        }
-        $organization = Organization::find($user->organization_id);
+
+
         $data = [
             'code' => $request->code,
             'name' => $user->username,
-            'organization' => $organization->name,
-            'from' => $user->email,
-            'url' => 'https://nzukoor.com/register/?referral_code=' . $request->code
+            'organization' => 'Nzukoor',
+            'from' => 'info@nzukoor.com',
+            'url' => 'https://nzukoor.com/register/?invite=' . $request->code
         ];
         Mail::to($request->emails)->send(new ReferralInvite($data));
     }
