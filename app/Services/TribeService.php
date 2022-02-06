@@ -67,7 +67,7 @@ class  TribeService
   {
 
     $mytribe = $user->tribes()->get()->pluck('id');
-    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users',  'discussions', 'feeds', 'events')->inRandomOrder()->take(10)->get();
+    $tribe = Tribe::whereNotIn('id',  $mytribe)->with('users',  'discussions')->inRandomOrder()->take(10)->get();
 
     $interests = $user->interests;
     if (is_null($interests) || gettype($interests) !== 'array') {
@@ -87,7 +87,7 @@ class  TribeService
   public function usertribe($user)
   {
 
-    $data =  $user->tribes()->with('users')->latest()->paginate(15);
+    $data =  $user->tribes()->with('users', 'discussions')->latest()->paginate(15);
 
     return TribeResource::collection($data)->response()->getData(true);
   }
@@ -128,7 +128,7 @@ class  TribeService
     return response()->json([
       'success' => true,
       'message' => 'update successful',
-      'data' => new TribeResource($tribe->load('users'))
+      'data' => new TribeResource($tribe->load('users', 'discussions'))
     ]);
   }
   public function createtriberequest($tribe, $user)
@@ -146,7 +146,7 @@ class  TribeService
     ]);
     $details = [
       'message' => ucfirst($user->username) . ' has requested to join your tribe, ' . ucfirst($tribe->name),
-      'url' => 'https://nzukoor.com/member/tribe/discussions' . $tribe->id
+      'url' => 'https://nzukoor.com/me/tribe/discussions' . $tribe->id
     ];
     $owner->notify(new TribeRequestAlert($details));
 
@@ -167,7 +167,7 @@ class  TribeService
         $this->addusertotribe($tribe, $user);
         $details = [
           'message' => 'Your  request to join the tribe, ' . ucfirst($tribe->name) . ' has been approved',
-          'url' => 'https://nzukoor.com/member/tribe/discussions' . $tribe->id
+          'url' => 'https://nzukoor.com/me/tribe/discussions' . $tribe->id
         ];
         $user->notify(new TribeRequestApprove($details));
       } else {

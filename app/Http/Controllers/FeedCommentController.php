@@ -50,7 +50,7 @@ class FeedCommentController extends Controller
         // }
 
         $message = $user->username . ' liked your comment';
-        $url = 'https://nzukoor.com/member/feed/view/' . $feed->feed_id;
+        $url = 'https://nzukoor.com/me/feed/' . $feed->feed_id;
         $details = [
             'message' => $message,
             'url' => $url
@@ -116,7 +116,7 @@ class FeedCommentController extends Controller
             }
             $details = [
                 'body' => $user->username . ' mentioned you in a comment',
-                'url' => 'https://nzukoor.com/member/feed/view/' . $request->id
+                'url' => 'https://nzukoor.com/me/feed/' . $request->id
             ];
 
             Notification::send($tagged, new TaggedNotification($details));

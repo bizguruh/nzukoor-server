@@ -376,7 +376,6 @@ class ConnectionController extends Controller
 
         //broadcast search results with Pusher channels
         event(new SearchEvent( UserResource::collection($users)));
-
         return response()->json("ok");
     }
 

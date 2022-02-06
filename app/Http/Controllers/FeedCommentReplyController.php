@@ -37,7 +37,7 @@ class FeedCommentReplyController extends Controller
             'greeting' => 'Hello ' . $owner->username,
             'body' => $body,
             'actionText' => 'Click to view',
-            //  'url' => "https://nzukoor.com/explore/discussion/" . $request->discussion_id,
+            //  'url' => "https://nzukoor.com/g/discussion/" . $request->discussion_id,
 
         ];
 
@@ -57,7 +57,7 @@ class FeedCommentReplyController extends Controller
             }
             $detail = [
                 'body' => $user->username . ' mentioned you in a comment',
-                'url' => 'https://nzukoor.com/member/feed/view/' . $request->feed_id
+                'url' => 'https://nzukoor.com/me/feed/' . $request->feed_id
             ];
 
             Notification::send($tagged, new TaggedNotification($detail));
@@ -94,7 +94,7 @@ class FeedCommentReplyController extends Controller
     }
     public function destroy( $id)
     {
-       
+
         FeedCommentReply::find($id)->delete();
         return response('ok');
     }

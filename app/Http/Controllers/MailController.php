@@ -128,7 +128,7 @@ class MailController extends Controller
             'from_name' => 'Nzukoor Team',
             'greeting' => 'Hello Friend',
             'body' => $body,
-            'actionText' => 'Click to ',
+            'actionText' => 'Click to join',
             'url' => $url,
             'sender' => $user->username,
 
@@ -195,7 +195,7 @@ class MailController extends Controller
                 'greeting' => 'Hello',
                 'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
                 'actionText' => 'Join here',
-                'url' => "https://nzukoor.com/explore/discussion/" . $request->id,
+                'url' => "https://nzukoor.com/g/discussion/" . $request->id,
 
             ];
 
@@ -226,13 +226,13 @@ class MailController extends Controller
             'greeting' => 'Hello',
             'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
             'actionText' => 'Join here',
-            'url' => "https://nzukoor.com/explore/discussion/" . $request->id,
+            'url' => "https://nzukoor.com/g/discussion/" . $request->id,
 
         ];
         $tribe_id = Discussion::find($request->id)->tribe_id;
         Mail::to($request->users)->send(new DiscussionInvite($details));
 
-        $url = "https://nzukoor.com/member/tribe/".$tribe_id."discussion/" . $request->id;
+        $url = "https://nzukoor.com/me/tribe/".$tribe_id."discussion/" . $request->id;
         $body = 'I just started a discussion, <b>' . $request->title . '</b> on Nzukoor and I’d like to hear your thoughts. <br> <a href=' . $url . '>' . $url . '</a>';
 
 
@@ -267,7 +267,7 @@ class MailController extends Controller
             'greeting' => 'Hello',
             'body' => 'You have been invited to join the discussion, **' . $request->title . '** on Nzukoor and We’d like to hear your thoughts. ',
             'actionText' => 'Join here',
-            'url' => "https://nzukoor.com/explore/discussion/" . $request->id,
+            'url' => "https://nzukoor.com/g/discussion/" . $request->id,
 
         ];
         $tribe_id = Discussion::find($request->id)->tribe_id;

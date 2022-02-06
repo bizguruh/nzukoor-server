@@ -66,7 +66,7 @@ class FeedLikeController extends Controller
             'title' => $title,
             'message' => Feed::find($request->id)->message,
             'image' => Feed::find($request->id)->media,
-            'url' => "https://nzukoor.com/member/feed/" . $request->id
+            'url' => "https://nzukoor.com/me/feed/" . $request->id
 
         ];
 
