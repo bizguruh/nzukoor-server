@@ -211,7 +211,7 @@ class DiscussionController extends Controller
             'from_email' => 'info@nzukoor.com',
             'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
             'greeting' => 'Hello ',
-            'body' => 'New Tribe Discussion Alert! ' . $user->username . " just created a new discussion in" . $tribe->name . 'Tribe',
+            'body' => 'New Discussion Alert!!! ' . $user->username . " just created a new discussion in " . $tribe->name . ' Tribe',
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
             'url' => 'https://nzukoor.com/me/tribes',
