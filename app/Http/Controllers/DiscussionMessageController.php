@@ -96,7 +96,7 @@ class DiscussionMessageController extends Controller
             $detail = [
                 'title' => $title,
                 'message' => strip_tags($request->message),
-                'url' => "/member/discussion/" . $request->discussion_id
+                'url' => "/me/discussion/" . $request->discussion_id
 
             ];
             $discussion = Discussion::find($request->discussion_id);
@@ -116,7 +116,7 @@ class DiscussionMessageController extends Controller
                 }
                 $detail = [
                     'body' => $user->username . ' mentioned you in a discussion reply',
-                     'url' => "https://nzukoor.com/member/tribe/".$discussion->tribe_id."/discussion/". $discussion->id
+                     'url' => "https://nzukoor.com/me/tribe/".$discussion->tribe_id."/discussion/". $discussion->id
                 ];
 
                 Notification::send($tagged, new TaggedNotification($detail));

@@ -274,7 +274,7 @@ Route::get('trending/discussions', [DiscussionController::class, 'trenddiscussio
 Route::get('interest/discussions', [DiscussionController::class, 'interestdiscussions']);
 
 Route::apiResource('discussion-messages', DiscussionMessageController::class);
-Route::get('get/discussion/members/{id}', [DiscussionController::class, 'discussionmembers']);
+Route::get('get/discussion/mes/{id}', [DiscussionController::class, 'discussionmembers']);
 Route::apiResource('discussion/message/replies', DiscussionMessageCommentController::class);
 
 Route::apiResource('views', DiscussionViewController::class);
@@ -286,6 +286,7 @@ Route::apiResource('reports', ReportController::class);
 Route::apiResource('feed/comment/reply', FeedCommentReplyController::class);
 Route::post('feed/comment/reply/like', [FeedCommentReplyController::class, 'replylike']);
 Route::get('trending/feeds', [FeedController::class, 'trendingFeedsByComments']);
+Route::get('explore/trending/feeds', [FeedController::class, 'exploretrendingFeedsByComments']);
 Route::get('custom/feeds', [FeedController::class, 'customFeeds']);
 Route::get('recent/feeds', [FeedController::class, 'recentFeedsByConnection']);
 
@@ -425,7 +426,7 @@ Route::get('toprated', [CourseController::class, 'toprated']);
 
 // Guest
 Route::get('guest/mostenrolled', [CourseController::class, 'guestmostenrolled']);
-Route::get('guest/members', [UserController::class, 'index']);
+Route::get('guest/mes', [UserController::class, 'index']);
 Route::get('guest/facilitators', [FacilitatorController::class, 'guestindex']);
 Route::get('guest/courses', [CourseController::class, 'guestcourses']);
 Route::get('guest/discussions', [DiscussionController::class, 'guestdiscussions']);
@@ -436,6 +437,9 @@ Route::get('guest/trending/feeds', [FeedController::class, 'getTrendingFeedInter
 Route::get('guest/trending/feed/{interest}', [FeedController::class, 'getSpecificFeed']);
 
 Route::get('guest/users/{interest}', [ConnectionController::class, 'getUsersWithInterest']);
+
+Route::get('g/feed/{feed}', [FeedController::class, 'show']);
+Route::get('g/discussion/{id}', [DiscussionController::class, 'guestdiscussion']);
 
 
 // Contact message
@@ -467,7 +471,7 @@ Route::get('get/feeds/tags', [FeedController::class, 'getFeedsByInterest']);
 
 
 //Route::get('get/interests/{interest}', [GuestController::class, 'getInterestContent']);
-Route::get('get/members', [GuestController::class, 'getmembers']);
+Route::get('get/mes', [GuestController::class, 'getmembers']);
 
 
 Route::post('forgot-password', [UserController::class, 'postEmail']);
@@ -495,7 +499,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);
     Route::post('tribe/invite', [MailController::class, 'sendtribeinvite']);
     Route::get('user/tribes', [TribeController::class, 'getusertribe']);
-    Route::get('tribe/members/{tribe}', [TribeController::class, 'tribemembers']);
+    Route::get('tribe/mes/{tribe}', [TribeController::class, 'tribemembers']);
     Route::get('check/tribe/{tribe}', [TribeController::class, 'checktribe']);
     Route::get('check/tribe/discussion/{discussion}', [TribeController::class, 'checkdiscussiontribe']);
     Route::get('join/tribe/{tribe}', [TribeController::class, 'addusertotribe']);
@@ -518,7 +522,16 @@ Route::middleware(['auth:api'])->group(function () {
 });
 
 Route::get('search', [TribeSearchController::class, 'search']);
+Route::get('search/tribes', [TribeSearchController::class, 'mobilesearch']);
+Route::get('sort/tribes', [TribeSearchController::class, 'sorttribes']);
 Route::get('all/tribes', [TribeSearchController::class, 'get']);
+
+Route::get('search/users', [ConnectionController::class, 'search']);
+Route::get('all/users', [ConnectionController::class, 'get']);
+
+Route::get('search/discussions', [DiscussionController::class, 'search']);
+Route::get('all/discussions', [DiscussionController::class, 'get']);
+
 
 
 // Mobile Password

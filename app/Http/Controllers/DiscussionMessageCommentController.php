@@ -83,7 +83,7 @@ class DiscussionMessageCommentController extends Controller
             'greeting' => 'Hello ' . $owner->username,
             'body' => $body,
             'actionText' => 'Click to view',
-            'url' => "https://nzukoor.com/explore/discussion/" . $request->discussion_id,
+            'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
 
         ];
 
@@ -103,7 +103,7 @@ class DiscussionMessageCommentController extends Controller
             }
             $detail = [
                 'body' => $user->username . ' mentioned you in a discussion reply',
-                'url' => 'https://nzukoor.com/member/tribe/'.$discussion->tribe_id.'/discussion/'. $discussion->id
+                'url' => 'https://nzukoor.com/me/tribe/'.$discussion->tribe_id.'/discussion/'. $discussion->id
             ];
 
             Notification::send($tagged, new TaggedNotification($detail));

@@ -29,8 +29,8 @@ class FeedResource extends JsonResource
         return in_array(
             $id,
             array_map(function ($a) use ($arr) {
-                return $a['user_id'] && $a['like'];
-            }, $arr)
+                return $a['user_id'];
+            }, $arr->toArray())
         );
     }
     public function toArray($request)
@@ -41,11 +41,13 @@ class FeedResource extends JsonResource
             'message' => $this['message'],
             'media' => $this['media'],
             'commentCount' => count($this['comments']),
-            'likesCount' => count($this['likes']),
+            'likesCount' => count(collect($this['likes'])->filter(function ($a){ return $a['like'];})),
             'comments' =>  FeedCommentResource::collection($this['comments']),
             'likes' =>  FeedLikeResource::collection($this['likes']),
             'isOwner' => $this->handleIsOwner(),
-            'isLiked' => $this->handleisLiked($this['likes']),
+            'isLiked' => $this->handleisLiked(collect($this['likes'])->filter(function ($a) {
+                return $a['like'];
+            })),
             'url' => $this['url'],
             'mediaType' => $this['mediaType'],
             'publicId' => $this['publicId'],

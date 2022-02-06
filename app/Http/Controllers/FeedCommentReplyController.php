@@ -17,14 +17,8 @@ class FeedCommentReplyController extends Controller
     public function store(Request $request)
     {
 
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
-            return ('Unauthorized');
-        }
+        $user = auth('api')->user();
 
-
-        if (auth('api')->user()) {
-            $user = auth('api')->user();
-        }
 
         $data = $user->feedcommentreplies()->create([
 
@@ -43,7 +37,7 @@ class FeedCommentReplyController extends Controller
             'greeting' => 'Hello ' . $owner->username,
             'body' => $body,
             'actionText' => 'Click to view',
-            //  'url' => "https://nzukoor.com/explore/discussion/" . $request->discussion_id,
+            //  'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
 
         ];
 
@@ -63,7 +57,7 @@ class FeedCommentReplyController extends Controller
             }
             $detail = [
                 'body' => $user->username . ' mentioned you in a comment',
-                'url' => 'https://nzukoor.com/member/feed/view/' . $request->feed_id
+                'url' => 'https://nzukoor.com/me/feed/' . $request->feed_id
             ];
 
             Notification::send($tagged, new TaggedNotification($detail));
@@ -79,12 +73,12 @@ class FeedCommentReplyController extends Controller
         $feed = FeedCommentReply::find($request->feed_comment_reply_id);
         $creator = User::find($feed->user_id);
           $mainfeed = Feed::find($feed->feed_id);
-        if ($mainfeed->user_id !== $user->id) {
-            return response([
-                'success'=>false,
-                'message'=> 'only creator allowed'
-            ], 401);
-        }
+        // if ($mainfeed->user_id !== $user->id) {
+        //     return response([
+        //         'success'=>false,
+        //         'message'=> 'only creator allowed'
+        //     ], 401);
+        // }
 
         $check = $user->feedcommentreplylikes()->where('feed_comment_reply_id', $request->feed_comment_reply_id)->first();
         if (is_null($check)) {
@@ -97,5 +91,11 @@ class FeedCommentReplyController extends Controller
             $check->delete();
             return response()->json('deleted');
         }
+    }
+    public function destroy( $id)
+    {
+
+        FeedCommentReply::find($id)->delete();
+        return response('ok');
     }
 }

@@ -20,6 +20,6 @@ class FeedCommentReply extends Model
     }
     public function feedcommentreplylikes()
     {
-        return $this->hasOne(FeedCommentReplyLike::class);
+        return $this->hasMany(FeedCommentReplyLike::class);
     }
 }

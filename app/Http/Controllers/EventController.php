@@ -123,7 +123,7 @@ class EventController extends Controller
             'body' => 'New Tribe Event Alert! ' . $user->username . " just created a new event in" . $tribe->name . 'Tribe',
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => 'https://nzukoor.com/member/tribes',
+            'url' => 'https://nzukoor.com/me/tribes',
 
         ];
 
@@ -166,7 +166,7 @@ class EventController extends Controller
                 'greeting' => 'Hello',
                 'body' => 'The event, **' . $value['title'] . '** will be starting in few hours. Don\'t forget to Join! ',
                 'actionText' => 'Join here',
-                'url' => "https://nzukoor.com/member/event/" . $value['id'],
+                'url' => "https://nzukoor.com/me/event/" . $value['id'],
 
             ];
             $emails =  $value->eventattendance()->get()->map(function ($user) {

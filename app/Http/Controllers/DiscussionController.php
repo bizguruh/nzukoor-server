@@ -14,6 +14,7 @@ use App\Models\DiscussionMessageComment;
 use App\Notifications\NewTribeDiscussion;
 use App\Http\Resources\DiscussionResource;
 use Illuminate\Support\Facades\Notification;
+use App\Http\Resources\GuestDiscussionResource;
 use App\Http\Resources\TribeDiscussionResource;
 
 class DiscussionController extends Controller
@@ -184,7 +185,7 @@ class DiscussionController extends Controller
 
         $tribe = Tribe::find($request->tribe_id);
         $data = $user->discussions()->create([
-            'type' =>'public',
+            'type' => 'public',
             'name' => $request->name,
             'tags' => $request->tags,
             'creator' => 'user',
@@ -202,7 +203,7 @@ class DiscussionController extends Controller
         }
 
         $tribe = Tribe::find($request->tribe_id);
-        if(is_null($tribe)) return response(404,'Tribe not found');
+        if (is_null($tribe)) return response(404, 'Tribe not found');
         $tribemembers = $tribe->users()->get()->filter(function ($a) use ($user) {
             return $a->id != $user->id;
         });
@@ -213,7 +214,7 @@ class DiscussionController extends Controller
             'body' => 'New Tribe Discussion Alert! ' . $user->username . " just created a new discussion in" . $tribe->name . 'Tribe',
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => 'https://nzukoor.com/member/tribes',
+            'url' => 'https://nzukoor.com/me/tribes',
 
         ];
 
@@ -239,9 +240,9 @@ class DiscussionController extends Controller
         }
 
 
-        $alldiscussions =  Discussion::where('tribe_id', null)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
+        $alldiscussions =  Discussion::with('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
 
-        $discussion = Discussion::where('tribe_id', null)->find($id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->first();
+        $discussion = Discussion::find($id)->with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->first();
 
         $newdis = [];
         foreach ($alldiscussions as $key => $value) {
@@ -253,7 +254,7 @@ class DiscussionController extends Controller
 
         $discussion->related = $newdis;
 
-        return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
+        return  new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
     }
 
     public function getguestdiscussion($id)
@@ -261,7 +262,7 @@ class DiscussionController extends Controller
         function filtertag($arr)
         {
             return  array_map(function ($val) {
-                 return $val['value'];
+                return $val['value'];
             }, $arr);
         }
 
@@ -303,23 +304,10 @@ class DiscussionController extends Controller
         }
 
 
-        //  $alldiscussions =  Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
-
-        // $related =  $alldiscussions->filter(function ($a) use ($discussion) {
-
-
-        //     if (!is_null($a['tags']) && count($a['tags'])) {
-        //         $interests = array_intersect(sorttags($discussion->tags), sorttags($a->tags));
-
-        //         return count($interests);
-        //     }
-        // });
-        // $discussion->related = $related->values()->all();
         $data =  new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
 
 
-            return $data;
-
+        return $data;
     }
 
     public function getdiscussion($id)
@@ -350,6 +338,9 @@ class DiscussionController extends Controller
         if ($request->has('type') && $request->filled('type') && !empty($request->input('type'))) {
             $discussion->type = $request->type;
         }
+        if ($request->has('description') && $request->filled('description') && !empty($request->input('description'))) {
+            $discussion->description = $request->description;
+        }
         if ($request->has('name') && $request->filled('name') && !empty($request->input('name'))) {
             $discussion->name = $request->name;
         }
@@ -362,15 +353,13 @@ class DiscussionController extends Controller
         if ($request->has('creator') && $request->filled('creator') && !empty($request->input('creator'))) {
             $discussion->creator = $request->creator;
         }
-        if ($request->has('course_id') && $request->filled('course_id') && !empty($request->input('course_id'))) {
-            $discussion->course_id = $request->course_id;
-        }
+
 
 
 
 
         $discussion->save();
-        return $discussion->load('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
+        return $discussion->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe');
     }
 
     /**
@@ -380,28 +369,31 @@ class DiscussionController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function updatediscussioncomment(Request $request){
+    public function updatediscussioncomment(Request $request)
+    {
 
         $find = DiscussionMessage::find($request->id);
         $find->message = $request->message;
         $find->save();
         return $find;
-     }
-      public function updatediscussionreply(Request $request){
+    }
+    public function updatediscussionreply(Request $request)
+    {
 
         $find = DiscussionMessageComment::find($request->id);
         $find->message = $request->message;
         $find->save();
         return $find;
-     }
-      public function dropdiscussioncomment( $id){
+    }
+    public function dropdiscussioncomment($id)
+    {
 
         $find = DiscussionMessage::find($id);
         $find->delete();
 
         return response('ok');
-     }
-    public function dropdiscussionreply( $id)
+    }
+    public function dropdiscussionreply($id)
     {
 
         $find = DiscussionMessageComment::find($id);
@@ -417,5 +409,22 @@ class DiscussionController extends Controller
         return response()->json([
             'message' => 'Delete successful'
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->query('query');
+        $discussion =   GuestDiscussionResource::collection(Discussion::where('name', 'like', '%' . $query . '%')
+            ->with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')
+            ->latest()->paginate(15));
+
+        return $discussion;
+    }
+
+    //fetch all discussion
+    public function get()
+    {
+
+        return  GuestDiscussionResource::collection(Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview',  'tribe')->latest()->paginate(15));
     }
 }

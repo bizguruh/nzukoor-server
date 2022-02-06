@@ -45,6 +45,7 @@ class TribeResource extends JsonResource
             "type" => $this->type,
             "amount" => $this->amount,
             "users" => count($this->users),
+            "discussions" => $this->discussions ? count($this->discussions) : 0,
             'isMember' => $this->checkifmember($this->users),
             'isOwner' => $this->isOwner(),
             'category' => $this->category,

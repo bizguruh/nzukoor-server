@@ -144,7 +144,7 @@ class NotificationController extends Controller
             'body' => $user->name . " added you as a connection",
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => "https://nzukoor.com/member/connections",
+            'url' => "https://nzukoor.com/me/connections",
         ];
 
         $receiver->notify(new NewConnection($details));
@@ -193,7 +193,7 @@ class NotificationController extends Controller
             'body' => $user->name . " has requested access to join your discussion, " . strtoupper($discussion->name),
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => "https://nzukoor.com/explore/discussion/" . $request->discussion_id,
+            'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
             'id' => $request->discussion_id,
             'sender_id' => $user->id,
             'sender' => $sender
@@ -235,7 +235,7 @@ class NotificationController extends Controller
             'body' => "Your request to join the discussion, " . strtoupper($discussion->name) . ' has been rejected',
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => "https://nzukoor.com/explore/discussion/" . $request->discussion_id,
+            'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
             'id' => $request->discussion_id
         ];
 
