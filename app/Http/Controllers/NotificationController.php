@@ -193,7 +193,7 @@ class NotificationController extends Controller
             'body' => $user->name . " has requested access to join your discussion, " . strtoupper($discussion->name),
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => "https://nzukoor.com/g/discussion/" . $request->discussion_id,
+            'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
             'id' => $request->discussion_id,
             'sender_id' => $user->id,
             'sender' => $sender
@@ -235,7 +235,7 @@ class NotificationController extends Controller
             'body' => "Your request to join the discussion, " . strtoupper($discussion->name) . ' has been rejected',
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
-            'url' => "https://nzukoor.com/g/discussion/" . $request->discussion_id,
+            'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
             'id' => $request->discussion_id
         ];
 

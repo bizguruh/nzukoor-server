@@ -38,21 +38,14 @@ class FeedLikeController extends Controller
      */
     public function store(Request $request)
     {
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $type = 'admin';
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $type = 'facilitator';
-        }
-        if (auth('api')->user()) {
+
+       
             $user = auth('api')->user();
             $type = 'user';
-        }
+
 
         $data = $user->likes()->firstOrNew([
-            'organization_id' => $user->organization_id ? $user->organization_id : 1,
+            'organization_id' =>  1,
             'feed_id' => $request->id,
         ]);
 

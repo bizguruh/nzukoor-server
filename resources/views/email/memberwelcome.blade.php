@@ -300,7 +300,7 @@ The Team @ Nzukoor</small>
 <hr>
 <div>
   <h4 class="mb-0">Join trending conversations . . .</h4>
-  <p><a href="https://nzukoor.com/g/discussion/45" target="_blank"> Does 30-min daily morning meditation really work? </a></p>
+  <p><a href="https://nzukoor.com/me/discussion/45" target="_blank"> Does 30-min daily morning meditation really work? </a></p>
 </div>
 </div>
 

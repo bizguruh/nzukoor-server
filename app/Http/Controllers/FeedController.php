@@ -271,6 +271,15 @@ class FeedController extends Controller
 
         return SingleFeedResource::collection((new Collection($sorted->values()->all()))->paginate(15));
     }
+    public function exploretrendingFeedsByComments()
+    {
+        $sorted = Feed::with('user', 'comments', 'likes')->get()->sortByDesc(function ($f) {
+            return count($f['comments']);
+        })->take(3);
+
+
+        return SingleFeedResource::collection((new Collection($sorted->values()->all()))->paginate(15));
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -300,7 +309,7 @@ class FeedController extends Controller
 
 
 
-        broadcast(new AddFeed($user, new SingleFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();
+        broadcast(new AddFeed($user, new SinglFeedResourceeFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();
         $regex = '(@\w+)';
         $tagged = [];
         if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {

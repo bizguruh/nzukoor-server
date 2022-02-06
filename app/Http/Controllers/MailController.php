@@ -195,7 +195,7 @@ class MailController extends Controller
                 'greeting' => 'Hello',
                 'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
                 'actionText' => 'Join here',
-                'url' => "https://nzukoor.com/g/discussion/" . $request->id,
+                'url' => "https://nzukoor.com/me/discussion/" . $request->id,
 
             ];
 
@@ -226,7 +226,7 @@ class MailController extends Controller
             'greeting' => 'Hello',
             'body' => 'I just started a discussion, **' . $request->title . '** on Nzukoor and I’d like to hear your thoughts. ',
             'actionText' => 'Join here',
-            'url' => "https://nzukoor.com/g/discussion/" . $request->id,
+            'url' => "https://nzukoor.com/me/discussion/" . $request->id,
 
         ];
         $tribe_id = Discussion::find($request->id)->tribe_id;
@@ -267,7 +267,7 @@ class MailController extends Controller
             'greeting' => 'Hello',
             'body' => 'You have been invited to join the discussion, **' . $request->title . '** on Nzukoor and We’d like to hear your thoughts. ',
             'actionText' => 'Join here',
-            'url' => "https://nzukoor.com/g/discussion/" . $request->id,
+            'url' => "https://nzukoor.com/me/discussion/" . $request->id,
 
         ];
         $tribe_id = Discussion::find($request->id)->tribe_id;

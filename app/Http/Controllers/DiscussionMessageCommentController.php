@@ -83,7 +83,7 @@ class DiscussionMessageCommentController extends Controller
             'greeting' => 'Hello ' . $owner->username,
             'body' => $body,
             'actionText' => 'Click to view',
-            'url' => "https://nzukoor.com/g/discussion/" . $request->discussion_id,
+            'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
 
         ];
 

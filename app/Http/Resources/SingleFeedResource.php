@@ -42,7 +42,9 @@ class SingleFeedResource extends JsonResource
             'media' => $this['media'],
             'mediaType' => $this['mediaType'],
             'commentCount' => count($this['comments']),
-            'likesCount' => count($this['likes']),
+            'likesCount' => count(collect($this['likes'])->filter(function ($a) {
+                return $a['like'];
+            })),
             'comments' =>  FeedCommentResource::collection($this['comments']),
             'likes' =>  FeedLikeResource::collection($this['likes']),
             'isOwner' => $this->handleIsOwner(),
