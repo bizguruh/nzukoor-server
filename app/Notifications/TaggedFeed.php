@@ -29,7 +29,7 @@ class TaggedFeed extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail','database'];
     }
 
     /**
@@ -52,10 +52,15 @@ class TaggedFeed extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toDatabase($notifiable)
     {
         return [
-            //
+            'notification' => $this->details['body'],
+            'url' => $this->details['url'],
+            'type' => $this->details['type'],
+            'id' => $this->details['id'],
+            'tribe_id' => $this->details['tribe_id'] ? $this->details['tribe_id'] : null,
+            'message' => $this->details['message']
         ];
     }
 }

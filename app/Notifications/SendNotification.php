@@ -64,8 +64,9 @@ class SendNotification extends Notification implements ShouldQueue
     {
         return [
             'notification' => $this->details['body'],
+            'type' => $this->details['type'],
             'id' => $this->details['id'],
-            'to' => $this->details['to']
+            'tribe_id' => $this->details['tribe_id'] ? $this->details['tribe_id'] : null
         ];
     }
 }

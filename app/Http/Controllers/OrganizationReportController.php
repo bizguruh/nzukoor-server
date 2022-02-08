@@ -63,17 +63,21 @@ class OrganizationReportController extends Controller
         switch ($report->type) {
             case 'feed':
                 $data =  Feed::find($request->id);
+                $type = 'feed';
                 break;
             case 'feed comment':
                 $data =   FeedComment::find($request->id);
+                $type = 'feed';
 
                 break;
             case 'discussion':
                 $data =   Discussion::find($request->id);
+                $type = 'discussion';
 
                 break;
             case 'discussionmessage':
                 $data =   DiscussionMessage::find($request->id);
+                $type = 'discussion';
 
                 break;
 
@@ -84,7 +88,8 @@ class OrganizationReportController extends Controller
 
 
         $details = [
-            'message'=> 'Your content as be removed due to improper conduct'
+            'body'=> 'Your content as be removed due to improper conduct',
+            'type'=> $type,
         ];
         $user = User::find($request->user_id);
         $user->notify(new DeletedContent($details));

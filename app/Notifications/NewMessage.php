@@ -65,10 +65,14 @@ class NewMessage extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toDatabase($notifiable)
     {
         return [
-            //
+            'notification' => $this->details['body'],
+            'url' => $this->details['url'],
+            'type' => $this->details['type'],
+            'id' => $this->details['id'],
+            'tribe_id' => $this->details['tribe_id'] ? $this->details['tribe_id'] : null
         ];
     }
 }

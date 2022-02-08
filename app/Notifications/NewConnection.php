@@ -56,6 +56,10 @@ class NewConnection extends Notification implements ShouldQueue
     {
         return [
             'notification' => $this->details['body'],
+            'type' => 'connection',
+            'id' => $this->details['id'],
+
+
 
         ];
     }

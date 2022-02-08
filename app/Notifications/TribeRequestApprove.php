@@ -56,8 +56,11 @@ class TribeRequestApprove extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'notification' => $this->details['message'],
-            'url' => $this->details['url']
+            'notification' => $this->details['body'],
+            'url' => $this->details['url'],
+            'type' => $this->details['type'],
+            'id' => $this->details['id'],
+            
         ];
     }
 }

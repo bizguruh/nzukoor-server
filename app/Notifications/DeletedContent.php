@@ -29,7 +29,7 @@ class DeletedContent extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -56,7 +56,8 @@ class DeletedContent extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'notification' => $this->details['body'],
+
         ];
     }
 }

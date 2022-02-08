@@ -38,12 +38,15 @@ class FeedCommentReplyController extends Controller
             'body' => $body,
             'actionText' => 'Click to view',
             //  'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
+            'id' => $request->feed_id,
+            'type' => 'feed',
+
 
         ];
 
-        // if (!$owner->username !== $user->username) {
-        //     $owner->notify(new CommentReply($details));
-        // }
+        if (!$owner->username !== $user->username) {
+            $owner->notify(new CommentReply($details));
+        }
 
         $regex = '(@\w+)';
         $tagged = [];
@@ -57,7 +60,11 @@ class FeedCommentReplyController extends Controller
             }
             $detail = [
                 'body' => $user->username . ' mentioned you in a comment',
-                'url' => 'https://nzukoor.com/me/feed/' . $request->feed_id
+                'url' => 'https://nzukoor.com/me/feed/' . $request->feed_id,
+                'type' => 'feed',
+                'id' => $request->feed_id,
+                'message' => $request->message
+
             ];
 
             Notification::send($tagged, new TaggedNotification($detail));
