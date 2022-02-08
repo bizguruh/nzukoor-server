@@ -33,7 +33,7 @@ class NewDiscussionReply extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [WebPushChannel::class];
+        return [WebPushChannel::class, 'database'];
     }
 
     public function toWebPush($notifiable, $notification)
@@ -69,10 +69,15 @@ class NewDiscussionReply extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toDatabase($notifiable)
     {
         return [
-            //
+            'notification' => $this->details['body'],
+            'url' => $this->details['url'],
+            'type' => 'discussion',
+            'id' => $this->details['id'],
+            'tribe_id' => $this->details['tribe_id'] ? $this->details['tribe_id'] : null
+
         ];
     }
 }

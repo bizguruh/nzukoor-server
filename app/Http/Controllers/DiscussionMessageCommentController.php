@@ -84,6 +84,9 @@ class DiscussionMessageCommentController extends Controller
             'body' => $body,
             'actionText' => 'Click to view',
             'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
+            'id' => $request->discussion_id,
+            'type' =>'discussion',
+            'tribe_id'=> $discussion->tribe_id
 
         ];
 
@@ -103,7 +106,11 @@ class DiscussionMessageCommentController extends Controller
             }
             $detail = [
                 'body' => $user->username . ' mentioned you in a discussion reply',
-                'url' => 'https://nzukoor.com/me/tribe/'.$discussion->tribe_id.'/discussion/'. $discussion->id
+                'url' => 'https://nzukoor.com/me/tribe/'.$discussion->tribe_id.'/discussion/'. $discussion->id,
+                'type' => 'discussion',
+                'id' => $discussion->id,
+                'tribe_id' => $discussion->tribe_id,
+                'message' => $request->message
             ];
 
             Notification::send($tagged, new TaggedNotification($detail));

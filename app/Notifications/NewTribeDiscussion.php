@@ -66,7 +66,10 @@ class NewTribeDiscussion extends Notification implements ShouldQueue
     {
         return [
             'notification' => $this->details['body'],
-            'url' => $this->details['url']
+            'url' => $this->details['url'],
+            'type' => 'tribe',
+            'id' => $this->details['id'],
+           
 
         ];
     }

@@ -215,6 +215,9 @@ class DiscussionController extends Controller
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
             'url' => 'https://nzukoor.com/me/tribes',
+            'type' => 'discussion',
+            'id' => $data->name,
+            'tribe_id' => $tribe->id
 
         ];
 
@@ -410,11 +413,21 @@ class DiscussionController extends Controller
             'message' => 'Delete successful'
         ]);
     }
-
     public function search(Request $request)
     {
         $query = $request->query('query');
         $discussion =   GuestDiscussionResource::collection(Discussion::where('name', 'like', '%' . $query . '%')
+            ->with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')
+            ->latest()->paginate(15));
+
+        return $discussion;
+    }
+    public function searchwithtribe($id, Request $request)
+    {
+
+        $query = $request->query('query');
+        $discussion =   DiscussionResource::collection(Discussion::where('name', 'like', '%' . $query . '%')
+             ->where('tribe_id', $id)
             ->with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')
             ->latest()->paginate(15));
 

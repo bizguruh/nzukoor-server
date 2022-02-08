@@ -145,6 +145,8 @@ class NotificationController extends Controller
             'thanks' => 'Thanks',
             'actionText' => 'Click to view',
             'url' => "https://nzukoor.com/me/connections",
+            'type' => 'connection',
+            'id' => $user->id
         ];
 
         $receiver->notify(new NewConnection($details));

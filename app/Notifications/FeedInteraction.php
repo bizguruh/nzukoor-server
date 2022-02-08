@@ -73,7 +73,10 @@ class FeedInteraction extends Notification
     {
         return [
             'notification' => $this->details['title'] . ' - ' . $this->details['message'],
-            'url' => $this->details['url']
+            'url' => $this->details['url'],
+            'type' => 'feed',
+            'id' => $this->details['id'],
+
 
         ];
     }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TaggedNotification extends Notification 
+class TaggedNotification extends Notification
 {
     use Queueable;
 
@@ -64,8 +64,11 @@ class TaggedNotification extends Notification
     {
         return [
             'notification' => $this->details['body'],
-            'url' => $this->details['url']
-
+            'url' => $this->details['url'],
+            'type' => $this->details['type'],
+            'id' => $this->details['id'],
+            'tribe_id' => $this->details['tribe_id'] ? $this->details['tribe_id'] : null,
+            'message' => $this->details['message']
         ];
     }
 }

@@ -39,9 +39,9 @@ class FeedLikeController extends Controller
     public function store(Request $request)
     {
 
-       
-            $user = auth('api')->user();
-            $type = 'user';
+
+        $user = auth('api')->user();
+        $type = 'user';
 
 
         $data = $user->likes()->firstOrNew([
@@ -59,7 +59,9 @@ class FeedLikeController extends Controller
             'title' => $title,
             'message' => Feed::find($request->id)->message,
             'image' => Feed::find($request->id)->media,
-            'url' => "https://nzukoor.com/me/feed/" . $request->id
+            'url' => "https://nzukoor.com/me/feed/" . $request->id,
+            'type' =>'feed',
+            'id' => $request->id
 
         ];
 

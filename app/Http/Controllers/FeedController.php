@@ -322,7 +322,10 @@ class FeedController extends Controller
             }
             $details = [
                 'body' => $user->username . ' tagged you in a post',
-                'url' => 'https://nzukoor.com/me/feed/' . $data->id
+                'url' => 'https://nzukoor.com/me/feed/' . $data->id,
+                'type' => 'feed',
+                'id' => $data->id,
+
             ];
 
             Notification::send($tagged, new TaggedNotification($details));

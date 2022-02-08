@@ -145,8 +145,10 @@ class  TribeService
       'tribe_owner_id' => $owner->id
     ]);
     $details = [
-      'message' => ucfirst($user->username) . ' has requested to join your tribe, ' . ucfirst($tribe->name),
-      'url' => 'https://nzukoor.com/me/tribe/discussions' . $tribe->id
+      'body' => ucfirst($user->username) . ' has requested to join your tribe, ' . ucfirst($tribe->name),
+      'url' => 'https://nzukoor.com/me/tribe/discussions' . $tribe->id,
+      'type'=> 'tribe',
+      'id' => $tribe->id,
     ];
     $owner->notify(new TribeRequestAlert($details));
 
@@ -166,13 +168,17 @@ class  TribeService
       if ($request->response === 'approve') {
         $this->addusertotribe($tribe, $user);
         $details = [
-          'message' => 'Your  request to join the tribe, ' . ucfirst($tribe->name) . ' has been approved',
-          'url' => 'https://nzukoor.com/me/tribe/discussions' . $tribe->id
+          'body' => 'Your  request to join the tribe, ' . ucfirst($tribe->name) . ' has been approved',
+          'url' => 'https://nzukoor.com/me/tribe/discussions' . $tribe->id,
+          'type' => 'tribe',
+          'id' => $tribe->id,
         ];
         $user->notify(new TribeRequestApprove($details));
       } else {
         $details = [
           'message' => 'Your  request to join the tribe, ' . ucfirst($tribe->name) . ' has been rejected',
+          'type' => 'tribe',
+          'id' => $tribe->id,
 
         ];
         $user->notify(new TribeRequestReject($details));

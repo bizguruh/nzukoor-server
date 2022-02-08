@@ -530,6 +530,7 @@ Route::get('search/users', [ConnectionController::class, 'search']);
 Route::get('all/users', [ConnectionController::class, 'get']);
 
 Route::get('search/discussions', [DiscussionController::class, 'search']);
+Route::get('search/discussions/{id}', [DiscussionController::class, 'searchwithtribe']);
 Route::get('all/discussions', [DiscussionController::class, 'get']);
 
 
