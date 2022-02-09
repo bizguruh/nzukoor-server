@@ -3,14 +3,11 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use NotificationChannels\WebPush\WebPushChannel;
-use NotificationChannels\WebPush\WebPushMessage;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class NewDiscussionReply extends Notification implements ShouldQueue
+class NewFeedComment extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -24,7 +21,6 @@ class NewDiscussionReply extends Notification implements ShouldQueue
     {
         $this->details = $details;
     }
-
     /**
      * Get the notification's delivery channels.
      *
@@ -33,18 +29,7 @@ class NewDiscussionReply extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [WebPushChannel::class, 'database'];
-    }
-
-    public function toWebPush($notifiable, $notification)
-    {
-
-
-        return (new WebPushMessage)
-            ->title($this->details['title'])
-            ->body($this->details['message'])
-            ->action('reply', $this->details['url'])
-            ->data($this->details['url']);
+        return ['database'];
     }
 
     /**
@@ -53,12 +38,24 @@ class NewDiscussionReply extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
+
+    public function toWebPush($notifiable, $notification)
+    {
+
+
+        return (new WebPushMessage)
+            ->title($this->details['body'])
+            ->body($this->details['message'])
+            ->action('reply', $this->details['url'])
+            ->data($this->details['url']);
+    }
+
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -72,9 +69,8 @@ class NewDiscussionReply extends Notification implements ShouldQueue
         return [
             'notification' => $this->details['body'],
             'url' => $this->details['url'],
-            'type' => 'discussion',
+            'type' => 'feed',
             'id' => $this->details['id'],
-            'tribe_id' => $this->details['tribe_id'] ? $this->details['tribe_id'] : null
 
         ];
     }

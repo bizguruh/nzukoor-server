@@ -166,65 +166,68 @@ class DiscussionController extends Controller
 
     public function store(Request $request)
     {
+ return DB::transaction(function () use ($request) {
 
-        $validated = $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'tags' => ' required',
+            $validated = $request->validate([
+                'name' => 'required',
+                'description' => 'required',
+                'tags' => ' required',
 
-        ]);
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
-            return ('Unauthorized');
-        }
-
-        if (auth('api')->user()) {
-            $user = auth('api')->user();
-            $sender = 'user';
-        }
-
-
-        $tribe = Tribe::find($request->tribe_id);
-        $data = $user->discussions()->create([
-            'type' => 'public',
-            'name' => $request->name,
-            'tags' => $request->tags,
-            'creator' => 'user',
-            'description' => $request->description,
-            'tribe_id' => $request->tribe_id,
-            'organization_id' =>  1,
-        ]);
-
-
-        if ($request->type == 'private') {
-            $user->privatediscusion()->create([
-                'discussion_id' => $data->id,
-                'type' => $sender
             ]);
-        }
+            if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
+                return ('Unauthorized');
+            }
 
-        $tribe = Tribe::find($request->tribe_id);
-        if (is_null($tribe)) return response(404, 'Tribe not found');
-        $tribemembers = $tribe->users()->get()->filter(function ($a) use ($user) {
-            return $a->id != $user->id;
-        });
-        $details = [
-            'from_email' => 'info@nzukoor.com',
-            'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
-            'greeting' => 'Hello ',
-            'body' => 'New Discussion Alert!!! ' . $user->username . " just created a new discussion in " . $tribe->name . ' Tribe',
-            'thanks' => 'Thanks',
-            'actionText' => 'Click to view',
-            'url' => 'https://nzukoor.com/me/tribes',
-            'type' => 'discussion',
-            'id' => $data->name,
-            'tribe_id' => $tribe->id
-
-        ];
+            if (auth('api')->user()) {
+                $user = auth('api')->user();
+                $sender = 'user';
+            }
 
 
-        Notification::send($tribemembers, new NewTribeDiscussion($details));
-        broadcast(new NotificationSent())->toOthers();
-        return new DiscussionResource($data->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
+            $tribe = Tribe::find($request->tribe_id);
+            $data = $user->discussions()->create([
+                'type' => 'public',
+                'name' => $request->name,
+                'tags' => $request->tags,
+                'creator' => 'user',
+                'description' => $request->description,
+                'tribe_id' => $request->tribe_id,
+                'organization_id' =>  1,
+            ]);
+
+
+            if ($request->type == 'private') {
+                $user->privatediscusion()->create([
+                    'discussion_id' => $data->id,
+                    'type' => $sender
+                ]);
+            }
+
+            $tribe = Tribe::find($request->tribe_id);
+            if (is_null($tribe)) return response(404, 'Tribe not found');
+            $tribemembers = $tribe->users()->get()->filter(function ($a) use ($user) {
+                return $a->id != $user->id;
+            });
+            $details = [
+                'from_email' => 'info@nzukoor.com',
+                'from_name' =>  $tribe->name . 'Tribe - Nzukoor',
+                'greeting' => 'Hello ',
+                'body' => 'New Discussion Alert!!! ' . $user->username . " just created a new discussion in " . $tribe->name . ' Tribe',
+                'thanks' => 'Thanks',
+                'actionText' => 'Click to view',
+                'url' => 'https://nzukoor.com/me/tribes',
+                'type' => 'discussion',
+                'id' => $data->name,
+                'tribe_id' => $tribe->id
+
+            ];
+
+
+            Notification::send($tribemembers, new NewTribeDiscussion($details));
+            broadcast(new NotificationSent())->toOthers();
+            return new DiscussionResource($data->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
+    
+});
     }
 
     /**
