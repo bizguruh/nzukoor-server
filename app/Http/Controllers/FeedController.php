@@ -341,6 +341,7 @@ class FeedController extends Controller
      */
     public function show(Feed $feed)
     {
+        if(is_null($feed))  return response(404, ['message' => 'not found']);
         return  new SingleFeedResource($feed->load('user', 'comments', 'likes'));
     }
 
