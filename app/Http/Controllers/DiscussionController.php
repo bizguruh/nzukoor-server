@@ -246,7 +246,9 @@ class DiscussionController extends Controller
         $alldiscussions =  Discussion::with('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->latest()->get();
 
         $discussion = Discussion::find($id)->with('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe')->first();
-
+       if(is_null($discussion)){
+           return response(404,['message'=>'not found']);
+       }
         $newdis = [];
         foreach ($alldiscussions as $key => $value) {
             $intersect =   array_intersect(sorttag($value->tags), sorttag($discussion->tags));
@@ -272,6 +274,9 @@ class DiscussionController extends Controller
 
         $alldiscussions =  Discussion::where('tribe_id', null)->with('tribe', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->get();
         $discussion = Discussion::where('id', $id)->with('admin', 'user', 'facilitator', 'discussionmessage', 'discussionvote', 'discussionview', 'contributions', 'tribe')->first();
+        if (is_null($discussion)) {
+            return response(404, ['message' => 'not found']);
+        }
         $related =  $alldiscussions->filter(function ($a) use ($discussion) {
 
             if (!is_null($a['tags']) && count($a['tags'])) {
@@ -281,8 +286,6 @@ class DiscussionController extends Controller
             }
         });
         $discussion->related = $related->values()->all();
-
-
         return new DiscussionResource($discussion->load('user', 'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
     }
     public function show(Discussion $discussion)
@@ -323,7 +326,11 @@ class DiscussionController extends Controller
         } else {
             $user = auth('api')->user();
         }
-        return  Discussion::where('id', $id)->with('discussionmessage')->get();
+        $discussion =  Discussion::where('id', $id)->with('discussionmessage')->get();
+        if (is_null($discussion)) {
+            return response(404, ['message' => 'not found']);
+        }
+        return $discussion;
     }
 
     /**

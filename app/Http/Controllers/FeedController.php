@@ -309,7 +309,7 @@ class FeedController extends Controller
 
 
 
-        broadcast(new AddFeed($user, new SinglFeedResourceeFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();
+        broadcast(new AddFeed($user, new SingleFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();
         $regex = '(@\w+)';
         $tagged = [];
         if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
