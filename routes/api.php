@@ -274,7 +274,7 @@ Route::get('trending/discussions', [DiscussionController::class, 'trenddiscussio
 Route::get('interest/discussions', [DiscussionController::class, 'interestdiscussions']);
 
 Route::apiResource('discussion-messages', DiscussionMessageController::class);
-Route::get('get/discussion/mes/{id}', [DiscussionController::class, 'discussionmembers']);
+Route::get('get/discussion/members/{id}', [DiscussionController::class, 'discussionmembers']);
 Route::apiResource('discussion/message/replies', DiscussionMessageCommentController::class);
 
 Route::apiResource('views', DiscussionViewController::class);
@@ -426,7 +426,7 @@ Route::get('toprated', [CourseController::class, 'toprated']);
 
 // Guest
 Route::get('guest/mostenrolled', [CourseController::class, 'guestmostenrolled']);
-Route::get('guest/mes', [UserController::class, 'index']);
+Route::get('guest/members', [UserController::class, 'index']);
 Route::get('guest/facilitators', [FacilitatorController::class, 'guestindex']);
 Route::get('guest/courses', [CourseController::class, 'guestcourses']);
 Route::get('guest/discussions', [DiscussionController::class, 'guestdiscussions']);
@@ -471,7 +471,7 @@ Route::get('get/feeds/tags', [FeedController::class, 'getFeedsByInterest']);
 
 
 //Route::get('get/interests/{interest}', [GuestController::class, 'getInterestContent']);
-Route::get('get/mes', [GuestController::class, 'getmembers']);
+Route::get('get/members', [GuestController::class, 'getmembers']);
 
 
 Route::post('forgot-password', [UserController::class, 'postEmail']);
@@ -499,7 +499,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('trending/discussions/{tribe}', [DiscussionController::class, 'tribetrenddiscussions']);
     Route::post('tribe/invite', [MailController::class, 'sendtribeinvite']);
     Route::get('user/tribes', [TribeController::class, 'getusertribe']);
-    Route::get('tribe/mes/{tribe}', [TribeController::class, 'tribemembers']);
+    Route::get('tribe/members/{tribe}', [TribeController::class, 'tribemembers']);
     Route::get('check/tribe/{tribe}', [TribeController::class, 'checktribe']);
     Route::get('check/tribe/discussion/{discussion}', [TribeController::class, 'checkdiscussiontribe']);
     Route::get('join/tribe/{tribe}', [TribeController::class, 'addusertotribe']);

@@ -59,18 +59,9 @@ class DiscussionMessageController extends Controller
     public function store(Request $request)
     {
 
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
-            return ('Unauthorized');
-        }
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
-        if (auth('api')->user()) {
+
             $user = auth('api')->user();
-        }
+
 
         return  DB::transaction(function () use ($request, $user) {
             $data = $user->discussionmessage()->create([

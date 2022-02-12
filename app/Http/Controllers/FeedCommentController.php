@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Events\NotificationSent;
 use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
+use App\Notifications\NewFeedComment;
 use App\Notifications\TaggedNotification;
 use App\Http\Resources\FeedCommentResource;
 use Illuminate\Support\Facades\Notification;
@@ -85,50 +86,57 @@ class FeedCommentController extends Controller
     public function store(Request $request)
     {
 
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-            $type = 'admin';
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-            $type = 'facilitator';
-        }
-        if (auth('api')->user()) {
+    return   DB::transaction( function () use ($request) {
             $user = auth('api')->user();
             $type = 'user';
-        }
 
-        $data = $user->comments()->create([
-            'organization_id' => $user->organization_id ? $user->organization_id : 1,
-            'feed_id' => $request->id,
-            'comment' => $request->comment
-        ]);
 
-         broadcast(new AddCommment($user, new FeedCommentResource($data->load('user', 'feed'))))->toOthers();
+            $data = $user->comments()->create([
+                'organization_id' =>1,
+                'feed_id' => $request->id,
+                'comment' => $request->comment
+            ]);
 
-        $regex = '(@\w+)';
-        $tagged = [];
-        if (preg_match_all($regex, $request->comment, $matches, PREG_PATTERN_ORDER)) {
+            broadcast(new AddCommment($user, new FeedCommentResource($data->load('user', 'feed'))))->toOthers();
 
-            foreach ($matches[0] as $word) {
-                $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
-                if (!is_null($username)) {
-                    array_push($tagged, $username);
+            $regex = '(@\w+)';
+            $tagged = [];
+            if (preg_match_all($regex, $request->comment, $matches, PREG_PATTERN_ORDER)) {
+
+                foreach ($matches[0] as $word) {
+                    $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
+                    if (!is_null($username)) {
+                        array_push($tagged, $username);
+                    }
                 }
+                $details = [
+                    'body' => $user->username . ' mentioned you in a comment',
+                    'url' => 'https://nzukoor.com/me/feed/' . $request->id,
+                    'type' => 'feed',
+                    'id' => $request->id,
+                    'message' => $request->message,
+
+                ];
+
+
+                Notification::send($tagged, new TaggedNotification($details));
             }
-            $details = [
-                'body' => $user->username . ' mentioned you in a comment',
+            $detail = [
+                'body' => $user->username . ' commented on your post',
                 'url' => 'https://nzukoor.com/me/feed/' . $request->id,
                 'type' => 'feed',
                 'id' => $request->id,
-                'message' => $request->message,
+                'message' => $request->comment,
 
             ];
+            $creator_id = Feed::find($request->id)->user_id;
+            if ($user->id !== $creator_id) {
+                $creator = User::find($creator_id);
+                $creator->notify(new NewFeedComment($detail));
+            }
 
-            Notification::send($tagged, new TaggedNotification($details));
-        }
-
-        return  new SingleFeedCommentResource($data->load('user', 'feed'));
+            return  new SingleFeedCommentResource($data->load('user', 'feed'));
+       });
     }
 
     /**

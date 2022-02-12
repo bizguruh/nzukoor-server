@@ -289,48 +289,50 @@ class FeedController extends Controller
     public function store(Request $request)
     {
 
-        if (auth('api')->user()) {
+
+        return DB::transaction(function () use ($request){
             $user = auth('api')->user();
             $type = 'user';
-        }
 
 
 
-        $data = $user->feeds()->create([
-            'organization_id' => 1,
-            'media' => $request->media,
-            'url' => $request->url,
-            'publicId' => $request->publicId,
-            'message' => $request->message,
-            'tribe_id' => $request->tribe_id,
-            'tags' => $request->tags,
-            'mediaType' => $request->mediaType
-        ]);
+
+            $data = $user->feeds()->create([
+                'organization_id' => 1,
+                'media' => $request->media,
+                'url' => $request->url,
+                'publicId' => $request->publicId,
+                'message' => $request->message,
+                'tribe_id' => $request->tribe_id,
+                'tags' => $request->tags,
+                'mediaType' => $request->mediaType
+            ]);
 
 
 
-        broadcast(new AddFeed($user, new SingleFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();
-        $regex = '(@\w+)';
-        $tagged = [];
-        if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
+            broadcast(new AddFeed($user, new SingleFeedResource($data->load('user', 'comments', 'likes'))))->toOthers();
+            $regex = '(@\w+)';
+            $tagged = [];
+            if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
 
-            foreach ($matches[0] as $word) {
-                $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
-                if (!is_null($username)) {
-                    array_push($tagged, $username);
+                foreach ($matches[0] as $word) {
+                    $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
+                    if (!is_null($username)) {
+                        array_push($tagged, $username);
+                    }
                 }
+                $details = [
+                    'body' => $user->username . ' tagged you in a post',
+                    'url' => 'https://nzukoor.com/me/feed/' . $data->id,
+                    'type' => 'feed',
+                    'id' => $data->id,
+
+                ];
+
+                Notification::send($tagged, new TaggedNotification($details));
             }
-            $details = [
-                'body' => $user->username . ' tagged you in a post',
-                'url' => 'https://nzukoor.com/me/feed/' . $data->id,
-                'type' => 'feed',
-                'id' => $data->id,
-
-            ];
-
-            Notification::send($tagged, new TaggedNotification($details));
-        }
-        return  new SingleFeedResource($data->load('user', 'comments', 'likes'));
+            return  new SingleFeedResource($data->load('user', 'comments', 'likes'));
+        });
     }
 
     /**

@@ -18,59 +18,61 @@ class FeedCommentReplyController extends Controller
     public function store(Request $request)
     {
 
-        $user = auth('api')->user();
+       return DB::transaction(function () use ($request){
+            $user = auth('api')->user();
 
 
-        $data = $user->feedcommentreplies()->create([
+            $data = $user->feedcommentreplies()->create([
 
-            'message' => $request->message,
-            'feed_id' => $request->feed_id,
-            'feed_comment_id' => $request->feed_comment_id,
+                'message' => $request->message,
+                'feed_id' => $request->feed_id,
+                'feed_comment_id' => $request->feed_comment_id,
 
-        ]);
+            ]);
 
-        $feed = Feed::find($request->feed_id)->value('message');
-        $body = $user->username . ' replied your comment - ' . $feed;
-        $owner = User::find(FeedCommentReply::where('feed_comment_id', $request->feed_comment_id)->value('user_id'));
-        $details = [
-            'from_email' => 'info@nzukoor.com',
-            'from_name' => 'Nzukoor',
-            'greeting' => 'Hello ' . $owner->username,
-            'body' => $body,
-            'actionText' => 'Click to view',
-            //  'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
-            'id' => $request->feed_id,
-            'type' => 'feed',
-
-
-        ];
-
-        if (!$owner->username !== $user->username) {
-            $owner->notify(new CommentReply($details));
-        }
-
-        $regex = '(@\w+)';
-        $tagged = [];
-        if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
-
-            foreach ($matches[0] as $word) {
-                $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
-                if (!is_null($username)) {
-                    array_push($tagged, $username);
-                }
-            }
-            $detail = [
-                'body' => $user->username . ' mentioned you in a comment',
-                'url' => 'https://nzukoor.com/me/feed/' . $request->feed_id,
-                'type' => 'feed',
+            $feed = Feed::find($request->feed_id)->value('message');
+            $body = $user->username . ' replied your comment - ' . $feed;
+            $owner = User::find(FeedCommentReply::where('feed_comment_id', $request->feed_comment_id)->value('user_id'));
+            $details = [
+                'from_email' => 'info@nzukoor.com',
+                'from_name' => 'Nzukoor',
+                'greeting' => 'Hello ' . $owner->username,
+                'body' => $body,
+                'actionText' => 'Click to view',
+                //  'url' => "https://nzukoor.com/me/discussion/" . $request->discussion_id,
                 'id' => $request->feed_id,
-                'message' => $request->message
+                'type' => 'feed',
+
 
             ];
 
-            Notification::send($tagged, new TaggedNotification($detail));
-        }
-        return response(new  FeedCommentRepliesResource($data->load('user')), 201);
+            if (!$owner->username !== $user->username) {
+                $owner->notify(new CommentReply($details));
+            }
+
+            $regex = '(@\w+)';
+            $tagged = [];
+            if (preg_match_all($regex, $request->message, $matches, PREG_PATTERN_ORDER)) {
+
+                foreach ($matches[0] as $word) {
+                    $username = User::where('username', strtolower(str_replace('@', '', $word)))->first();
+                    if (!is_null($username)) {
+                        array_push($tagged, $username);
+                    }
+                }
+                $detail = [
+                    'body' => $user->username . ' mentioned you in a comment',
+                    'url' => 'https://nzukoor.com/me/feed/' . $request->feed_id,
+                    'type' => 'feed',
+                    'id' => $request->feed_id,
+                    'message' => $request->message
+
+                ];
+
+                Notification::send($tagged, new TaggedNotification($detail));
+            }
+            return response(new  FeedCommentRepliesResource($data->load('user')), 201);
+       });
     }
     public function replylike(Request $request)
     {
