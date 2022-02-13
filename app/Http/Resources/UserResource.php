@@ -12,6 +12,12 @@ class UserResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+    public function isConnected($id){
+         $user = auth('api')->user();
+         if(is_null($user)) return false;
+          $connections = $user->connections()->get()->map(function($a){return $a->following_id;})->toArray();
+         return in_array($id, $connections);
+    }
     public function toArray($request)
     {
         return [
@@ -21,7 +27,8 @@ class UserResource extends JsonResource
             "bio" => $this['bio'],
             "username" => $this['username'],
             'interests' => $this['interests'],
-            "email" => $this['email']
+            "email" => $this['email'],
+            "is_connected"=> $this->isConnected($this['id'])
         ];
     }
 }

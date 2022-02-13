@@ -22,6 +22,7 @@ use App\Mail\PasswordResetMail;
 use App\Models\CourseCommunity;
 use Illuminate\Support\Facades\DB;
 use App\Models\CourseCommunityLink;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\AddedToLibrary;
@@ -66,7 +67,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'found',
-            'data' => $user
+            'data' => new UserResource($user)
         ]);
     }
 

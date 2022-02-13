@@ -16,6 +16,7 @@ use App\Http\Resources\FollowerResource;
 use App\Models\PendingConnectionMessage;
 use App\Http\Resources\ChatUsersResource;
 use App\Http\Resources\ConnectionResource;
+use App\Http\Resources\PendingConnectionResource;
 
 class ConnectionController extends Controller
 {
@@ -43,9 +44,8 @@ class ConnectionController extends Controller
         }
 
         $data = Connection::where('user_id', $user->id)->with('user')->latest()->get();
-         $res = ChatUsersResource::collection($data);
-       return  $results = collect($res)->sortByDesc('last_message_time')->values()->all();
-
+        $res = ChatUsersResource::collection($data);
+        return  $results = collect($res)->sortByDesc('last_message_time')->values()->all();
     }
     public function pendingchatusers()
     {
@@ -57,15 +57,21 @@ class ConnectionController extends Controller
         $data = PendingConnectionMessage::where('user_id', $user->id)->with('user')->latest()->get();
         $res = ChatUsersResource::collection($data);
         return  $results = collect($res)->sortByDesc('last_message_time')->values()->all();
-
-
-
     }
-    public function anonymousmessage(){
-      $user =  auth('api')->user();
-      $messages = Inbox::where('receiver_id', $user->id)->get();
+    public function pendingconections()
+    {
 
+        if (auth('api')->user()) {
+            $user = auth('api')->user();
+        }
 
+        $data = $user->pendingconnections()->get();
+        return PendingConnectionResource::collection($data);
+    }
+    public function anonymousmessage()
+    {
+        $user =  auth('api')->user();
+        $messages = Inbox::where('receiver_id', $user->id)->get();
     }
     public function myconnections()
     {
@@ -83,41 +89,40 @@ class ConnectionController extends Controller
     {
 
 
-
-
-        if (auth('api')->user()) {
-            $user = auth('api')->user();
-        }
-
-        $check = $user->connections()->where([['follow_type', $request->follow_type], ['following_id', $request->following_id]])->first();
-        $checkpending = $user->pendingconnections()->where( 'following_id', $request->following_id)->first();
-        if(!is_null($checkpending)){
-            $checkpending->delete();
-        }
+        $user = auth('api')->user();
+        $check = $user->connections()->where('following_id', $request->following_id)->first();
         if (is_null($check)) {
-            return  $user->connections()->create([
-                'follow_type' => $request->follow_type,
+            $connection =  $user->connections()->create([
+                'follow_type' => 'user',
                 'following_id' => $request->following_id
             ]);
         }
+
+        $checkpending = $user->pendingconnections()->where('following_id', $request->following_id)->first();
+        if (!is_null($checkpending)) {
+
+            $checkpending->delete();
+        }
+
+        $isFollowingBack = Connection::where([['user_id', $request->following_id],['following_id', $user->id]])->first();
+        if (is_null($isFollowingBack)) {
+            PendingConnectionMessage::create([
+                'following_id' => $user->id,
+                'user_id' => $request->following_id
+            ]);
+        }
+
+        return response('ok',200);
     }
     public function deletepending(Request $request)
     {
 
-
-
-
         if (auth('api')->user()) {
             $user = auth('api')->user();
         }
-
-
-        $checkpending = $user->pendingconnections()->where( 'following_id', $request->following_id)->first();
-
+        $checkpending = $user->pendingconnections()->where('following_id', $request->following_id)->first();
         $checkpending->delete();
         return response('ok');
-
-
     }
 
     public function getmemberswithinterests()
@@ -201,17 +206,17 @@ class ConnectionController extends Controller
 
 
 
-            $user = auth('api')->user();
-            $connectedusers = $user->connections()->get()->filter(function ($u) {
-                if ($u->follow_type == 'user')  return $u;
-            })->map(function ($u) {
+        $user = auth('api')->user();
+        $connectedusers = $user->connections()->get()->filter(function ($u) {
+            if ($u->follow_type == 'user')  return $u;
+        })->map(function ($u) {
 
-                return $u->following_id;
-            });
+            return $u->following_id;
+        });
 
 
 
-            $allusers = User::where('id', '!=', $user->id)->whereNotIn('id', $connectedusers->toArray())->inRandomOrder()->get();
+        $allusers = User::where('id', '!=', $user->id)->whereNotIn('id', $connectedusers->toArray())->inRandomOrder()->get();
 
 
         if (is_null($user->interests)) return;
@@ -232,7 +237,7 @@ class ConnectionController extends Controller
 
 
         $mergedUsers = $mapsimilarusers->values()->all();
-        return array_slice($mergedUsers,0,10);
+        return array_slice($mergedUsers, 0, 10);
     }
     public function getUsersWithInterest($interest)
     {
@@ -287,7 +292,7 @@ class ConnectionController extends Controller
 
         if (is_null($user->interests)) return;
         $interests = $user->interests;
-        $discussion = Discussion::with( 'user', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
+        $discussion = Discussion::with('user', 'discussionmessage', 'discussionvote', 'discussionview')->latest()->get();
         $result =   $discussion->filter(function ($a) use ($interests) {
             $tags = collect($a->tags)->map(function ($t) {
 
@@ -375,7 +380,7 @@ class ConnectionController extends Controller
         $users = User::where('username', 'like', '%' . $query . '%')->get();
 
         //broadcast search results with Pusher channels
-        event(new SearchEvent( UserResource::collection($users)));
+        event(new SearchEvent(UserResource::collection($users)));
         return response()->json("ok");
     }
 
