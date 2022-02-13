@@ -67,7 +67,8 @@ class DiscussionMessageCommentController extends Controller
         }
 
         $data = $user->discussionmessagecomment()->create([
-
+            'attachment' => $request->attachment,
+            'mediaType' => $request->mediaType,
             'message' => $request->message,
             'discussion_id' => $request->discussion_id,
             'discussion_message_id' => $request->message_id,
