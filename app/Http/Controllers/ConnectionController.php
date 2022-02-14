@@ -125,6 +125,11 @@ class ConnectionController extends Controller
         return response('ok');
     }
 
+    public function removeconnection( $id)
+    {
+        PendingConnection::find($id)->delete();
+        return response('ok');
+    }
     public function getmemberswithinterests()
     {
         if (auth('admin')->user()) {

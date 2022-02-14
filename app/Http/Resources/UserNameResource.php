@@ -19,7 +19,8 @@ class UserNameResource extends JsonResource
             "name" => $this['name'],
             "profile" => $this['profile'],
             "username" => $this['username'],
-            "email" => $this['email']
+            "email" => $this['email'],
+            "bio" => $this['bio']
 
         ];
     }
