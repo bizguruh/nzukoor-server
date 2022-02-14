@@ -112,7 +112,9 @@ class ConnectionController extends Controller
             ]);
         }
 
-        return response('ok',200);
+        return response([
+            'status' => 'success'
+        ], 200);
     }
     public function deletepending(Request $request)
     {
@@ -122,13 +124,17 @@ class ConnectionController extends Controller
         }
         $checkpending = $user->pendingconnections()->where('following_id', $request->following_id)->first();
         $checkpending->delete();
-        return response('ok');
+        return response([
+            'status'=>'success'
+        ],200);
     }
 
     public function removeconnection( $id)
     {
         PendingConnection::find($id)->delete();
-        return response('ok');
+        return response([
+            'status' => 'success'
+        ], 200);
     }
     public function getmemberswithinterests()
     {
