@@ -26,8 +26,8 @@ class ConnectionResource extends JsonResource
         return [
             'id' => $this->id,
             'user_follower' =>  new UserNameResource(User::find($this->following_id)),
-            'last_message' => $last_message,
-            'unread_message' => $unread_messages
+            // 'last_message' => $last_message,
+            // 'unread_message' => $unread_messages
 
         ];
     }
