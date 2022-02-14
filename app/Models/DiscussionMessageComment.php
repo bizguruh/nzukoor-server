@@ -11,7 +11,7 @@ class DiscussionMessageComment extends Model
     use HasFactory, Notifiable;
 
     protected $table = 'discussion_message_comments';
-    protected $fillable = ['facilitator_id', 'user_id', 'admin_id', 'message', 'discussion_id', 'discussion_message_id', 'organization_id'];
+    protected $fillable = ['facilitator_id', 'user_id', 'admin_id', 'message', 'discussion_id', 'discussion_message_id', 'organization_id', 'mediaType', 'attachment'];
 
     public function discussion()
     {

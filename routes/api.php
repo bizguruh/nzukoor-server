@@ -227,6 +227,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('my/connections', [ConnectionController::class, 'myconnections']);
     Route::get('get/chat/connections', [ConnectionController::class, 'chatusers']);
     Route::get('get/pending/chat', [ConnectionController::class, 'pendingchatusers']);
+    Route::get('get/connection/requests', [ConnectionController::class, 'pendingconections']);
+    Route::post('remove/pending/connection', [ConnectionController::class, 'deletepending']);
     Route::post('remove/pending/connections', [ConnectionController::class, 'deletepending']);
 
 

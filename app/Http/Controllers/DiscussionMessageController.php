@@ -68,6 +68,7 @@ class DiscussionMessageController extends Controller
 
                 'message' => $request->message,
                 'attachment' => $request->attachment,
+                'mediaType' => $request->mediaType,
                 'publicId' => $request->publicId,
                 'discussion_id' => $request->discussion_id,
                 'organization_id' => $user->organization_id ? $user->organization_id : 1,
