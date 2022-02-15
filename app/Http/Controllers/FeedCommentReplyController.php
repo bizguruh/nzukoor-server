@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Events\NotificationSent;
 use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
+use Illuminate\Support\Facades\DB;
 use App\Notifications\CommentReply;
 use App\Notifications\TaggedNotification;
 use Illuminate\Support\Facades\Notification;

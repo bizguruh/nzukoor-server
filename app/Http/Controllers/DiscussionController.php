@@ -9,6 +9,7 @@ use App\Support\Collection;
 use Illuminate\Http\Request;
 use App\Events\NotificationSent;
 use App\Models\DiscussionMessage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use App\Models\DiscussionMessageComment;
 use App\Notifications\NewTribeDiscussion;
@@ -174,9 +175,7 @@ class DiscussionController extends Controller
                 'tags' => ' required',
 
             ]);
-            if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
-                return ('Unauthorized');
-            }
+           
 
             if (auth('api')->user()) {
                 $user = auth('api')->user();
@@ -226,7 +225,7 @@ class DiscussionController extends Controller
             Notification::send($tribemembers, new NewTribeDiscussion($details));
             broadcast(new NotificationSent())->toOthers();
             return new DiscussionResource($data->load('user',  'discussionmessage', 'discussionvote', 'discussionview', 'tribe'));
-    
+
 });
     }
 

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Events\NotificationSent;
 use App\Models\FeedCommentReply;
 use App\Notifications\LikeComment;
+use Illuminate\Support\Facades\DB;
 use App\Notifications\NewFeedComment;
 use App\Notifications\TaggedNotification;
 use App\Http\Resources\FeedCommentResource;

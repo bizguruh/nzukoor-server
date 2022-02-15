@@ -11,6 +11,7 @@ use App\Models\Facilitator;
 use App\Models\FeedComment;
 use App\Support\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\FeedResource;
 use App\Http\Resources\FeedLikeResource;
 use App\Notifications\TaggedNotification;
