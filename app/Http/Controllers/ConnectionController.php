@@ -394,6 +394,15 @@ class ConnectionController extends Controller
         event(new SearchEvent(UserResource::collection($users)));
         return response()->json("ok");
     }
+    public function searchconnections(Request $request)
+    {
+        $query = $request->query('query');
+        $users = User::where('username', 'like', '%' . $query . '%')->get();
+
+        //broadcast search results with Pusher channels
+
+        return UserResource::collection($users);
+    }
 
     //fetch all products
     public function get(Request $request)
