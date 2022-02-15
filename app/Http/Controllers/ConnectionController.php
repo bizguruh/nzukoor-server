@@ -131,7 +131,7 @@ class ConnectionController extends Controller
 
     public function removeconnection( $id)
     {
-        PendingConnection::find($id)->delete();
+        PendingConnectionMessage::find($id)->delete();
         return response([
             'status' => 'success'
         ], 200);
