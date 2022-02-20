@@ -106,7 +106,8 @@ class InboxController extends Controller
             $detail = [
                 'title' => $title,
                 'message' => $request->message,
-                'image' => $user->profile
+                'image' => $user->profile,
+                'type'=> 'chat'
             ];
 
             $user_connection_id = Connection::where('user_id', $user->id)->where('following_id', $request->receiver_id)->value('id');

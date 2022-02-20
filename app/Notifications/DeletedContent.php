@@ -57,6 +57,7 @@ class DeletedContent extends Notification
     {
         return [
             'notification' => $this->details['body'],
+          
 
         ];
     }
