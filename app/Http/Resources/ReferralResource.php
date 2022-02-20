@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Admin;
-use App\Models\Facilitator;
 use App\Models\User;
+
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReferralResource extends JsonResource
@@ -19,9 +19,7 @@ class ReferralResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'member_detail' => $this->when($this->referree_type === 'member', User::find($this->referree_id)),
-            'facilitator_detail' => $this->when($this->referree_type === 'facilitator', Facilitator::find($this->referree_id)),
-            'administrator_detail' => $this->when($this->referree_type === 'administrator', Admin::find($this->referree_id)),
+            'user' => new UserResource(User::find($this->referree_id)),
             'created_at' => $this->created_at,
         ];
     }

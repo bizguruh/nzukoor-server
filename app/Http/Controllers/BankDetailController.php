@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TransactionSuccessful;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Tribe;
+use App\Models\TribeUser;
+use App\Jobs\VerifyPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use App\Events\TransactionSuccessful;
 
 class BankDetailController extends Controller
 {
@@ -48,18 +51,24 @@ class BankDetailController extends Controller
                 ]);
             }
             $tribe_name = $request->name;
+            $username = $this->user->username;
             $bank_name = $request->bank_name;
             $account_no = $request->account_no;
             $bank_code = $request->bank_code;
+            if (is_null($this->user->accountdetail()->first())) {
+                $accountdetail = $this->user->accountdetail()->create([
+                    'account_no' => $account_no,
+                    'bank_name' => $bank_name,
+                    'bank_code' => $bank_code
 
-            $accountdetail = $this->user->accountdetail()->create([
-                'account_no' => $account_no,
-                'bank_name' => $bank_name,
-                'bank_code' => $bank_code,
+                ]);
+            } else {
+                $accountdetail = $this->user->accountdetail()->first();
+            }
 
-            ]);
-
-
+            if ($accountdetail->group_split_code && $accountdetail->subaccount_code) {
+                return 'already exists';
+            }
             // Create subaccount
             $subaccountReponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->api_key,
@@ -67,7 +76,7 @@ class BankDetailController extends Controller
             ])->post(
                 'https://api.paystack.co/subaccount',
                 [
-                    'business_name' => $tribe_name,
+                    'business_name' => $username . '_tribes',
                     'settlement_bank' => $bank_code,
                     'account_number' => $account_no,
                     'percentage_charge' => 10.0,
@@ -86,7 +95,7 @@ class BankDetailController extends Controller
             ])->post(
                 'https://api.paystack.co/split',
                 [
-                    'name' => $tribe_name . ' spliting',
+                    'name' => $username . ' spliting',
                     'type' => 'percentage',
                     'currency' => 'NGN',
                     'subaccounts' => [
@@ -131,7 +140,7 @@ class BankDetailController extends Controller
     }
     public function getbankdetail()
     {
-        return $this->user->accountdetail()->first();
+        return $this->user->accountdetail()->firstOrFail();
     }
     public function makepayment(Request $request)
     {
@@ -191,10 +200,91 @@ class BankDetailController extends Controller
 
         return $data;
     }
+    public function makemobilepayment(Request $request)
+    {
+
+        $request->validate([
+
+            'tribe_id' => 'required| numeric'
+        ]);
+        $user = auth('api')->user()->accountdetail();
+        $tribe = Tribe::find($request->tribe_id);
+        $owner = $tribe->getTribeOwnerAttribute();
+
+        $email = $user->email;
+        $amount = $tribe->amount * 100;
+        $type = 'tribe';
+        $item_id = $request->tribe_id;
+
+
+        if ($owner['split_code']) {
+            $split_code = $owner['split_code'];
+            $body = [
+                'email' => $email,
+                'amount' => $amount,
+                'split_code' => $split_code
+
+            ];
+        } else {
+            $body = [
+                'email' => $email,
+                'amount' => $amount,
+
+
+            ];
+        }
+
+        $response =  Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->api_key,
+        ])->post(
+            'https://api.paystack.co/transaction/initialize',
+            $body
+        );
+
+        if ($response['status']) {
+            $data = $response->json()['data'];
+
+            $result =   $this->user->order()->create([
+                'reference' => $data['reference'],
+                'message' => 'pending',
+                'status' => 'pending',
+                'trans' => $data['access_code'],
+                'transaction' => $data['access_code'],
+                'trxref' =>  $data['access_code'],
+                'redirecturl' =>  $data['authorization_url'],
+                'item_id' => $item_id,
+                'amount' => $amount,
+                'type' => $type,
+                'organization_id' =>  1,
+            ]);
+
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => $response['message']
+            ]);
+        }
+    }
+
 
     public function verifytransaction($reference)
     {
+        // VerifyPayment::dispatch($reference);
+
         return  DB::transaction(function () use ($reference) {
+            $order = Order::where('reference', $reference)->first();
+            if (is_null($order)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid reference'
+                ]);
+            }
+
             $response =  Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->api_key,
             ])->get(
@@ -202,30 +292,46 @@ class BankDetailController extends Controller
             );
 
 
+
             if ($response->json()['status'] && strtolower($response->json()['message']) == 'verification successful') {
 
-                $order = Order::where('reference', $reference)->first();
-                if (!$order) {
+                if ($response->json()['data']['status'] == 'success') {
+
+
+                    $order->message = $response->json()['message'];
+                    $order->status = $response->json()['status'];
+                    $order->save();
+
+
+                    if ($order->type == 'tribe') {
+                        $tribe = Tribe::find($order->item_id);
+                        $tribe->users()->attach($order->user_id);
+                    }
+
                     return response()->json([
-                        'status' => false,
-                        'message' => 'Invalid reference'
+                        'status' => true,
+                        'message' => 'Verification successful'
                     ]);
                 }
-                $order->message = $response->json()['message'];
-                $order->status = $response->json()['status'];
-                $order->save();
-
-
-                if ($order->type == 'tribe') {
-                    $tribe = Tribe::find($order->item_id);
-                    $tribe->users()->attach($order->user_id);
+                if ($response->json()['data']['status'] == 'abandoned') {
+                    return response()->json([
+                        'status' => false,
+                        'message' => $response->json()['data']['status']
+                    ]);
                 }
 
                 return response()->json([
                     'status' => true,
-                    'message' => 'Verification successful'
+                    'message' => 'failed'
+                ]);
+            } else {
+                VerifyPayment::dispatch($reference);
+                return response()->json([
+                    'status' => false,
+                    'message' => $response->json()['data']['status']
                 ]);
             }
+
         });
     }
 

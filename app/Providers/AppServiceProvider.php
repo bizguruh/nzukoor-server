@@ -56,6 +56,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         JsonResource::withoutWrapping();
-        Tribe::observe(TribeObserver::class);
+       // Tribe::observe(TribeObserver::class);
     }
 }

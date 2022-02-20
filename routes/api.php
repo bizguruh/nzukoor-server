@@ -246,6 +246,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('update/discussion/comment', [DiscussionController::class, 'updatediscussioncomment']);
     Route::delete('drop/discussion/comment/{id}', [DiscussionController::class, 'dropdiscussioncomment']);
     Route::delete('drop/discussion/reply/{id}', [DiscussionController::class, 'dropdiscussionreply']);
+
+
+    //Referral routes
+    Route::get('my/referrals', [ReferralController::class, 'referraldetail']);
+    Route::apiResource('referrals', ReferralController::class);
+
+
 });
 
 Route::post('user-register', [UserController::class, 'storeuser']);
@@ -403,10 +410,6 @@ Route::post('guest/send/discussion/invite', [MailController::class, 'guestsenddi
 Route::post('guest/send/event/invite', [MailController::class, 'sendeventinvite']);
 
 
-//Referral routes
-
-Route::apiResource('referrals', ReferralController::class);
-
 
 // Notification request
 
@@ -549,8 +552,10 @@ Route::get('get/banks', [BankDetailController::class, 'getbanks']);
 Route::get('get/bank/detail', [BankDetailController::class, 'getbankdetail']);
 Route::apiResource('bank/details', BankDetailController::class);
 Route::post('transaction/initiate', [BankDetailController::class, 'makepayment']);
+Route::post('mobile/transaction/initiate', [BankDetailController::class, 'makemobilepayment']);
 
 Route::get('transaction/verify/{reference}', [BankDetailController::class, 'verifytransaction']);
+Route::get('mobile/transaction/verify/{reference}', [BankDetailController::class, 'verifytransaction']);
 Route::post('transaction/verify', [BankDetailController::class, 'transactionevent']);
 
 

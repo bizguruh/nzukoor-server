@@ -14,7 +14,7 @@ class AddAmountToOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('amout');
+            $table->string('amount');
         });
     }
 

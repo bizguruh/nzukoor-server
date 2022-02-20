@@ -685,7 +685,7 @@ class UserController extends Controller
                     "success" => false,
                     "message" => 'identical password'
 
-                ], 200);
+                ], 422);
             }
 
             $user = User::where('email', $updatePassword->email)
@@ -699,7 +699,7 @@ class UserController extends Controller
                     "success" => false,
                     "message" => 'identical password'
 
-                ], 200);
+                ], 422);
             }
 
             $user = Facilitator::where('email', $updatePassword->email)

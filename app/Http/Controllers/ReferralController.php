@@ -15,21 +15,28 @@ class ReferralController extends Controller
      */
     public function index()
     {
-        if (!auth('admin')->user() && !auth('facilitator')->user() && !auth('api')->user() && !auth('organization')->user()) {
-            return ('Unauthorized');
-        }
-        if (auth('admin')->user()) {
-            $user = auth('admin')->user();
-        }
-        if (auth('facilitator')->user()) {
-            $user = auth('facilitator')->user();
-        }
-        if (auth('api')->user()) {
-            $user = auth('api')->user();
-        }
 
+
+        $user = auth('api')->user();
         $refs = $user->referral()->get();
         return ReferralResource::collection($refs);
+    }
+
+    public function referraldetail()
+    {
+
+
+        $user = auth('api')->user();
+        $count = $user->referral()->count();
+        $users = ReferralResource::collection($user->referral()->get());
+        return response()->json([
+            'status' => true,
+           'data' => [
+                'count' => $count,
+                'earning' => $count * 10,
+                'users' => $users
+           ]
+        ]);
     }
 
     /**
