@@ -207,8 +207,14 @@ class BankDetailController extends Controller
 
             'tribe_id' => 'required| numeric'
         ]);
-        $user = auth('api')->user()->accountdetail();
+        $user = auth('api')->user();
         $tribe = Tribe::find($request->tribe_id);
+        if(is_null($tribe)){
+            return response()->json([
+                'success' => false,
+                'data' => 'invalid tribe id'
+            ]);
+        }
         $owner = $tribe->getTribeOwnerAttribute();
 
         $email = $user->email;
