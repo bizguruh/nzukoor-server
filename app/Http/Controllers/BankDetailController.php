@@ -145,109 +145,43 @@ class BankDetailController extends Controller
     public function makepayment(Request $request)
     {
 
-        $request->validate([
+    return   DB::transaction( function () use ($request){
+            $request->validate([
 
-            'email' => 'required',
-            'amount' => 'required',
-            'type' => 'required',
-            'item_id' => 'required'
-        ]);
-
-        $email = $request->email;
-        $amount = $request->amount * 100;
-        $type = $request->type;
-        $item_id = $request->item_id;
-
-        if ($request->split_code) {
-            $split_code = $request->split_code;
-            $body = [
-                'email' => $email,
-                'amount' => $amount,
-                'split_code' => $split_code
-
-            ];
-        } else {
-            $body = [
-                'email' => $email,
-                'amount' => $amount,
-
-            ];
-        }
-
-
-        $response =  Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->api_key,
-        ])->post(
-            'https://api.paystack.co/transaction/initialize',
-            $body
-        );
-        $data = $response->json()['data'];
-
-        $result =   $this->user->order()->create([
-            'reference' => $data['reference'],
-            'message' => 'pending',
-            'status' => 'pending',
-            'trans' => $data['access_code'],
-            'transaction' => $data['access_code'],
-            'trxref' =>  $data['access_code'],
-            'redirecturl' =>  $data['authorization_url'],
-            'item_id' => $item_id,
-            'amount' => $amount,
-            'type' => $type,
-            'organization_id' =>  1,
-        ]);
-
-
-        return $data;
-    }
-    public function makemobilepayment(Request $request)
-    {
-
-        $request->validate([
-
-            'tribe_id' => 'required| numeric'
-        ]);
-        $user = auth('api')->user();
-        $tribe = Tribe::find($request->tribe_id);
-        if(is_null($tribe)){
-            return response()->json([
-                'success' => false,
-                'data' => 'invalid tribe id'
+                'email' => 'required',
+                'amount' => 'required',
+                'type' => 'required',
+                'item_id' => 'required'
             ]);
-        }
-        $owner = $tribe->getTribeOwnerAttribute();
 
-        $email = $user->email;
-        $amount = $tribe->amount * 100;
-        $type = 'tribe';
-        $item_id = $request->tribe_id;
+            $email = $request->email;
+            $amount = $request->amount * 100;
+            $type = $request->type;
+            $item_id = $request->item_id;
+
+            if ($request->split_code) {
+                $split_code = $request->split_code;
+                $body = [
+                    'email' => $email,
+                    'amount' => $amount,
+                    'split_code' => $split_code
+
+                ];
+            } else {
+                $body = [
+                    'email' => $email,
+                    'amount' => $amount,
+
+                ];
+            }
 
 
-        if ($owner['split_code']) {
-            $split_code = $owner['split_code'];
-            $body = [
-                'email' => $email,
-                'amount' => $amount,
-                'split_code' => $split_code
-
-            ];
-        } else {
-            $body = [
-                'email' => $email,
-                'amount' => $amount,
-
-
-            ];
-        }
-
-        $response =  Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->api_key,
-        ])->post(
-            'https://api.paystack.co/transaction/initialize',
-            $body
-        );
-
-        if ($response['status']) {
+            $response =  Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->api_key,
+            ])->post(
+                'https://api.paystack.co/transaction/initialize',
+                $body
+            );
             $data = $response->json()['data'];
 
             $result =   $this->user->order()->create([
@@ -265,16 +199,86 @@ class BankDetailController extends Controller
             ]);
 
 
-            return response()->json([
-                'success' => true,
-                'data' => $data
+            return $data;
+       });
+    }
+    public function makemobilepayment(Request $request)
+    {
+
+    return   DB::transaction(function () use ($request){
+            $request->validate([
+
+                'tribe_id' => 'required| numeric'
             ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => $response['message']
-            ]);
-        }
+            $user = auth('api')->user();
+            $tribe = Tribe::find($request->tribe_id);
+            if (is_null($tribe)) {
+                return response()->json([
+                    'success' => false,
+                    'data' => 'invalid tribe id'
+                ]);
+            }
+            $owner = $tribe->getTribeOwnerAttribute();
+
+            $email = $user->email;
+            $amount = $tribe->amount * 100;
+            $type = 'tribe';
+            $item_id = $request->tribe_id;
+
+
+            if ($owner['split_code']) {
+                $split_code = $owner['split_code'];
+                $body = [
+                    'email' => $email,
+                    'amount' => $amount,
+                    'split_code' => $split_code
+
+                ];
+            } else {
+                $body = [
+                    'email' => $email,
+                    'amount' => $amount,
+
+
+                ];
+            }
+
+            $response =  Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->api_key,
+            ])->post(
+                'https://api.paystack.co/transaction/initialize',
+                $body
+            );
+
+            if ($response['status']) {
+                $data = $response->json()['data'];
+
+                $result =   $this->user->order()->create([
+                    'reference' => $data['reference'],
+                    'message' => 'pending',
+                    'status' => 'pending',
+                    'trans' => $data['access_code'],
+                    'transaction' => $data['access_code'],
+                    'trxref' =>  $data['access_code'],
+                    'redirecturl' =>  $data['authorization_url'],
+                    'item_id' => $item_id,
+                    'amount' => $amount,
+                    'type' => $type,
+                    'organization_id' =>  1,
+                ]);
+
+
+                return response()->json([
+                    'success' => true,
+                    'data' => $data
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => $response['message']
+                ]);
+            }
+       });
     }
 
 
