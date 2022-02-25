@@ -20,6 +20,7 @@ class BankDetailController extends Controller
     {
         $this->user = auth('api')->user();
         $this->api_key = config('services.paystack.sk');
+        $this->p_key = config('services.paystack.pk');
     }
 
     /**  @params
@@ -270,7 +271,8 @@ class BankDetailController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'data' => $data
+                    'data' => $data,
+                    'p_key'=> $this->p_key
                 ]);
             } else {
                 return response()->json([
