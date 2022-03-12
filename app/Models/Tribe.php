@@ -28,7 +28,7 @@ class Tribe extends Model
 
     public function events()
     {
-        return $this->hasMany(Event::class)->with('eventattendance', 'facilitator')->latest();
+        return $this->hasMany(Event::class)->with('eventattendance')->latest();
     }
     public function courses()
     {
@@ -40,7 +40,7 @@ class Tribe extends Model
     }
     public function feeds()
     {
-        return $this->hasMany(Feed::class)->with('admin', 'user', 'facilitator', 'comments', 'likes', 'stars')->latest();
+        return $this->hasMany(Feed::class)->with( 'user', 'comments', 'likes', 'stars')->latest();
     }
 
     public function getTribeOwnerAttribute()

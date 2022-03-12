@@ -513,6 +513,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('get/tribe/courses/{tribe}', [TribeController::class, 'tribecourses']);
     Route::get('get/tribe/events/{tribe}', [TribeController::class, 'tribeevents']);
     Route::get('get/tribe/myevents/{tribe}', [TribeController::class, 'mytribeevents']);
+
+
+    Route::get('get/pending/events/{tribe}', [EventController::class, 'getpendingevents']);
+    Route::get('get/active/events/{tribe}', [EventController::class, 'getactiveevents']);
+    Route::get('get/expired/events/{tribe}', [EventController::class, 'getexpiredevents']);
+
+
     Route::get('get/tribe/discussions/{tribe}', [TribeController::class, 'tribediscussions']);
     Route::get('tribe/suggestions', [TribeController::class, 'suggestedtribe']);
     Route::post('vote/discussion/message', [DiscussionMessageController::class, 'votediscussionmessage']);

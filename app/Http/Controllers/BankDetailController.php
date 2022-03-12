@@ -31,11 +31,12 @@ class BankDetailController extends Controller
 
 
      */
-    public function store($request)
+    public function store(Request $request)
     {
+
         $request->validate(
             [
-                'name' => 'required',
+
                 'bank_name' => 'required',
                 'account_no' => 'required',
                 'bank_code' => 'required'
@@ -51,7 +52,7 @@ class BankDetailController extends Controller
                     'message' => 'Cannot verify account details'
                 ]);
             }
-            $tribe_name = $request->name;
+
             $username = $this->user->username;
             $bank_name = $request->bank_name;
             $account_no = $request->account_no;
@@ -65,10 +66,18 @@ class BankDetailController extends Controller
                 ]);
             } else {
                 $accountdetail = $this->user->accountdetail()->first();
+
+                 $accountdetail->account_no = $account_no;
+                $accountdetail->bank_name = $bank_name;
+                $accountdetail->bank_code = $bank_code;
+                 $accountdetail->save();
             }
 
-            if ($accountdetail->group_split_code && $accountdetail->subaccount_code) {
-                return 'already exists';
+            if ($accountdetail->account_no == $account_no && $accountdetail->bank_name = $bank_name) {
+                return [
+                    'status'=> false,
+                    'message' => 'already exists'
+                ];
             }
             // Create subaccount
             $subaccountReponse = Http::withHeaders([
@@ -102,7 +111,7 @@ class BankDetailController extends Controller
                     'subaccounts' => [
                         [
                             'subaccount' => $subaccount['subaccount_code'],
-                            'share' => 10
+                            'share' => 90
                         ]
                     ],
                     "bearer_type" => "all",
@@ -146,7 +155,7 @@ class BankDetailController extends Controller
     public function makepayment(Request $request)
     {
 
-    return   DB::transaction( function () use ($request){
+        return   DB::transaction(function () use ($request) {
             $request->validate([
 
                 'email' => 'required',
@@ -201,12 +210,12 @@ class BankDetailController extends Controller
 
 
             return $data;
-       });
+        });
     }
     public function makemobilepayment(Request $request)
     {
 
-    return   DB::transaction(function () use ($request){
+        return   DB::transaction(function () use ($request) {
             $request->validate([
 
                 'tribe_id' => 'required| numeric'
@@ -272,7 +281,7 @@ class BankDetailController extends Controller
                 return response()->json([
                     'success' => true,
                     'data' => $data,
-                    'p_key'=> $this->p_key
+                    'p_key' => $this->p_key
                 ]);
             } else {
                 return response()->json([
@@ -280,7 +289,7 @@ class BankDetailController extends Controller
                     'message' => $response['message']
                 ]);
             }
-       });
+        });
     }
 
 
@@ -343,7 +352,6 @@ class BankDetailController extends Controller
                     'message' => $response->json()['data']['status']
                 ]);
             }
-
         });
     }
 

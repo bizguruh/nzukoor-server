@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NotificationSent;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Tribe;
 use Illuminate\Http\Request;
+use App\Events\NotificationSent;
 use App\Notifications\EventReminder;
 use App\Notifications\NewTribeEvent;
+use App\Http\Resources\EventResource;
 use Illuminate\Support\Facades\Notification;
 
 
@@ -77,6 +78,21 @@ class EventController extends Controller
             $event->save();
         }
     }
+    public function getpendingevents(Tribe $tribe)
+    {
+        $events = $tribe->events()->with('eventattendance', 'tribe')->where('status', 'pending')->get();
+        return EventResource::collection($events);
+    }
+    public function getactiveevents(Tribe $tribe)
+    {
+        $events =  $tribe->events()->with('eventattendance', 'tribe')->where('status', 'active')->get();
+        return EventResource::collection($events);
+    }
+    public function getexpiredevents(Tribe $tribe)
+    {
+        $events =  $tribe->events()->with('eventattendance', 'tribe')->where('status', 'expired')->get();
+        return EventResource::collection($events);
+    }
 
     public function store(Request $request)
     {
@@ -141,7 +157,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return $event->load('eventattendance', 'facilitator', 'tribe');
+        return new EventResource($event->load('eventattendance', 'facilitator', 'tribe'));
     }
 
     public function eventReminder()
