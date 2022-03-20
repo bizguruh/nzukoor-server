@@ -399,8 +399,7 @@ class ConnectionController extends Controller
         $query = $request->query('query');
         $users = User::where('username', 'like', '%' . $query . '%')->get();
 
-        //broadcast search results with Pusher channels
-
+   
         return UserResource::collection($users);
     }
 

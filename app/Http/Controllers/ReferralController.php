@@ -104,4 +104,11 @@ class ReferralController extends Controller
     {
         //
     }
+
+    public function redeemvoucher(){
+        return response([
+            'status' => true,
+            'message' => 'processing'
+        ]);
+    }
 }

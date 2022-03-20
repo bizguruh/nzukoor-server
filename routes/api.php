@@ -251,6 +251,7 @@ Route::middleware(['auth:api'])->group(function () {
     //Referral routes
     Route::get('my/referrals', [ReferralController::class, 'referraldetail']);
     Route::apiResource('referrals', ReferralController::class);
+    Route::get('redeem/voucher', [ReferralController::class, 'redeemvoucher']);
 
 
 });
