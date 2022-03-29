@@ -41,6 +41,8 @@ class EventResource extends JsonResource
             'cover' => $this->cover,
             'tribe_id' => $this->tribe_id,
             'tribe' => $this->tribe,
+            "user" => new UserNameResource($this->user)
+
         ];
     }
 }

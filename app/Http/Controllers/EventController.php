@@ -24,7 +24,7 @@ class EventController extends Controller
         }
         if (auth('organization')->user()) {
             $user = auth('organization')->user();
-            return Event::where('organization_id', $user->id)->with('eventattendance', 'facilitator')->latest()->get();
+            return Event::where('organization_id', $user->id)->with('user','eventattendance', 'facilitator')->latest()->get();
         }
         if (auth('admin')->user()) {
             $user = auth('admin')->user();
@@ -36,17 +36,17 @@ class EventController extends Controller
             $user = auth('api')->user();
         }
 
-        return Event::with('eventattendance', 'facilitator', 'tribe')->latest()->get();
+        return Event::with('user','eventattendance', 'facilitator', 'tribe')->latest()->get();
     }
     public function guestindex()
     {
 
-        return Event::with('eventattendance', 'facilitator', 'tribe')->latest()->get();
+        return Event::with('user','eventattendance', 'facilitator', 'tribe')->latest()->get();
     }
     public function guestevent($id)
     {
 
-        return Event::find($id)->load('eventattendance', 'facilitator', 'tribe');
+        return Event::find($id)->load('user','eventattendance', 'facilitator', 'tribe');
     }
     public function facilitatorgetevents()
     {
@@ -54,12 +54,12 @@ class EventController extends Controller
             return ('Unauthorized');
         }
         $user = auth('facilitator')->user();
-        return Event::with('eventattendance', 'facilitator', 'tribe')->latest()->get();
+        return Event::with('user','eventattendance', 'facilitator', 'tribe')->latest()->get();
     }
 
     public function facilitatorgetevent($id)
     {
-        return Event::where('id', $id)->with('eventattendance', 'facilitator', 'tribe')->first();
+        return Event::where('id', $id)->with('user','eventattendance', 'facilitator', 'tribe')->first();
     }
     public function checkEvents()
     {
@@ -80,17 +80,17 @@ class EventController extends Controller
     }
     public function getpendingevents(Tribe $tribe)
     {
-        $events = $tribe->events()->with('eventattendance', 'tribe')->where('status', 'pending')->get();
+        $events = $tribe->events()->with('user','eventattendance', 'tribe')->where('status', 'pending')->get();
         return EventResource::collection($events);
     }
     public function getactiveevents(Tribe $tribe)
     {
-        $events =  $tribe->events()->with('eventattendance', 'tribe')->where('status', 'active')->get();
+        $events =  $tribe->events()->with('user','eventattendance', 'tribe')->where('status', 'active')->get();
         return EventResource::collection($events);
     }
     public function getexpiredevents(Tribe $tribe)
     {
-        $events =  $tribe->events()->with('eventattendance', 'tribe')->where('status', 'expired')->get();
+        $events =  $tribe->events()->with('user','eventattendance', 'tribe')->where('status', 'expired')->get();
         return EventResource::collection($events);
     }
 
@@ -146,7 +146,7 @@ class EventController extends Controller
 
         Notification::send($tribemembers, new NewTribeEvent($details));
         broadcast(new NotificationSent())->toOthers();
-        return response($event->load('eventattendance', 'facilitator', 'tribe'), 201);
+        return response($event->load('user','eventattendance', 'facilitator', 'tribe'), 201);
     }
 
     /**
@@ -157,7 +157,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return new EventResource($event->load('eventattendance', 'facilitator', 'tribe'));
+        return new EventResource($event->load('user','eventattendance', 'facilitator', 'tribe'));
     }
 
     public function eventReminder()
