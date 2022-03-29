@@ -104,7 +104,7 @@ class ConnectionController extends Controller
             $checkpending->delete();
         }
 
-        $isFollowingBack = Connection::where([['user_id', $request->following_id],['following_id', $user->id]])->first();
+        $isFollowingBack = Connection::where([['user_id', $request->following_id], ['following_id', $user->id]])->first();
         if (is_null($isFollowingBack)) {
             PendingConnectionMessage::create([
                 'following_id' => $user->id,
@@ -125,11 +125,11 @@ class ConnectionController extends Controller
         $checkpending = $user->pendingconnections()->where('following_id', $request->following_id)->first();
         $checkpending->delete();
         return response([
-            'status'=>'success'
-        ],200);
+            'status' => 'success'
+        ], 200);
     }
 
-    public function removeconnection( $id)
+    public function removeconnection($id)
     {
         PendingConnectionMessage::find($id)->delete();
         return response([
@@ -382,6 +382,20 @@ class ConnectionController extends Controller
             'message' => 'Delete successful'
         ]);
     }
+    public function searchmyconnections(Request $request)
+    {
+        $user = auth('api')->user();
+        $query = $request->query('query');
+         $conn = ConnectionResource::collection($user->connections()->get());
+
+        $filter  =  collect($conn)->filter(function ($a) use ($query) {
+            
+            return str_contains(strtolower($a['user_follower']['username']), strtolower($query));
+        });
+
+
+        return $filter->toArray();
+    }
 
 
 
@@ -399,7 +413,7 @@ class ConnectionController extends Controller
         $query = $request->query('query');
         $users = User::where('username', 'like', '%' . $query . '%')->get();
 
-   
+
         return UserResource::collection($users);
     }
 

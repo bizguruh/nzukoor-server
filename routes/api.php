@@ -541,6 +541,7 @@ Route::get('all/tribes', [TribeSearchController::class, 'get']);
 
 Route::get('search/users', [ConnectionController::class, 'search']);
 Route::get('search/connections', [ConnectionController::class, 'searchconnections']);
+Route::get('search/my/connections', [ConnectionController::class, 'searchmyconnections']);
 Route::get('all/users', [ConnectionController::class, 'get']);
 
 Route::get('search/discussions', [DiscussionController::class, 'search']);
